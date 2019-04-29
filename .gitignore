@@ -1,0 +1,16 @@
+build/
+cmake-build-debug/
+
+*.exe
+*.obj
+*.o
+*.out
+
+*.local.*
+
+compile_commands.json
+
+.idea/
+*.imp
+
+*.stackdump

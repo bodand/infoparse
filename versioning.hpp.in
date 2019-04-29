@@ -1,0 +1,10 @@
+#define InfoParse_MAJOR "@InfoParse_VERSION_MAJOR@"
+#define InfoParse_MINOR "@InfoParse_VERSION_MINOR@"
+#define InfoParse_VERSION "@InfoParse_VERSION@"
+
+#include <string>
+namespace InfoParse {
+    static const std::string getVersion() {
+        return InfoParse_VERSION;
+    }
+}
