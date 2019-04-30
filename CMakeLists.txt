@@ -11,7 +11,6 @@ if (NOT RELEASE)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif ()
 
-# Versioning for inside use,
 configure_file(
         "${PROJECT_SOURCE_DIR}/versioning.hpp.in"
         "${PROJECT_SOURCE_DIR}/versioning.hpp"
@@ -21,62 +20,34 @@ set(InfoParse_SOURCES
         utils.cpp __Option.cpp OptionsParser.cpp __OptionHandler.cpp)
 
 set(InfoParse_HEADERS
-#        versioning.hpp
-        utils.hpp
+        versioning.hpp utils.hpp
         __Option.hpp __OptionHandler.hpp OptionsParser.hpp)
-
-foreach(p LIB BIN INCLUDE CMAKE)
-    set(var INSTALL_${p}_DIR)
-    if(NOT IS_ABSOLUTE "${${var}}")
-        set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-    endif()
-endforeach()
-
-include_directories(
-        "${PROJECT_SOURCE_DIR}"
-        "${PROJECT_BINARY_DIR}")
-
-set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
-set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
-set(INSTALL_INCLUDE_DIR include CACHE PATH
-        "Installation directory for header files")
-if(WIN32 AND NOT CYGWIN)
-    set(DEF_INSTALL_CMAKE_DIR CMake)
-else()
-    set(DEF_INSTALL_CMAKE_DIR lib/CMake/InfoParse)
-endif()
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
-        "Installation directory for CMake files")
 
 add_library(infoparse SHARED versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 
-set_target_properties(infoparse PROPERTIES
-        PUBLIC_HEADER "__OptionHandler.hpp;__Option.hpp;OptionsParser.hpp;utils.hpp;versioning.hpp")
+set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
+set(INSTALL_INCLUDE_DIR include CACHE PATH "Installation directory for header files")
+if (WIN32 AND NOT CYGWIN)
+    set(DEF_INSTALL_CMAKE_DIR CMake)
+else ()
+    set(DEF_INSTALL_CMAKE_DIR lib/CMake/InfoParse)
+endif ()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 
-file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
-        "${INSTALL_INCLUDE_DIR}")
-set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
-configure_file(InfoParseConfig.cmake.in
-        "${PROJECT_BINARY_DIR}/InfoParseConfig.cmake" @ONLY)
+foreach(header ${InfoParse_HEADERS})
+    get_target_property(pub infoparse PUBLIC_HEADER)
+    if ("${pub}" STREQUAL "pub-NOTFOUND")
+        set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header}")
+    else()
+        set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header};${pub}")
+    endif ()
+endforeach()
 
-set(CONF_INCLUDE_DIRS "${InfoParse_CMAKE_DIR}/${REL_INCLUDE_DIR}")
-configure_file(InfoParseConfig.cmake.in
-        "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/InfoParseConfig.cmake" @ONLY)
-
-export(TARGETS infoparse FILE "${PROJECT_BINARY_DIR}/InfoParseTargets.cmake")
-export(PACKAGE InfoParse)
-
-install(FILES
-        "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/InfoParseConfig.cmake"
-        "${PROJECT_BINARY_DIR}/InfoParseConfigVersion.cmake"
-        DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-install(EXPORT InfoParseTargets DESTINATION
-        "${INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-install(TARGETS infoparse
-        EXPORT InfoParseTargets
-        RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
-        LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
-        PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/infoparse"
-        COMPONENT dev)
+install(TARGETS infoparse EXPORT InfoParseConfig
+        RUNTIME DESTINATION ${INSTALL_BIN_DIR}
+        LIBRARY DESTINATION ${INSTALL_LIB_DIR}
+        ARCHIVE DESTINATION ${INSTALL_LIB_DIR}/static
+        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
+        )
+install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})

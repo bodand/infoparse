@@ -1,6 +1,0 @@
-get_filename_component(INFOPARSE_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-set(INFOPARSE_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
-
-if(NOT TARGET infoparse AND NOT InfoParse_BINARY_DIR)
-    include("${INFOPARSE_CMAKE_DIR}/InfoParseTargets.cmake")
-endif()
