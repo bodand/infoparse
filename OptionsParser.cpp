@@ -53,6 +53,5 @@ std::string InfoParse::OptionsParser::explodeBundledFlags(const std::string& arg
 }
 
 std::string InfoParse::OptionsParser::equalizeWhitespace(const std::string& args) {
-    std::regex moreWhitespace("\\s+");
-    return std::regex_replace(args, moreWhitespace, " ");
+    return std::regex_replace(args, std::regex("\\s+"), " ");
 }

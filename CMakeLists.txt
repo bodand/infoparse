@@ -4,12 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 project(InfoParse)
 
 set(InfoParse_VERSION_MAJOR 1)
-set(InfoParse_VERSION_MINOR 0)
+set(InfoParse_VERSION_MINOR 2)
 set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}")
-
-if (NOT RELEASE)
-    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-endif ()
 
 configure_file(
         "${PROJECT_SOURCE_DIR}/versioning.hpp.in"
@@ -17,13 +13,18 @@ configure_file(
 )
 
 set(InfoParse_SOURCES
-        utils.cpp __Option.cpp OptionsParser.cpp __OptionHandler.cpp)
+        utils.cpp _Option.cpp OptionsParser.cpp _OptionHandler.cpp)
 
 set(InfoParse_HEADERS
         versioning.hpp utils.hpp
-        __Option.hpp __OptionHandler.hpp OptionsParser.hpp)
+        _Option.hpp _OptionHandler.hpp OptionsParser.hpp)
 
 add_library(infoparse SHARED versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
+add_library(ips STATIC versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
+set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(ips PROPERTIES LINKER_LANGUAGE CXX)
+
+add_subdirectory(test)
 
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
@@ -35,14 +36,14 @@ else ()
 endif ()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 
-foreach(header ${InfoParse_HEADERS})
+foreach (header ${InfoParse_HEADERS})
     get_target_property(pub infoparse PUBLIC_HEADER)
     if ("${pub}" STREQUAL "pub-NOTFOUND")
         set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header}")
-    else()
+    else ()
         set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header};${pub}")
     endif ()
-endforeach()
+endforeach ()
 
 install(TARGETS infoparse EXPORT InfoParseConfig
         RUNTIME DESTINATION ${INSTALL_BIN_DIR}

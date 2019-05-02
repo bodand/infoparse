@@ -1,0 +1,10 @@
+//
+// Created by tudom on 2019. 05. 01..
+//
+
+#define BOOST_TEST_MODULE InfoParseTestModule
+
+//#include "../${BUILD_DIR_NAME}/tests.hpp"
+//#include "tests.hpp"
+${
+Test_TEST_CASES}

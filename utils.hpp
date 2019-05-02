@@ -6,6 +6,9 @@
 
 #include <vector>
 #include <string>
+#include <regex>
+#include <sstream>
+#include <iterator>
 
 #define unless(x) if (!(x))
 #define until(x) while (!(x))
@@ -14,9 +17,30 @@
 #define THEN(T) ,T>::type
 
 namespace InfoParse {
+    // guaranteed s = arcItrStr(itrStr(s))
+    // or whatever, you get it
+    void itrStr(std::string& str);
+    void arcItrStr(std::string& str);
+    void itrStr(std::wstring& str);
+    void arcItrStr(std::wstring& str);
+
     std::string makeMonolithArgs(int argc, char** argv);
 
+    void replaceAll(std::string& str, const std::string& from, const std::string& to);
+    void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to);
+
     std::vector<std::string> splitByWhitespace(const std::string& str);
+
+//    template<class Traits, class CharT, class UnaryFunction>
+//    std::string regex_replace(const std::string &s,
+//                              const std::basic_regex<CharT, Traits> &re, UnaryFunction f);
+    template<class Traits, class CharT, class UnaryFunction>
+    std::basic_string<CharT> regex_replace(const std::basic_string<CharT>& s,
+                                           const std::basic_regex<CharT, Traits>& re, UnaryFunction f);
+
+    template<class BidirIt, class Traits, class CharT, class UnaryFunction>
+    std::basic_string<CharT> regex_replace(BidirIt first, BidirIt last,
+                                           const std::basic_regex<CharT, Traits>& re, UnaryFunction f);
 
     namespace Internals {
 
@@ -33,7 +57,7 @@ namespace InfoParse {
             return std::is_base_of<
                     typename std::remove_reference<I>::type,
                     typename std::remove_reference<B>::type
-                                  >::value;
+            >::value;
         }
 
         /**
@@ -46,12 +70,12 @@ namespace InfoParse {
          * @return Whether the Factory can produce the Product with Args
          */
         template<class F, class P,
-                 class... Args>
+                class... Args>
         constexpr bool can_construct_with() {
             return std::is_same<
                     decltype(std::declval<F>().manufacture(std::declval<Args>()...)),
                     P
-                               >::value;
+            >::value;
         }
 
         /**

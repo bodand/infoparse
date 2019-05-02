@@ -4,7 +4,7 @@
 
 #include <string>
 namespace InfoParse {
-    static const std::string getVersion() {
+    static inline const std::string getVersion() {
         return InfoParse_VERSION;
     }
 }
