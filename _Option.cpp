@@ -15,11 +15,10 @@ InfoParse::_Option<bool>::_Option(const std::string& name, bool* exporter) :
         shortName(name[0]),
         exporter(exporter) {}
 
-InfoParse::_Option<bool>::~_Option() = default;
 
 std::string InfoParse::_Option<bool>::match(const std::string& args) const {
     std::string parsable(args);
-    std::string shortNameString(std::string("") + shortName);
+    std::string shortNameString(1, shortName);
     std::size_t startMatch;
     const auto longSequence = std::string(" --") + longName + " ";
     const auto shortSequence = std::string(" -") + shortName + " ";
@@ -33,4 +32,28 @@ std::string InfoParse::_Option<bool>::match(const std::string& args) const {
     }
 
     return parsable;
+}
+
+bool InfoParse::_Option<bool>::operator==(const _Option& rhs) const {
+    return longName == rhs.longName;
+}
+
+bool InfoParse::_Option<bool>::operator!=(const _Option& rhs) const {
+    return !(rhs == *this);
+}
+
+bool InfoParse::_Option<bool>::operator==(const std::string& name) const {
+    return longName == name;
+}
+
+bool InfoParse::_Option<bool>::operator!=(const std::string& name) const {
+    return !(longName == name);
+}
+
+bool InfoParse::_Option<bool>::operator==(const char* cname) const {
+    return *this == std::string(cname);
+}
+
+bool InfoParse::_Option<bool>::operator!=(const char* cname) const {
+    return *this != std::string(cname);
 }

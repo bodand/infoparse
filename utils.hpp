@@ -31,9 +31,6 @@ namespace InfoParse {
 
     std::vector<std::string> splitByWhitespace(const std::string& str);
 
-//    template<class Traits, class CharT, class UnaryFunction>
-//    std::string regex_replace(const std::string &s,
-//                              const std::basic_regex<CharT, Traits> &re, UnaryFunction f);
     template<class Traits, class CharT, class UnaryFunction>
     std::basic_string<CharT> regex_replace(const std::basic_string<CharT>& s,
                                            const std::basic_regex<CharT, Traits>& re, UnaryFunction f);

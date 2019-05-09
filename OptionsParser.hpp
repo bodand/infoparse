@@ -1,8 +1,8 @@
 //
 // Created by bodand on 2019-02-06.
 //
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCDFAInspection"
+//#pragma clang diagnostic push
+//#pragma ide diagnostic ignored "OCDFAInspection"
 #pragma once
 
 #include <typeinfo>
@@ -20,9 +20,6 @@ namespace InfoParse {
                 std::function<std::string(void*, const std::string&)>>> optionHandlers;
 
     public:
-        OptionsParser();
-        virtual ~OptionsParser();
-
         template<class T>
         ENABLE_IF true THEN
         (void) addOption(const std::string& longName, char shortName, T* exporter);
@@ -47,8 +44,8 @@ namespace InfoParse {
                 return ((_OptionHandler<T>*) optionVoid)->handle(args);
             };
         }
-        _Option<T> option(longName, shortName, exporter);
-        ((_OptionHandler<T>*) optionHandlers[typeid(T)].first)->addOption(option);
+        ((_OptionHandler<T>*) optionHandlers[typeid(T)].first)
+                ->addOption(longName, shortName, exporter);
     }
 
     template<class T>
@@ -60,9 +57,8 @@ namespace InfoParse {
                 return ((_OptionHandler<T>*) optionVoid)->handle(args);
             };
         }
-        _Option<T> option(name, exporter);
-        ((_OptionHandler<T>*) optionHandlers[typeid(T)].first)->addOption(option);
+        ((_OptionHandler<T>*) optionHandlers[typeid(T)].first)->addOption(name, exporter);
     }
 }
 
-#pragma clang diagnostic pop
+//#pragma clang diagnostic pop

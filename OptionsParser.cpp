@@ -7,10 +7,6 @@
 #include <iterator>
 #include <regex>
 
-InfoParse::OptionsParser::OptionsParser() = default;
-
-InfoParse::OptionsParser::~OptionsParser() = default;
-
 std::string InfoParse::OptionsParser::parse(int argc, char** argv) {
     return parse(InfoParse::makeMonolithArgs(argc, argv));
 }

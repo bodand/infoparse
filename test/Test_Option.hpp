@@ -91,5 +91,41 @@ BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameCherryPick)
     delete opt;
 }
 
+BOOST_AUTO_TEST_CASE(Test_Option_OptionEqualityBasedOnLONGNames) {
+    int i;
+    auto* optc = new _Option<decltype(i)>("test", 'c', &i);
+    auto* optk = new _Option<decltype(i)>("test", 'k', &i);
+    BOOST_CHECK_EQUAL(*optc, *optk);
+    delete optc;
+    delete optk;
+}
+
+BOOST_AUTO_TEST_CASE(Test_Option_BoolSpecializationEquality) {
+    bool i;
+    auto* optc = new _Option<decltype(i)>("test", 'c', &i);
+    auto* optk = new _Option<decltype(i)>("test", 'k', &i);
+    BOOST_CHECK_EQUAL(*optc, *optk);
+    delete optc;
+    delete optk;
+}
+
+BOOST_AUTO_TEST_CASE(Test_Option_OptionEqualityBasedOnLONGNamesFalse) {
+    int i;
+    auto* optc = new _Option<decltype(i)>("testc", &i);
+    auto* optk = new _Option<decltype(i)>("testk", &i);
+    BOOST_CHECK_NE(*optc, *optk);
+    delete optc;
+    delete optk;
+}
+
+BOOST_AUTO_TEST_CASE(Test_Option_BoolSpecializationEqualityFalse) {
+    bool i;
+    auto* optc = new _Option<decltype(i)>("testc", &i);
+    auto* optk = new _Option<decltype(i)>("testk", &i);
+    BOOST_CHECK_NE(*optc, *optk);
+    delete optc;
+    delete optk;
+}
+
 #pragma clang diagnostic pop
 

@@ -23,9 +23,25 @@ namespace InfoParse {
 
         _Option(const std::string& name, T* exporter);
 
-        virtual ~_Option();
+        _Option<T>(_Option<T>& other) = default;
+        _Option<T>(_Option<T>&& other) noexcept = default;
+        _Option<T>& operator=(const _Option<T>& other) = default;
+        _Option<T>& operator=(_Option<T>&& other) noexcept = default;
+
+
+        virtual ~_Option() = default;
 
         std::string match(const std::string& args) const;
+
+        template<class U>
+        friend std::ostream& operator<<(std::ostream& os, const _Option<U>& option);
+
+        bool operator==(const _Option& rhs) const;
+        bool operator==(const std::string& name) const;
+        bool operator==(const char* cname) const;
+        bool operator!=(const _Option& rhs) const;
+        bool operator!=(const std::string& name) const;
+        bool operator!=(const char* cname) const;
 
     private:
         void handleParameterParsing(std::size_t startMatch, std::string& args,
@@ -49,9 +65,24 @@ namespace InfoParse {
 
         _Option(const std::string& name, bool* exporter);
 
-        virtual ~_Option();
+        _Option<bool>(_Option<bool>& other) = default;
+        _Option<bool>(_Option<bool>&& other) = default;
+        _Option<bool>& operator=(const _Option<bool>& other) = default;
+        _Option<bool>& operator=(_Option<bool>&& other) = default;
+
+        virtual ~_Option() = default;
 
         std::string match(const std::string& args) const;
+
+        template<class U>
+        friend std::ostream& operator<<(std::ostream& os, const _Option<U>& option);
+
+        bool operator==(const _Option& rhs) const;
+        bool operator==(const std::string& name) const;
+        bool operator==(const char* cname) const;
+        bool operator!=(const _Option& rhs) const;
+        bool operator!=(const std::string& name) const;
+        bool operator!=(const char* cname) const;
     };
 
     template<class T>
@@ -130,7 +161,41 @@ namespace InfoParse {
         return converter.from_bytes(match.substr(match.find_last_of(' ') + 1));
     }
 
+    template<class U>
+    std::ostream& operator<<(std::ostream& os, const _Option<U>& option) {
+        os << "_Option<" << typeid(U).name() << ">[longName: " << option.longName
+           << ", shortName: " << option.shortName << "]";
+        return os;
+    }
+
     template<class T>
-    _Option<T>::~_Option() = default;
+    bool _Option<T>::operator==(const _Option& rhs) const {
+        return longName == rhs.longName;
+    }
+
+    template<class T>
+    bool _Option<T>::operator!=(const _Option& rhs) const {
+        return !(rhs == *this);
+    }
+
+    template<class T>
+    bool _Option<T>::operator==(const std::string& name) const {
+        return longName == name;
+    }
+
+    template<class T>
+    bool _Option<T>::operator!=(const std::string& name) const {
+        return !(longName == name);
+    }
+
+    template<class T>
+    bool _Option<T>::operator==(const char* cname) const {
+        return *this == std::string(cname);
+    }
+
+    template<class T>
+    bool _Option<T>::operator!=(const char* cname) const {
+        return *this != std::string(cname);
+    }
 }
 
