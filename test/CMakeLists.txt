@@ -10,7 +10,8 @@ if (Boost_FOUND)
             Test_Testing.hpp
             Test_Version.hpp
             Test_OptionHandler.hpp
-            Test_Option.hpp Test_Utils.hpp)
+            Test_Option.hpp
+            Test_Utils.hpp)
 
     foreach (case ${Test_HEADERS})
         set(Test_TEST_CASES "${Test_TEST_CASES}

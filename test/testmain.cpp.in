@@ -4,6 +4,5 @@
 
 #define BOOST_TEST_MODULE InfoParseTestModule
 
-//&!off
-${Test_TEST_CASES}
+//&!off ${Test_TEST_CASES}
 //&!on

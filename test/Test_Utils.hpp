@@ -82,5 +82,18 @@ BOOST_AUTO_TEST_CASE(Test_Utils_ArcItrStrIsInverseOfItrStrW) {
     BOOST_CHECK(spacey == spacey_2);
 }
 
+BOOST_AUTO_TEST_CASE(Test_Utils_StringWithExactSpaceMarkerformatIsEscapedCorrectly) {
+    std::string dollary("asd asd$4$asd2");
+    itrStr(dollary);
+    BOOST_CHECK_EQUAL(dollary, R"(asd$1$asd\$4\$asd2)");
+}
+
+BOOST_AUTO_TEST_CASE(Test_Utils_StringWithExactSpaceMarkerformatIsArcosedCorrectly) {
+    std::string dollary("asd asd$4$asd2");
+    itrStr(dollary);
+    arcItrStr(dollary);
+    BOOST_CHECK_EQUAL(dollary, "asd asd$4$asd2");
+}
+
 #pragma clang diagnostic pop
 
