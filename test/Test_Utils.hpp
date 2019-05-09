@@ -95,5 +95,51 @@ BOOST_AUTO_TEST_CASE(Test_Utils_StringWithExactSpaceMarkerformatIsArcosedCorrect
     BOOST_CHECK_EQUAL(dollary, "asd asd$4$asd2");
 }
 
+class Base {
+};
+
+class Sub : public Base {
+};
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_extends) {
+    bool ret = Internals::extends<Sub, Base>();
+    BOOST_CHECK(ret);
+}
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_extends_false) {
+    bool ret = Internals::extends<Base, Sub>();
+    BOOST_CHECK(!ret);
+}
+
+class BaseFactory {
+public:
+    Base manufacture(int, int);
+};
+
+class SubFactory {
+public:
+    Sub manufacture();
+};
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct_with) {
+    bool ret = Internals::can_construct_with<BaseFactory, Base, int, int>();
+    BOOST_CHECK(ret);
+}
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct) {
+    bool ret = Internals::can_construct<SubFactory, Sub>();
+    BOOST_CHECK(ret);
+}
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_int) {
+    bool ret = Internals::can_stream<int>();
+    BOOST_CHECK_MESSAGE(ret, "can_stream failed for built-in type `int`");
+}
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_bool) {
+    bool ret = Internals::can_stream<bool>();
+    BOOST_CHECK_MESSAGE(ret, "can_stream failed for built-in type `bool`");
+}
+
 #pragma clang diagnostic pop
 

@@ -89,5 +89,13 @@ namespace InfoParse {
         constexpr bool can_construct() {
             return can_construct_with<F, P>();
         }
+
+        template<class T, class S = std::istream, class... Args>
+        constexpr bool can_stream() {
+            return std::is_same_v<
+                    std::decay_t<decltype(std::declval<S&>() >> std::declval<T&>(std::declval<Args>()...))>,
+                    S
+            >;
+        }
     }
 }

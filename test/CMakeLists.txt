@@ -11,7 +11,9 @@ if (Boost_FOUND)
             Test_Version.hpp
             Test_OptionHandler.hpp
             Test_Option.hpp
-            Test_Utils.hpp)
+            Test_Utils.hpp
+            Test_OptionsParser.hpp
+            )
 
     foreach (case ${Test_HEADERS})
         set(Test_TEST_CASES "${Test_TEST_CASES}
