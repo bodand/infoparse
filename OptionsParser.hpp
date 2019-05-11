@@ -84,7 +84,6 @@ namespace InfoParse {
          * @return The remnants of the parsed string, matched options removed.
          */
         std::string parse(const std::string& args);
-
     private:
         std::string explodeBundledFlags(const std::string& args);
         std::string equalizeWhitespace(const std::string& args);

@@ -122,13 +122,31 @@ public:
 };
 
 BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct_with) {
-    bool ret = Internals::can_construct_with<BaseFactory, Base, int, int>();
-    BOOST_CHECK(ret);
+    if constexpr (Internals::can_construct_with<BaseFactory, Base, int, int>())
+        BOOST_CHECK(true);
+    else
+        BOOST_CHECK(false);
 }
 
 BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct) {
-    bool ret = Internals::can_construct<SubFactory, Sub>();
-    BOOST_CHECK(ret);
+    if constexpr (Internals::can_construct<SubFactory, Sub>())
+        BOOST_CHECK(true);
+    else
+        BOOST_CHECK(false);
+}
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct_with_false) {
+    if constexpr (Internals::can_construct_with<BaseFactory, Sub, int, int>())
+        BOOST_CHECK(false);
+    else
+        BOOST_CHECK(true);
+}
+
+BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct_false) {
+    if constexpr (Internals::can_construct<SubFactory, Base>())
+        BOOST_CHECK(false);
+    else
+        BOOST_CHECK(true);
 }
 
 BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_int) {
