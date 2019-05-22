@@ -12,7 +12,11 @@
 #include "../versioning.hpp"
 
 BOOST_AUTO_TEST_CASE(Test_Version) {
-    BOOST_CHECK_EQUAL(InfoParse::getVersion(), "1.2");
+#if defined(_WIN32) || defined(_WIN64)
+    BOOST_CHECK(InfoParse::getVersion() == L"1.2");
+#else
+    BOOST_CHECK(InfoParse::getVersion() == "1.2");
+#endif
 }
 
 #pragma clang diagnostic pop

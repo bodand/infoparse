@@ -37,18 +37,29 @@ endif ()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
 
 foreach (header ${InfoParse_HEADERS})
+    # Dynamic library
     get_target_property(pub infoparse PUBLIC_HEADER)
     if ("${pub}" STREQUAL "pub-NOTFOUND")
         set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header}")
     else ()
         set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header};${pub}")
     endif ()
+    # Static library
+    get_target_property(pub infoparse PUBLIC_HEADER)
+    if ("${pub}" STREQUAL "pub-NOTFOUND")
+        set_target_properties(ips PROPERTIES PUBLIC_HEADER "${header}")
+    else ()
+        set_target_properties(ips PROPERTIES PUBLIC_HEADER "${header};${pub}")
+    endif ()
 endforeach ()
 
 install(TARGETS infoparse EXPORT InfoParseConfig
         RUNTIME DESTINATION ${INSTALL_BIN_DIR}
         LIBRARY DESTINATION ${INSTALL_LIB_DIR}
-        ARCHIVE DESTINATION ${INSTALL_LIB_DIR}/static
         PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
+        )
+install(TARGETS ips EXPORT InfoParseConfig
+        RUNTIME DESTINATION ${INSTALL_BIN_DIR}
+        ARCHIVE DESTINATION ${INSTALL_LIB_DIR}/static
         )
 install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})
