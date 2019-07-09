@@ -1,0 +1,162 @@
+\hypertarget{class_info_parse_1_1_options_parser}{}\section{Info\+Parse\+::Options\+Parser Class Reference}
+\label{class_info_parse_1_1_options_parser}\index{InfoParse::OptionsParser@{InfoParse::OptionsParser}}
+
+
+The only class which is supposed to be used.
+
+
+
+
+{\ttfamily \#include $<$Options\+Parser.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+    \item
+    {\footnotesize template$<$class T $>$ }\\std\+::enable\+\_\+if\+\_\+t$<$ Internals\+::can\+\_\+stream$<$ T $>$)$>$ \mbox{\hyperlink{class_info_parse_1_1_options_parser_a1f2d084e8086dfbfac406d24045dadff}{add\+Option}} (const std\+::string \&long\+Name, char short\+Name, T $\ast$exporter)
+    \begin{DoxyCompactList}
+        \small\item\em Adds an option with T type parameter to be stored and later invoked to do its parsing.
+    \end{DoxyCompactList}\item
+    {\footnotesize template$<$class T $>$ }\\std\+::enable\+\_\+if\+\_\+t$<$ Internals\+::can\+\_\+stream$<$ T $>$)$>$ \mbox{\hyperlink{class_info_parse_1_1_options_parser_a034a9658fa2ef9480de36055349e4408}{add\+Option}} (const std\+::string \&name, T $\ast$exporter)
+    \begin{DoxyCompactList}
+        \small\item\em Adds an option with T type parameter to be stored and later invoked to do its parsing.
+    \end{DoxyCompactList}\item
+    std\+::string \mbox{\hyperlink{class_info_parse_1_1_options_parser_a9b6c22651efe911c4710ef0f27b71d44}{parse}} (int argc, char $\ast$$\ast$argv)
+    \begin{DoxyCompactList}
+        \small\item\em Parses the given arguments using parameters in the style of {\ttfamily int main} parameters.
+    \end{DoxyCompactList}\item
+    std\+::string \mbox{\hyperlink{class_info_parse_1_1_options_parser_a78fa47e8a288b70ebbe3a9597c846a49}{parse}} (const std\+::string \&args)
+    \begin{DoxyCompactList}
+        \small\item\em Parses the given string as if it was directly input from the local shell.
+    \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The only class which is supposed to be used.
+
+Stores options for parsing, and parses.
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_info_parse_1_1_options_parser_a1f2d084e8086dfbfac406d24045dadff}\label{class_info_parse_1_1_options_parser_a1f2d084e8086dfbfac406d24045dadff}}
+\index{InfoParse::OptionsParser@{InfoParse::OptionsParser}!addOption@{addOption}}
+\index{addOption@{addOption}!InfoParse::OptionsParser@{InfoParse::OptionsParser}}
+\subsubsection{\texorpdfstring{addOption()}{addOption()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+std\+::enable\+\_\+if\+\_\+t$<$ Internals\+::can\+\_\+stream$<$ T $>$)$>$ Info\+Parse\+::\+Options\+Parser\+::add\+Option (\begin{DoxyParamCaption}
+                                                                                                                               \item[{const std\+::string \&}]{long\+Name,  }\item[{char}]{short\+Name,  }\item[{T $\ast$}]{exporter }
+\end{DoxyParamCaption})}
+
+
+
+Adds an option with T type parameter to be stored and later invoked to do its parsing.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T}
+    & Type for the exported value \\
+    \hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em long\+Name}
+    & The L\+O\+NG name of the option (--longname) \\
+    \hline
+    {\em short\+Name} & The S\+H\+O\+RT name of the option (-\/s) \\
+    \hline
+    {\em exporter} & A pointer to a memory block of type T, into which the value will be put\\
+    \hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+    nullptr for exporter is not checked, yet
+
+    T must support operator$>$$>$ from istream, this is made sure by S\+F\+I\+N\+AE so it will die compile time
+\end{DoxyNote}
+\mbox{\Hypertarget{class_info_parse_1_1_options_parser_a034a9658fa2ef9480de36055349e4408}\label{class_info_parse_1_1_options_parser_a034a9658fa2ef9480de36055349e4408}}
+\index{InfoParse::OptionsParser@{InfoParse::OptionsParser}!addOption@{addOption}}
+\index{addOption@{addOption}!InfoParse::OptionsParser@{InfoParse::OptionsParser}}
+\subsubsection{\texorpdfstring{addOption()}{addOption()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+std\+::enable\+\_\+if\+\_\+t$<$ Internals\+::can\+\_\+stream$<$ T $>$)$>$ Info\+Parse\+::\+Options\+Parser\+::add\+Option (\begin{DoxyParamCaption}
+                                                                                                                               \item[{const std\+::string \&}]{name,  }\item[{T $\ast$}]{exporter }
+\end{DoxyParamCaption})}
+
+
+
+Adds an option with T type parameter to be stored and later invoked to do its parsing.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T}
+    & Type for the exported value \\
+    \hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em name}
+    & The L\+O\+NG name of the option. S\+H\+O\+RT name is deduced from the first character of the L\+O\+NG name. \\
+    \hline
+    {\em exporter} & A pointer to a memory block of type T, into which the parsed value will be put\\
+    \hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+{\ttfamily nullptr}
+    for exporter is not checked, yet
+
+    T must support operator$>$$>$ from istream, this is made sure by S\+F\+I\+N\+AE so it will die compile time
+
+    The creation of the S\+H\+O\+RT name doesn\textquotesingle{}t check if there already exists an option with the same S\+H\+O\+RT name, thus it can be shadowed by earlier created options\textquotesingle{} S\+H\+O\+RT names
+\end{DoxyNote}
+\mbox{\Hypertarget{class_info_parse_1_1_options_parser_a9b6c22651efe911c4710ef0f27b71d44}\label{class_info_parse_1_1_options_parser_a9b6c22651efe911c4710ef0f27b71d44}}
+\index{InfoParse::OptionsParser@{InfoParse::OptionsParser}!parse@{parse}}
+\index{parse@{parse}!InfoParse::OptionsParser@{InfoParse::OptionsParser}}
+\subsubsection{\texorpdfstring{parse()}{parse()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily std\+::string Info\+Parse\+::\+Options\+Parser\+::parse (\begin{DoxyParamCaption}
+                                                                                     \item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }
+\end{DoxyParamCaption})}
+
+
+
+Parses the given arguments using parameters in the style of {\ttfamily int main} parameters.
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc}
+    & The length of argv \\
+    \hline
+    {\em argv} & An array of char arrays which store the parameters split up by the local shell \\
+    \hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+    The remnants of the parsed concatenated string, matched options removed.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+In the future the return value might change to return a pair of int and char$\ast$$\ast$
+
+argv is not checked for {\ttfamily nullptr}
+
+for any i $<$ argc; argv\mbox{[}i\mbox{]} is not checked for {\ttfamily nullptr}
+\end{DoxyNote}
+\mbox{\Hypertarget{class_info_parse_1_1_options_parser_a78fa47e8a288b70ebbe3a9597c846a49}\label{class_info_parse_1_1_options_parser_a78fa47e8a288b70ebbe3a9597c846a49}}
+\index{InfoParse::OptionsParser@{InfoParse::OptionsParser}!parse@{parse}}
+\index{parse@{parse}!InfoParse::OptionsParser@{InfoParse::OptionsParser}}
+\subsubsection{\texorpdfstring{parse()}{parse()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily std\+::string Info\+Parse\+::\+Options\+Parser\+::parse (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{args }\end{DoxyParamCaption})}
+
+
+
+Parses the given string as if it was directly input from the local shell.
+
+
+\begin{DoxyParams}{Parameters}
+{\em args} & The string to parse \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The remnants of the parsed string, matched options removed.
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item
+Options\+Parser.\+hpp\item
+Options\+Parser.\+cpp\end{DoxyCompactItemize}

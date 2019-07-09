@@ -64,3 +64,11 @@ bool InfoParse::Option_<bool>::operator==(const char* cname) const {
 bool InfoParse::Option_<bool>::operator!=(const char* cname) const {
     return *this != std::string(cname);
 }
+
+bool InfoParse::Option_<bool>::operator==(const char c) const {
+    return shortName == c;
+}
+
+bool InfoParse::Option_<bool>::operator!=(const char c) const {
+    return !(*this == c);
+}

@@ -97,6 +97,17 @@ namespace InfoParse {
         return can_construct_with<F, P>();
     }
 
+    /**
+     * Checks whether the supplied type T can
+     * be streamed into a stream of type S, using
+     * operator>>.
+     *
+     * @tparam T The type to check streamability of
+     * @tparam S The stream type to check streamability into
+     * @tparam Args Arguments for constructing an instance of type T
+     *
+     * @return Boolean depending on operator>>(S&, T&) exits.
+     */
     template<class T, class S = std::istream, class... Args>
     constexpr bool can_stream() {
         return std::is_same_v<

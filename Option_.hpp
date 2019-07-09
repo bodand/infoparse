@@ -17,6 +17,19 @@
 #include "utils.hpp"
 
 namespace InfoParse {
+  /**
+   * Stores one parsable option with a SHORT
+   * and LONG name.
+   *
+   * LONG names are parsed like "--LONG", while
+   * SHORT names are parsed like "-SHORT", and SHORT
+   * names are one character long.
+   *
+   * @tparam T The type of the parameter to stuff the
+   *           found value into.
+   *
+   * @specialized Option_<bool>
+   */
   template<class T>
   class Option_ {
       std::string longName;
@@ -24,8 +37,31 @@ namespace InfoParse {
       T* exporter;
 
   public:
+      /**
+       * Constructs the Option_ with explicitly
+       * given SHORT name.
+       *
+       * @param longName The LONG name for the option.
+       * @param shortName The SHORT name for the option
+       * @param exporter The pointer to a constructed memory whereto
+       *                 dump the found value
+       *
+       * @note `exporter` is not checked for `nullptr`
+       */
       Option_(std::string longName, char shortName, T* exporter);
 
+      /**
+       * Constructs the Option_ with implicitly deducted
+       * SHORT name. The SHORT name is generated as the first character
+       * of the LONG name.
+       *
+       * @param longName The LONG name for the option. First character will
+       *                 used as the SHORT name
+       * @param exporter The pointer to a constructed memory whereto
+       *                 dump the found value
+       *
+       * @note `exporter` is not checked for `nullptr`
+       */
       Option_(const std::string& name, T* exporter);
 
       Option_<T>(Option_<T>& other) = default;
@@ -33,20 +69,81 @@ namespace InfoParse {
       Option_<T>& operator=(const Option_<T>& other) = default;
       Option_<T>& operator=(Option_<T>&& other) noexcept = default;
 
-
       virtual ~Option_() = default;
 
+      /**
+       * Tries to match either of the names of the Option_
+       * to the supplied string.
+       *
+       * @param args The string to match the LONG then
+       *             if not found the SHORT name to
+       * @return The string with the removed options' name and value
+       *         For example: " text -b 4 more text" -> " text more text "
+       */
       std::string match(const std::string& args) const;
 
       template<class U>
       friend std::ostream& operator<<(std::ostream& os, const Option_<U>& option);
 
+      /**
+       * Checks equality depending on equal
+       * LONG and SHORT names
+       *
+       * let A = lhs.LONG == rhs.LONG
+       * let B = lhs.SHORT == rhs.SHORT
+       *
+       * lhs == rhs iff A ∨ B
+       */
       bool operator==(const Option_& rhs) const;
+
+      /**
+       * Checks equality with checking
+       * whether the given string equals to LONG name
+       */
       bool operator==(const std::string& name) const;
+
+      /**
+       * Checks equality with checking
+       * whether the given c-string equals to LONG name
+       */
       bool operator==(const char* cname) const;
+
+      /**
+       * Checks equality with checking
+       * whether the given char equals to SHORT name
+       */
+      bool operator==(char c) const;
+
+      /**
+       * Checks inequality by negating the
+       * equality check.
+       * let A = lhs.LONG == rhs.LONG
+       * let B = lhs.SHORT == rhs.SHORT
+       *
+       * lhs != rhs iff !(A ∨ B)
+       */
       bool operator!=(const Option_& rhs) const;
+
+      /**
+        * Checks inequality with checking
+        * whether the given string does
+        * not equal to LONG name
+        */
       bool operator!=(const std::string& name) const;
+
+      /**
+        * Checks inequality with checking
+        * whether the given c-string does
+        * not equal to LONG name
+        */
       bool operator!=(const char* cname) const;
+
+      /**
+        * Checks inequality with checking
+        * whether the given char does
+        * not equal to SHORT name
+        */
+      bool operator!=(char c) const;
 
   private:
       void handleParameterParsing(std::size_t startMatch, std::string& args,
@@ -59,6 +156,23 @@ namespace InfoParse {
                                             const std::string& name, const std::string& sequence) const;
   };
 
+  /**
+   * Specialized Option_ for
+   * boolean values.
+   *
+   * Boolean values need not parse
+   * after either their option's name was present
+   * they simply dump true, otherwise false.
+   *
+   * Stores one parsable option with a SHORT
+   * and LONG name.
+   *
+   * LONG names are parsed like "--LONG", while
+   * SHORT names are parsed like "-SHORT", and SHORT
+   * names are one character long.
+   *
+   * @see Option_<T>
+   */
   template<>
   class Option_<bool> {
       std::string longName;
@@ -66,8 +180,29 @@ namespace InfoParse {
       bool* exporter;
 
   public:
+      /**
+       * Constructs the Option_ with explicitly
+       * given SHORT name.
+       *
+       * @param longName The LONG name for the option.
+       * @param shortName The SHORT name for the option
+       * @param exporter The bool pointer to dump whether the switch was found
+       *
+       * @note `exporter` is not checked for `nullptr`
+       */
       Option_(std::string longName, char shortName, bool* exporter);
 
+      /**
+       * Constructs the Option_ with implicitly deducted
+       * SHORT name. The SHORT name is generated as the first character
+       * of the LONG name.
+       *
+       * @param longName The LONG name for the option. First character will
+       *                 used as the SHORT name
+       * @param exporter The bool pointer to dump whether the switch was found
+       *
+       * @note `exporter` is not checked for `nullptr`
+       */
       Option_(const std::string& name, bool* exporter);
 
       Option_<bool>(Option_<bool>& other) = default;
@@ -77,17 +212,82 @@ namespace InfoParse {
 
       virtual ~Option_() = default;
 
+      /**
+        * Tries to match either of the names of the Option_
+        * to the supplied string.
+        *
+        * @param args The string to match the LONG then
+        *             if not found the SHORT name to
+        * @return The string with the removed options' name
+        *         For example: " text -s more text" -> " text more text "
+        */
       std::string match(const std::string& args) const;
 
       template<class U>
       friend std::ostream& operator<<(std::ostream& os, const Option_<U>& option);
 
+      /**
+       * Checks equality depending on equal
+       * LONG and SHORT names
+       *
+       * let A = lhs.LONG == rhs.LONG
+       *
+       * let B = lhs.SHORT == rhs.SHORT
+       *
+       * lhs == rhs iff A ∨ B
+       */
       bool operator==(const Option_& rhs) const;
+
+      /**
+       * Checks equality with checking
+       * whether the given string equals to LONG name
+       */
       bool operator==(const std::string& name) const;
+
+      /**
+       * Checks equality with checking
+       * whether the given c-string equals to LONG name
+       */
       bool operator==(const char* cname) const;
+
+      /**
+       * Checks equality with checking
+       * whether the given char equals to SHORT name
+       */
+      bool operator==(char c) const;
+
+      /**
+       * Checks inequality by negating the
+       * equality check.
+       *
+       * let A = lhs.LONG == rhs.LONG
+       *
+       * let B = lhs.SHORT == rhs.SHORT
+       *
+       * lhs != rhs iff !(A ∨ B)
+       */
       bool operator!=(const Option_& rhs) const;
+
+      /**
+        * Checks inequality with checking
+        * whether the given string does
+        * not equal to LONG name
+        */
       bool operator!=(const std::string& name) const;
+
+      /**
+        * Checks inequality with checking
+        * whether the given c-string does
+        * not equal to LONG name
+        */
       bool operator!=(const char* cname) const;
+
+      /**
+        * Checks inequality with checking
+        * whether the given char does
+        * not equal to SHORT name
+        */
+      bool operator!=(char c) const;
   };
 
   template<class T>
@@ -99,9 +299,9 @@ namespace InfoParse {
       const auto shortSequence = std::string(" -") + shortName + " ";
 
       unless ((startMatch = parsable.find(longSequence)) == -1) {
-          handleParameterParsing(startMatch, /*&*/parsable, longName, longSequence);
+          handleParameterParsing(startMatch, parsable, longName, longSequence);
       } else unless ((startMatch = parsable.find(shortSequence)) == -1) {
-          handleParameterParsing(startMatch, /*&*/parsable, shortNameString, shortSequence);
+          handleParameterParsing(startMatch, parsable, shortNameString, shortSequence);
       }
 
       return parsable;
@@ -175,7 +375,8 @@ namespace InfoParse {
 
   template<class T>
   bool Option_<T>::operator==(const Option_& rhs) const {
-      return longName == rhs.longName;
+      return longName == rhs.longName
+             && shortName == rhs.shortName;
   }
 
   template<class T>
@@ -201,6 +402,16 @@ namespace InfoParse {
   template<class T>
   bool Option_<T>::operator!=(const char* cname) const {
       return *this != std::string(cname);
+  }
+
+  template<class T>
+  bool Option_<T>::operator==(char c) const {
+      return shortName == c;
+  }
+
+  template<class T>
+  bool Option_<T>::operator!=(char c) const {
+      return !(*this == c);
   }
 }
 

@@ -43,8 +43,9 @@ namespace InfoParse {
        *       is made sure by SFINAE so it will die compile time
        */
       template<class T>
-      ENABLE_IF Internals::can_stream<T>()THEN
-      (void) addOption(const std::string& longName, char shortName, T* exporter);
+      std::enable_if_t<Internals::can_stream<T>()>
+      addOption(const std::string& longName, char shortName, T* exporter);
+
       /**
        * Adds an option with T type parameter to be
        * stored and later invoked to do its parsing
@@ -62,8 +63,8 @@ namespace InfoParse {
        *       shadowed by earlier created options' SHORT names
        */
       template<class T>
-      ENABLE_IF Internals::can_stream<T>()THEN
-      (void) addOption(const std::string& name, T* exporter);
+      std::enable_if_t<Internals::can_stream<T>()>
+      addOption(const std::string& name, T* exporter);
 
       /**
        * Parses the given arguments using parameters in
@@ -81,6 +82,7 @@ namespace InfoParse {
        * @note for any i < argc; argv[i] is not checked for `nullptr`
        */
       std::string parse(int argc, char** argv);
+
       /**
        * Parses the given string as if it was directly input from
        * the local shell
@@ -95,8 +97,8 @@ namespace InfoParse {
   };
 
   template<class T>
-  ENABLE_IF Internals::can_stream<T>()THEN
-  (void) OptionsParser::addOption(const std::string& longName, char shortName, T* exporter) {
+  std::enable_if_t<Internals::can_stream<T>()>
+  OptionsParser::addOption(const std::string& longName, char shortName, T* exporter) {
       if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
           optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
           optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
@@ -109,8 +111,8 @@ namespace InfoParse {
   }
 
   template<class T>
-  ENABLE_IF Internals::can_stream<T>()THEN
-  (void) OptionsParser::addOption(const std::string& name, T* exporter) {
+  std::enable_if_t<Internals::can_stream<T>()>
+  OptionsParser::addOption(const std::string& name, T* exporter) {
       if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
           optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
           optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {

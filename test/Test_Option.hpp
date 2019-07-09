@@ -98,10 +98,10 @@ BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameCherryPick)
     delete opt;
 }
 
-BOOST_AUTO_TEST_CASE(Test_Option_OptionEqualityBasedOnLONGNames) {
+BOOST_AUTO_TEST_CASE(Test_Option_OptionEquality) {
     int i;
-    auto* optc = new Option_<decltype(i)>("test", 'c', &i);
-    auto* optk = new Option_<decltype(i)>("test", 'k', &i);
+    auto* optc = new Option_<decltype(i)>("test", &i);
+    auto* optk = new Option_<decltype(i)>("test", &i);
     BOOST_CHECK_EQUAL(*optc, *optk);
     delete optc;
     delete optk;
