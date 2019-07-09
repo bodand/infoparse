@@ -7,7 +7,7 @@
 #pragma ide diagnostic ignored "cert-err58-cpp"
 
 #define CREATE_HANDLER \
-    (auto* handler = new OptionHandler_<decltype(data)>)
+    auto* handler = new OptionHandler_<decltype(data)>
 
 #include "../OptionHandler_.hpp"
 #include "../Option_.hpp"
