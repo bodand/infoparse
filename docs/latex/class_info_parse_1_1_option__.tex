@@ -1,0 +1,217 @@
+\hypertarget{class_info_parse_1_1_option__}{}\section{Info\+Parse\+::Option\+\_\+$<$ T $>$ Class Template Reference}
+\label{class_info_parse_1_1_option__}\index{InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}}
+
+
+Stores one parsable option with a S\+H\+O\+RT and L\+O\+NG name.
+
+
+
+
+{\ttfamily \#include $<$Option\+\_\+.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+    \item
+    \mbox{\hyperlink{class_info_parse_1_1_option___a2f82c5bf879e405f1601b05c1fbf3f42}{Option\+\_\+}} (std\+::string long\+Name, char short\+Name, T $\ast$exporter)
+    \begin{DoxyCompactList}
+        \small\item\em Constructs the \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} with explicitly given S\+H\+O\+RT name.
+    \end{DoxyCompactList}\item
+    \mbox{\hyperlink{class_info_parse_1_1_option___a0db458c278bfa358675d3afaf5f004bc}{Option\+\_\+}} (const std\+::string \&name, T $\ast$exporter)
+    \begin{DoxyCompactList}
+        \small\item\em Constructs the \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} with implicitly deducted S\+H\+O\+RT name.
+    \end{DoxyCompactList}\item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a9b0d0782e770128b581c562229aa8124}\label{class_info_parse_1_1_option___a9b0d0782e770128b581c562229aa8124}}
+    {\bfseries Option\+\_\+} (\mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&other)=default
+    \item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a0ab9aad9077d0922a04c7fce75cda4e0}\label{class_info_parse_1_1_option___a0ab9aad9077d0922a04c7fce75cda4e0}}
+    {\bfseries Option\+\_\+} (\mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&\&other) noexcept=default
+    \item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a1b2c4badf391b91793c2f8d8fe3c576c}\label{class_info_parse_1_1_option___a1b2c4badf391b91793c2f8d8fe3c576c}}
+    \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \& {\bfseries operator=} (const \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&other)=default
+    \item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a0dc5118939f5746bfcd2146bc522dda4}\label{class_info_parse_1_1_option___a0dc5118939f5746bfcd2146bc522dda4}}
+    \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \& {\bfseries operator=} (\mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&\&other) noexcept=default
+    \item
+    std\+::string \mbox{\hyperlink{class_info_parse_1_1_option___a3fc88712223eb85ad1bb16c89eb0f49a}{match}} (const std\+::string \&args) const
+    \begin{DoxyCompactList}
+        \small\item\em Tries to match either of the names of the \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} to the supplied string.
+    \end{DoxyCompactList}\item
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___a49e2c6e87075ba1c1c75518317400e76}{operator==}} (const \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} \&rhs) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks equality depending on equal L\+O\+NG and S\+H\+O\+RT names.
+    \end{DoxyCompactList}\item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___aede68596b414cca93e8eed031285d517}\label{class_info_parse_1_1_option___aede68596b414cca93e8eed031285d517}}
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___aede68596b414cca93e8eed031285d517}{operator==}} (const std\+::string \&name) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks equality with checking whether the given string equals to L\+O\+NG name.
+    \end{DoxyCompactList}\item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a6a69c8e4d4bda3e88b2f5abbaa6dc80c}\label{class_info_parse_1_1_option___a6a69c8e4d4bda3e88b2f5abbaa6dc80c}}
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___a6a69c8e4d4bda3e88b2f5abbaa6dc80c}{operator==}} (const char $\ast$cname) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks equality with checking whether the given c-\/string equals to L\+O\+NG name.
+    \end{DoxyCompactList}\item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___ad037f2c39e1713a0d761b23837fca79b}\label{class_info_parse_1_1_option___ad037f2c39e1713a0d761b23837fca79b}}
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___ad037f2c39e1713a0d761b23837fca79b}{operator==}} (char c) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks equality with checking whether the given char equals to S\+H\+O\+RT name.
+    \end{DoxyCompactList}\item
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___a4b8f64ccc99c927b0c28cd5e58bfc54b}{operator!=}} (const \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} \&rhs) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks inequality by negating the equality check.
+    \end{DoxyCompactList}\item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a66fb46853cb1ee5a66da81391eec1019}\label{class_info_parse_1_1_option___a66fb46853cb1ee5a66da81391eec1019}}
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___a66fb46853cb1ee5a66da81391eec1019}{operator!=}} (const std\+::string \&name) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks inequality with checking whether the given string does not equal to L\+O\+NG name.
+    \end{DoxyCompactList}\item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a7b046bac42198649efd752d101ec3a51}\label{class_info_parse_1_1_option___a7b046bac42198649efd752d101ec3a51}}
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___a7b046bac42198649efd752d101ec3a51}{operator!=}} (const char $\ast$cname) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks inequality with checking whether the given c-\/string does not equal to L\+O\+NG name.
+    \end{DoxyCompactList}\item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___ac45e423563ae11a609bbb1d0af804e40}\label{class_info_parse_1_1_option___ac45e423563ae11a609bbb1d0af804e40}}
+    bool \mbox{\hyperlink{class_info_parse_1_1_option___ac45e423563ae11a609bbb1d0af804e40}{operator!=}} (char c) const
+    \begin{DoxyCompactList}
+        \small\item\em Checks inequality with checking whether the given char does not equal to S\+H\+O\+RT name.
+    \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+    \item
+    \mbox{\Hypertarget{class_info_parse_1_1_option___a90698d256c45cf77c5bcf9120e4d8c5e}\label{class_info_parse_1_1_option___a90698d256c45cf77c5bcf9120e4d8c5e}}
+    {\footnotesize template$<$class U $>$ }\\std\+::ostream \& {\bfseries operator$<$$<$} (std\+::ostream \&os, const \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ U $>$ \&option)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T$>$\newline
+class Info\+Parse\+::\+Option\+\_\+$<$ T $>$}
+
+Stores one parsable option with a S\+H\+O\+RT and L\+O\+NG name.
+
+L\+O\+NG names are parsed like \char`\"{}-\/-\/\+L\+O\+N\+G\char`\"{}, while S\+H\+O\+RT names are parsed like \char`\"{}-\/\+S\+H\+O\+R\+T\char`\"{}, and S\+H\+O\+RT names are one character long.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T}
+    & The type of the parameter to stuff the found value into.\\
+    \hline
+\end{DoxyTemplParams}
+@specialized \mbox{\hyperlink{class_info_parse_1_1_option___3_01bool_01_4}{Option\+\_\+$<$bool$>$}}
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_info_parse_1_1_option___a2f82c5bf879e405f1601b05c1fbf3f42}\label{class_info_parse_1_1_option___a2f82c5bf879e405f1601b05c1fbf3f42}}
+\index{InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}!Option\_@{Option\_}}
+\index{Option\_@{Option\_}!InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{Option\_()}{Option\_()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+\mbox{\hyperlink{class_info_parse_1_1_option__}{Info\+Parse\+::\+Option\+\_\+}}$<$ T $>$\+::\mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} (\begin{DoxyParamCaption}
+                                                                                                                                                                \item[{std\+::string}]{long\+Name,  }\item[{char}]{short\+Name,  }\item[{T $\ast$}]{exporter }
+\end{DoxyParamCaption})}
+
+
+
+Constructs the \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} with explicitly given S\+H\+O\+RT name.
+
+
+\begin{DoxyParams}{Parameters}
+{\em long\+Name}
+    & The L\+O\+NG name for the option. \\
+    \hline
+    {\em short\+Name} & The S\+H\+O\+RT name for the option \\
+    \hline
+    {\em exporter} & The pointer to a constructed memory whereto dump the found value\\
+    \hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+{\ttfamily exporter}
+    is not checked for {\ttfamily nullptr}
+\end{DoxyNote}
+\mbox{\Hypertarget{class_info_parse_1_1_option___a0db458c278bfa358675d3afaf5f004bc}\label{class_info_parse_1_1_option___a0db458c278bfa358675d3afaf5f004bc}}
+\index{InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}!Option\_@{Option\_}}
+\index{Option\_@{Option\_}!InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{Option\_()}{Option\_()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+\mbox{\hyperlink{class_info_parse_1_1_option__}{Info\+Parse\+::\+Option\+\_\+}}$<$ T $>$\+::\mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} (\begin{DoxyParamCaption}
+                                                                                                                                                                \item[{const std\+::string \&}]{name,  }\item[{T $\ast$}]{exporter }
+\end{DoxyParamCaption})}
+
+
+
+Constructs the \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} with implicitly deducted S\+H\+O\+RT name.
+
+The S\+H\+O\+RT name is generated as the first character of the L\+O\+NG name.
+
+
+\begin{DoxyParams}{Parameters}
+{\em long\+Name}
+    & The L\+O\+NG name for the option. First character will used as the S\+H\+O\+RT name \\
+    \hline
+    {\em exporter} & The pointer to a constructed memory whereto dump the found value\\
+    \hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+{\ttfamily exporter}
+    is not checked for {\ttfamily nullptr}
+\end{DoxyNote}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_info_parse_1_1_option___a3fc88712223eb85ad1bb16c89eb0f49a}\label{class_info_parse_1_1_option___a3fc88712223eb85ad1bb16c89eb0f49a}}
+\index{InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}!match@{match}}
+\index{match@{match}!InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{match()}{match()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+std\+::string \mbox{\hyperlink{class_info_parse_1_1_option__}{Info\+Parse\+::\+Option\+\_\+}}$<$ T $>$\+::match (\begin{DoxyParamCaption}
+                                                                                                                     \item[{const std\+::string \&}]{args }
+\end{DoxyParamCaption}) const}
+
+
+
+Tries to match either of the names of the \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}} to the supplied string.
+
+
+\begin{DoxyParams}{Parameters}
+{\em args}
+    & The string to match the L\+O\+NG then if not found the S\+H\+O\+RT name to \\
+    \hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+    The string with the removed options\textquotesingle{} name and value For example\+: \char`\"{} text -\/b 4 more text\char`\"{} -\/$>$ \char`\"{} text more text \char`\"{}
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_info_parse_1_1_option___a4b8f64ccc99c927b0c28cd5e58bfc54b}\label{class_info_parse_1_1_option___a4b8f64ccc99c927b0c28cd5e58bfc54b}}
+\index{InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+bool \mbox{\hyperlink{class_info_parse_1_1_option__}{Info\+Parse\+::\+Option\+\_\+}}$<$ T $>$\+::operator!= (\begin{DoxyParamCaption}
+                                                                                                                 \item[{const \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&}]{rhs }
+\end{DoxyParamCaption}) const}
+
+
+
+Checks inequality by negating the equality check.
+
+let A = lhs.\+L\+O\+NG == rhs.\+L\+O\+NG let B = lhs.\+S\+H\+O\+RT == rhs.\+S\+H\+O\+RT
+
+lhs != rhs iff !(A ∨ B) \mbox{\Hypertarget{class_info_parse_1_1_option___a49e2c6e87075ba1c1c75518317400e76}\label{class_info_parse_1_1_option___a49e2c6e87075ba1c1c75518317400e76}}
+\index{InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}!operator==@{operator==}}
+\index{operator==@{operator==}!InfoParse::Option\_$<$ T $>$@{InfoParse::Option\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+bool \mbox{\hyperlink{class_info_parse_1_1_option__}{Info\+Parse\+::\+Option\+\_\+}}$<$ T $>$\+::operator== (\begin{DoxyParamCaption}
+                                                                                                                 \item[{const \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&}]{rhs }
+\end{DoxyParamCaption}) const}
+
+
+
+Checks equality depending on equal L\+O\+NG and S\+H\+O\+RT names.
+
+let A = lhs.\+L\+O\+NG == rhs.\+L\+O\+NG let B = lhs.\+S\+H\+O\+RT == rhs.\+S\+H\+O\+RT
+
+lhs == rhs iff A ∨ B
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+                                                                             \item
+                                                                             Option\+\_\+.\+hpp
+\end{DoxyCompactItemize}
