@@ -7,22 +7,22 @@
 #pragma ide diagnostic ignored "cert-err58-cpp"
 
 #define CREATE_HANDLER \
-    auto* handler = new _OptionHandler<decltype(data)>
+    (auto* handler = new OptionHandler_<decltype(data)>)
 
-#include "../_OptionHandler.hpp"
-#include "../_Option.hpp"
+#include "../OptionHandler_.hpp"
+#include "../Option_.hpp"
 
 using namespace InfoParse;
 
 BOOST_AUTO_TEST_CASE(Test_OptionHandler_OptionHandlerCanBeInstantiated) {
-    auto* handler = new _OptionHandler<int>;
+    auto* handler = new OptionHandler_<int>;
     BOOST_CHECK_NE(handler, nullptr);
     delete handler;
 }
 
 BOOST_AUTO_TEST_CASE(Test_OptionHandler_AdditionOfAlreadyExistingOptions) {
     int data;
-    _Option<int> opt("name", &data);
+    Option_<int> opt("name", &data);
     CREATE_HANDLER;
     handler->addOption(std::move(opt));
     auto& opts = handler->getOptions();
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(Test_OptionHandler_AdditionOfConstructedOptionWithExplicitS
 
 BOOST_AUTO_TEST_CASE(Test_OptionHandler_RemovalOfAddedOption) {
     int data;
-    _Option<int> opt("name", &data);
+    Option_<int> opt("name", &data);
     CREATE_HANDLER;
     handler->addOption(std::move(opt));
     auto& opts = handler->getOptions();

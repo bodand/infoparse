@@ -13,33 +13,33 @@
 
 namespace InfoParse {
     template<class T>
-    class _Option {
+    class Option_ {
         std::string longName;
         char shortName;
         T* exporter;
 
     public:
-        _Option(std::string longName, char shortName, T* exporter);
+        Option_(std::string longName, char shortName, T* exporter);
 
-        _Option(const std::string& name, T* exporter);
+        Option_(const std::string& name, T* exporter);
 
-        _Option<T>(_Option<T>& other) = default;
-        _Option<T>(_Option<T>&& other) noexcept = default;
-        _Option<T>& operator=(const _Option<T>& other) = default;
-        _Option<T>& operator=(_Option<T>&& other) noexcept = default;
+        Option_<T>(Option_<T>& other) = default;
+        Option_<T>(Option_<T>&& other) noexcept = default;
+        Option_<T>& operator=(const Option_<T>& other) = default;
+        Option_<T>& operator=(Option_<T>&& other) noexcept = default;
 
 
-        virtual ~_Option() = default;
+        virtual ~Option_() = default;
 
         std::string match(const std::string& args) const;
 
         template<class U>
-        friend std::ostream& operator<<(std::ostream& os, const _Option<U>& option);
+        friend std::ostream& operator<<(std::ostream& os, const Option_<U>& option);
 
-        bool operator==(const _Option& rhs) const;
+        bool operator==(const Option_& rhs) const;
         bool operator==(const std::string& name) const;
         bool operator==(const char* cname) const;
-        bool operator!=(const _Option& rhs) const;
+        bool operator!=(const Option_& rhs) const;
         bool operator!=(const std::string& name) const;
         bool operator!=(const char* cname) const;
 
@@ -55,38 +55,38 @@ namespace InfoParse {
     };
 
     template<>
-    class _Option<bool> {
+    class Option_<bool> {
         std::string longName;
         char shortName;
         bool* exporter;
 
     public:
-        _Option(std::string longName, char shortName, bool* exporter);
+        Option_(std::string longName, char shortName, bool* exporter);
 
-        _Option(const std::string& name, bool* exporter);
+        Option_(const std::string& name, bool* exporter);
 
-        _Option<bool>(_Option<bool>& other) = default;
-        _Option<bool>(_Option<bool>&& other) = default;
-        _Option<bool>& operator=(const _Option<bool>& other) = default;
-        _Option<bool>& operator=(_Option<bool>&& other) = default;
+        Option_<bool>(Option_<bool>& other) = default;
+        Option_<bool>(Option_<bool>&& other) = default;
+        Option_<bool>& operator=(const Option_<bool>& other) = default;
+        Option_<bool>& operator=(Option_<bool>&& other) = default;
 
-        virtual ~_Option() = default;
+        virtual ~Option_() = default;
 
         std::string match(const std::string& args) const;
 
         template<class U>
-        friend std::ostream& operator<<(std::ostream& os, const _Option<U>& option);
+        friend std::ostream& operator<<(std::ostream& os, const Option_<U>& option);
 
-        bool operator==(const _Option& rhs) const;
+        bool operator==(const Option_& rhs) const;
         bool operator==(const std::string& name) const;
         bool operator==(const char* cname) const;
-        bool operator!=(const _Option& rhs) const;
+        bool operator!=(const Option_& rhs) const;
         bool operator!=(const std::string& name) const;
         bool operator!=(const char* cname) const;
     };
 
     template<class T>
-    std::string _Option<T>::match(const std::string& args) const {
+    std::string Option_<T>::match(const std::string& args) const {
         std::string parsable(args);
         std::string shortNameString(std::string("") + shortName);
         std::size_t startMatch;
@@ -103,19 +103,19 @@ namespace InfoParse {
     }
 
     template<class T>
-    _Option<T>::_Option(std::string longName, char shortName, T* exporter):
+    Option_<T>::Option_(std::string longName, char shortName, T* exporter):
             longName(std::move(longName)),
             shortName(shortName),
             exporter(exporter) {}
 
     template<class T>
-    _Option<T>::_Option(const std::string& name, T* exporter):
+    Option_<T>::Option_(const std::string& name, T* exporter):
             longName(name),
             shortName(name[0]),
             exporter(exporter) {}
 
     template<class T>
-    void _Option<T>::handleParameterParsing(std::size_t startMatch, std::string& args,
+    void Option_<T>::handleParameterParsing(std::size_t startMatch, std::string& args,
                                             const std::string& name, const std::string& sequence) const {
         if constexpr (!std::is_same_v<std::remove_pointer_t<decltype(exporter)>, std::wstring> &&
                       !std::is_same_v<std::remove_pointer_t<decltype(exporter)>, wchar_t>) {
@@ -134,7 +134,7 @@ namespace InfoParse {
     }
 
     template<class T>
-    std::string _Option<T>::_getOptionValueAsString(std::size_t startMatch,
+    std::string Option_<T>::_getOptionValueAsString(std::size_t startMatch,
                                                     std::string& args,
                                                     const std::string& name,
                                                     const std::string& sequence) const {
@@ -147,7 +147,7 @@ namespace InfoParse {
     }
 
     template<class T>
-    std::wstring _Option<T>::_getOptionValueAsWString(std::size_t startMatch,
+    std::wstring Option_<T>::_getOptionValueAsWString(std::size_t startMatch,
                                                       std::string& args,
                                                       const std::string& name,
                                                       const std::string& sequence) const {
@@ -162,39 +162,39 @@ namespace InfoParse {
     }
 
     template<class U>
-    std::ostream& operator<<(std::ostream& os, const _Option<U>& option) {
-        os << "_Option<" << typeid(U).name() << ">[longName: " << option.longName
+    std::ostream& operator<<(std::ostream& os, const Option_<U>& option) {
+        os << "Option_<" << typeid(U).name() << ">[longName: " << option.longName
            << ", shortName: " << option.shortName << "]";
         return os;
     }
 
     template<class T>
-    bool _Option<T>::operator==(const _Option& rhs) const {
+    bool Option_<T>::operator==(const Option_& rhs) const {
         return longName == rhs.longName;
     }
 
     template<class T>
-    bool _Option<T>::operator!=(const _Option& rhs) const {
+    bool Option_<T>::operator!=(const Option_& rhs) const {
         return !(rhs == *this);
     }
 
     template<class T>
-    bool _Option<T>::operator==(const std::string& name) const {
+    bool Option_<T>::operator==(const std::string& name) const {
         return longName == name;
     }
 
     template<class T>
-    bool _Option<T>::operator!=(const std::string& name) const {
+    bool Option_<T>::operator!=(const std::string& name) const {
         return !(longName == name);
     }
 
     template<class T>
-    bool _Option<T>::operator==(const char* cname) const {
+    bool Option_<T>::operator==(const char* cname) const {
         return *this == std::string(cname);
     }
 
     template<class T>
-    bool _Option<T>::operator!=(const char* cname) const {
+    bool Option_<T>::operator!=(const char* cname) const {
         return *this != std::string(cname);
     }
 }

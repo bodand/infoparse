@@ -52,8 +52,8 @@ namespace InfoParse {
         template<class B, class I>
         constexpr bool extends() {
             return std::is_base_of<
-                    typename std::remove_reference<I>::type,
-                    typename std::remove_reference<B>::type
+                    typename std::remove_reference<B>::type,
+                    typename std::remove_reference<I>::type
             >::value;
         }
 

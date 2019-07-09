@@ -12,7 +12,7 @@
 #include <memory>
 
 #include "utils.hpp"
-#include "_OptionHandler.hpp"
+#include "OptionHandler_.hpp"
 
 namespace InfoParse {
     /**
@@ -93,12 +93,12 @@ namespace InfoParse {
     ENABLE_IF Internals::can_stream<T>()THEN
     (void) OptionsParser::addOption(const std::string& longName, char shortName, T* exporter) {
         if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
-            optionHandlers[typeid(T)].first = (void*) new _OptionHandler<T>();
+            optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
             optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
-                return ((_OptionHandler<T>*) optionVoid)->handle(args);
+              return ((OptionHandler_<T>*) optionVoid)->handle(args);
             };
         }
-        ((_OptionHandler<T>*) optionHandlers[typeid(T)].first)->addOption(longName,
+        ((OptionHandler_<T>*) optionHandlers[typeid(T)].first)->addOption(longName,
                                                                           shortName,
                                                                           exporter);
     }
@@ -107,12 +107,12 @@ namespace InfoParse {
     ENABLE_IF Internals::can_stream<T>()THEN
     (void) OptionsParser::addOption(const std::string& name, T* exporter) {
         if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
-            optionHandlers[typeid(T)].first = (void*) new _OptionHandler<T>();
+            optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
             optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
-                return ((_OptionHandler<T>*) optionVoid)->handle(args);
+              return ((OptionHandler_<T>*) optionVoid)->handle(args);
             };
         }
-        ((_OptionHandler<T>*) optionHandlers[typeid(T)].first)->addOption(name, exporter);
+        ((OptionHandler_<T>*) optionHandlers[typeid(T)].first)->addOption(name, exporter);
     }
 }
 

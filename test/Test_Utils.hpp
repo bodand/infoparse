@@ -102,12 +102,12 @@ class Sub : public Base {
 };
 
 BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_extends) {
-    bool ret = Internals::extends<Sub, Base>();
+    bool ret = Internals::extends<Base, Sub>();
     BOOST_CHECK(ret);
 }
 
 BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_extends_false) {
-    bool ret = Internals::extends<Base, Sub>();
+    bool ret = Internals::extends<Sub, Base>();
     BOOST_CHECK(!ret);
 }
 

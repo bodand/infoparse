@@ -13,11 +13,11 @@ configure_file(
 )
 
 set(InfoParse_SOURCES
-        utils.cpp _Option.cpp OptionsParser.cpp _OptionHandler.cpp)
+        utils.cpp Option_.cpp OptionsParser.cpp OptionHandler_.cpp)
 
 set(InfoParse_HEADERS
         versioning.hpp utils.hpp
-        _Option.hpp _OptionHandler.hpp OptionsParser.hpp)
+        Option_.hpp OptionHandler_.hpp OptionsParser.hpp)
 
 add_library(infoparse SHARED versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 add_library(ips STATIC versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
