@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2019, András Bodor
+ * Licensed under BSD 3-Clause
+ * For more information see the supplied
+ * LICENSE file
+ */
+
 //
 // Created by bodand on 2019-02-06.
 //
-//#pragma clang diagnostic push
-//#pragma ide diagnostic ignored "OCDFAInspection"
 #pragma once
 
 #include <typeinfo>

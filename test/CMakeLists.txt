@@ -1,8 +1,15 @@
+#
+# Copyright (c) 2019, András Bodor
+# Licensed under BSD 3-Clause
+# For more information see the supplied
+# LICENSE file
+#
+
 # Testing -> Boost.Test
-message(STATUS "Checking for Boost for testing")
+message(STATUS "[InfoParse] Checking for Boost for testing")
 find_package(Boost COMPONENTS unit_test_framework)
 if (Boost_FOUND)
-    message(STATUS "Found Boost, enabling testing")
+    message(STATUS "[InfoParse] Found Boost, enabling testing")
     enable_testing()
     add_definitions(-DBOOST_TEST_DYN_LINK)
 
@@ -33,5 +40,5 @@ if (Boost_FOUND)
     target_link_libraries(ip_test ips)
     set_target_properties(ip_test PROPERTIES LINKER_LANGUAGE CXX)
 else ()
-    message(STATUS "Could not find Boost, disabling testing")
+    message(STATUS "[InfoParse] Could not find Boost, disabling testing")
 endif ()

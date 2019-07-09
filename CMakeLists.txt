@@ -1,3 +1,9 @@
+#
+# Copyright (c) 2019, András Bodor
+# Licensed under the BSD 3-Clause license
+# For more information see the supplied
+# LICENSE file
+#
 cmake_minimum_required(VERSION 3.11)
 
 set(CMAKE_CXX_STANDARD 17)

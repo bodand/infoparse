@@ -1,7 +1,16 @@
+/*
+ * Copyright (c) 2019, András Bodor
+ * Licensed under BSD 3-Clause
+ * For more information see the supplied
+ * LICENSE file
+ */
+
 //
 // Created by tudom on 2019. 05. 01..
 //
+
 #pragma once
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "MemberFunctionCanBeStaticInspection"
 #pragma ide diagnostic ignored "cert-err58-cpp"
