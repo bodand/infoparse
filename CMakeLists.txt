@@ -19,7 +19,7 @@ set(InfoParse_HEADERS
         versioning.hpp utils.hpp
         Option_.hpp OptionHandler_.hpp OptionsParser.hpp)
 
-add_library(infoparse SHARED versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
+add_library(infoparse SHARED versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES} versioning.cpp)
 add_library(ips STATIC versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(ips PROPERTIES LINKER_LANGUAGE CXX)

@@ -2,21 +2,12 @@
 
 #define InfoParse_MAJOR @InfoParse_VERSION_MAJOR@
 #define InfoParse_MINOR @InfoParse_VERSION_MINOR@
-#if defined(_WIN64) || defined(_WIN32)
-  #define InfoParse_VERSION L"@InfoParse_VERSION@"
-#else
-  #define InfoParse_VERSION "@InfoParse_VERSION@"
-#endif
+#define InfoParse_VERSION "@InfoParse_VERSION@"
 
 #include <string>
 
 namespace InfoParse {
-#if defined(_WIN64) || defined(_WIN32)
-
-    static inline const std::wstring getVersion() {
-#else
-        static inline const std::string getVersion() {
-#endif
-        return InfoParse_VERSION;
-    }
+  static inline const std::string getVersion() {
+      return InfoParse_VERSION;
+  }
 }

@@ -2,7 +2,6 @@
 // Created by bodand on 2019-02-05.
 //
 
-
 #include "Option_.hpp"
 
 InfoParse::Option_<bool>::Option_(std::string longName, char shortName, bool* exporter) :
