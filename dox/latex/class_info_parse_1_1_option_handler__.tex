@@ -1,0 +1,188 @@
+\hypertarget{class_info_parse_1_1_option_handler__}{}\section{Info\+Parse\+::Option\+Handler\+\_\+$<$ T $>$ Class Template Reference}
+\label{class_info_parse_1_1_option_handler__}\index{InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}}
+
+
+Groups multiple \+\_\+\+Option$<$\+T$>$-\/s together for some type T Can execute handling of argument string on all contained \+\_\+\+Option$<$\+T$>$-\/s.
+
+
+
+
+{\ttfamily \#include $<$Option\+Handler\+\_\+.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+    \item
+    void \mbox{\hyperlink{class_info_parse_1_1_option_handler___a665e15d0113596904ed969b1d1c9be4a}{add\+Option}} (\mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&\&option)
+    \begin{DoxyCompactList}
+        \small\item\em Adds an option to the internal collection of \+\_\+\+Option$<$\+T$>$ type options.
+    \end{DoxyCompactList}\item
+    void \mbox{\hyperlink{class_info_parse_1_1_option_handler___aa9ce101627efa197aeff99662c53ee41}{add\+Option}} (std\+::string long\+Name, char short\+Name, T $\ast$exporter)
+    \begin{DoxyCompactList}
+        \small\item\em Constructs an \+\_\+\+Option$<$\+T$>$ with the supplied parameters within the inner collection thus skipping a move operation.
+    \end{DoxyCompactList}\item
+    void \mbox{\hyperlink{class_info_parse_1_1_option_handler___a3037ab35506464ce2a94ecfc6accf003}{add\+Option}} (std\+::string name, T $\ast$exporter)
+    \begin{DoxyCompactList}
+        \small\item\em Constructs an \+\_\+\+Option$<$\+T$>$ with the supplied parameters within the inner collection thus skipping a move operation.
+    \end{DoxyCompactList}\item
+    std\+::string \mbox{\hyperlink{class_info_parse_1_1_option_handler___a79febb4c9edeb20e7ea0336265055c82}{handle}} (const std\+::string \&args) const
+    \begin{DoxyCompactList}
+        \small\item\em Triggers the execution of argument processing on all stored \+\_\+\+Option$<$\+T$>$-\/s, each following the other in insertion order.
+    \end{DoxyCompactList}\item
+    const std\+::vector$<$ \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ $>$ \& \mbox{\hyperlink{class_info_parse_1_1_option_handler___aaa1be80887897051eb5dbad952e97d3a}{get\+Options}} () const
+    \begin{DoxyCompactList}
+        \small\item\em Getter for the options.
+    \end{DoxyCompactList}\item
+    void \mbox{\hyperlink{class_info_parse_1_1_option_handler___afa03bac484a7cecbd5e868e88e6c56b4}{rm\+Option}} (const std\+::string \&name)
+    \begin{DoxyCompactList}
+        \small\item\em Removes the option with \char`\"{}name\char`\"{}.
+    \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T$>$\newline
+class Info\+Parse\+::\+Option\+Handler\+\_\+$<$ T $>$}
+
+Groups multiple \+\_\+\+Option$<$\+T$>$-\/s together for some type T Can execute handling of argument string on all contained \+\_\+\+Option$<$\+T$>$-\/s.
+
+Used internally, not really useful outside of the internals of the project
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T}
+    & The type for \+\_\+\+Option$<$\+T$>$-\/s can be accepted into the group\\
+    \hline
+\end{DoxyTemplParams}
+\begin{DoxySeeAlso}{See also}
+    Info\+Parse\+::\+\_\+\+Option$<$\+T$>$
+\end{DoxySeeAlso}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_info_parse_1_1_option_handler___a665e15d0113596904ed969b1d1c9be4a}\label{class_info_parse_1_1_option_handler___a665e15d0113596904ed969b1d1c9be4a}}
+\index{InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}!addOption@{addOption}}
+\index{addOption@{addOption}!InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{addOption()}{addOption()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{class_info_parse_1_1_option_handler__}{Info\+Parse\+::\+Option\+Handler\+\_\+}}$<$ T $>$\+::add\+Option (\begin{DoxyParamCaption}
+                                                                                                                                   \item[{\mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ \&\&}]{option }
+\end{DoxyParamCaption})}
+
+
+
+Adds an option to the internal collection of \+\_\+\+Option$<$\+T$>$ type options.
+
+
+\begin{DoxyParams}{Parameters}
+{\em option}
+    & The \+\_\+\+Option$<$\+T$>$ to be added \\
+    \hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_info_parse_1_1_option_handler___aa9ce101627efa197aeff99662c53ee41}\label{class_info_parse_1_1_option_handler___aa9ce101627efa197aeff99662c53ee41}}
+\index{InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}!addOption@{addOption}}
+\index{addOption@{addOption}!InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{addOption()}{addOption()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{class_info_parse_1_1_option_handler__}{Info\+Parse\+::\+Option\+Handler\+\_\+}}$<$ T $>$\+::add\+Option (\begin{DoxyParamCaption}
+                                                                                                                                   \item[{std\+::string}]{long\+Name,  }\item[{char}]{short\+Name,  }\item[{T $\ast$}]{exporter }
+\end{DoxyParamCaption})}
+
+
+
+Constructs an \+\_\+\+Option$<$\+T$>$ with the supplied parameters within the inner collection thus skipping a move operation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em long\+Name}
+    & The L\+O\+NG name of the option (--longname) \\
+    \hline
+    {\em short\+Name} & The S\+H\+O\+RT name of the option (-\/s) \\
+    \hline
+    {\em exporter} & A pointer to a memory block of type T, into which the value will be put \\
+    \hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_info_parse_1_1_option_handler___a3037ab35506464ce2a94ecfc6accf003}\label{class_info_parse_1_1_option_handler___a3037ab35506464ce2a94ecfc6accf003}}
+\index{InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}!addOption@{addOption}}
+\index{addOption@{addOption}!InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{addOption()}{addOption()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{class_info_parse_1_1_option_handler__}{Info\+Parse\+::\+Option\+Handler\+\_\+}}$<$ T $>$\+::add\+Option (\begin{DoxyParamCaption}
+                                                                                                                                   \item[{std\+::string}]{name,  }\item[{T $\ast$}]{exporter }
+\end{DoxyParamCaption})}
+
+
+
+Constructs an \+\_\+\+Option$<$\+T$>$ with the supplied parameters within the inner collection thus skipping a move operation.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name}
+    & The L\+O\+NG name of the option. Short name is explicitly set to the first character of the name. \\
+    \hline
+    {\em exporter} & A pointer to a memory block of type T, into which the value will be pu\\
+    \hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+    The creation of the S\+H\+O\+RT name doesn\textquotesingle{}t check if there already exists an option with the same S\+H\+O\+RT name, thus it can be shadowed by earlier created options\textquotesingle{} S\+H\+O\+RT names
+\end{DoxyNote}
+\mbox{\Hypertarget{class_info_parse_1_1_option_handler___aaa1be80887897051eb5dbad952e97d3a}\label{class_info_parse_1_1_option_handler___aaa1be80887897051eb5dbad952e97d3a}}
+\index{InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}!getOptions@{getOptions}}
+\index{getOptions@{getOptions}!InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{getOptions()}{getOptions()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+const std\+::vector$<$ \mbox{\hyperlink{class_info_parse_1_1_option__}{Option\+\_\+}}$<$ T $>$ $>$ \& \mbox{\hyperlink{class_info_parse_1_1_option_handler__}{Info\+Parse\+::\+Option\+Handler\+\_\+}}$<$ T $>$\+::get\+Options (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Getter for the options.
+
+\begin{DoxyReturn}{Returns}
+    The internal collection of options
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_info_parse_1_1_option_handler___a79febb4c9edeb20e7ea0336265055c82}\label{class_info_parse_1_1_option_handler___a79febb4c9edeb20e7ea0336265055c82}}
+\index{InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}!handle@{handle}}
+\index{handle@{handle}!InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{handle()}{handle()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+std\+::string \mbox{\hyperlink{class_info_parse_1_1_option_handler__}{Info\+Parse\+::\+Option\+Handler\+\_\+}}$<$ T $>$\+::handle (\begin{DoxyParamCaption}
+                                                                                                                                       \item[{const std\+::string \&}]{args }
+\end{DoxyParamCaption}) const}
+
+
+
+Triggers the execution of argument processing on all stored \+\_\+\+Option$<$\+T$>$-\/s, each following the other in insertion order.
+
+
+\begin{DoxyParams}{Parameters}
+{\em args}
+    & The argument string to process \\
+    \hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+    The remains of the processed string
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_info_parse_1_1_option_handler___afa03bac484a7cecbd5e868e88e6c56b4}\label{class_info_parse_1_1_option_handler___afa03bac484a7cecbd5e868e88e6c56b4}}
+\index{InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}!rmOption@{rmOption}}
+\index{rmOption@{rmOption}!InfoParse::OptionHandler\_$<$ T $>$@{InfoParse::OptionHandler\_$<$ T $>$}}
+\subsubsection{\texorpdfstring{rmOption()}{rmOption()}}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void \mbox{\hyperlink{class_info_parse_1_1_option_handler__}{Info\+Parse\+::\+Option\+Handler\+\_\+}}$<$ T $>$\+::rm\+Option (\begin{DoxyParamCaption}
+                                                                                                                                  \item[{const std\+::string \&}]{name }
+\end{DoxyParamCaption})}
+
+
+
+Removes the option with \char`\"{}name\char`\"{}.
+
+No-\/op if it is not found internally
+\begin{DoxyParams}{Parameters}
+{\em name}
+    & \\
+    \hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+                                                                             \item
+                                                                             Option\+Handler\+\_\+.\+hpp
+\end{DoxyCompactItemize}
