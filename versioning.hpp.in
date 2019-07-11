@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2019, András Bodor
+ * Licensed under BSD 3-Clause
+ * For more information see the supplied
+ * LICENSE file
+ */
+
+#pragma once
+
+#define InfoParse_MAJOR @InfoParse_VERSION_MAJOR@
+#define InfoParse_MINOR @InfoParse_VERSION_MINOR@
+#define InfoParse_VERSION "@InfoParse_VERSION@"
+#define InfoParse_WIDE_VERSION L"@InfoParse_VERSION@"
+
+#include <string>
+
+namespace InfoParse {
+  static inline const std::string getVersion() {
+      return InfoParse_VERSION "built (__DATE__ at __TIME__)";
+  }
+
+  static inline const std::wstring getWideVersion() {
+      return InfoParse_WIDE_VERSION L"built (__DATE__ at __TIME__)";
+  }
+
+#if defined(_WIN32) || defined(_WIN64)
+
+  static inline const std::wstring getAutoVersion() {
+      return getWideVersion();
+#else
+      static inline const std::string getAutoVersion() {
+          return getVersion();
+#endif
+  }
+}

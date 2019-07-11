@@ -1,0 +1,4 @@
+site_name: InfoParse
+nav:
+  - Home: index.md
+  - Doxygen: doxygen/index.html
