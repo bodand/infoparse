@@ -9,7 +9,8 @@ perl:
 before_install:
   - sudo apt-get update
   - sudo apt-get install cmake make gcc libboost-all-dev doxygen
-  - sudo pip install conan mkdocs
+  - pip install --upgrade pip
+  - sudo pip install --user conan mkdocs
 
 install:
   - mkdir build && cd build
