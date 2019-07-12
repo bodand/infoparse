@@ -19,14 +19,15 @@ configure_file(
 )
 
 set(InfoParse_SOURCES
-        utils.cpp Option_.cpp OptionsParser.cpp OptionHandler_.cpp)
+        versioning.cpp utils.cpp
+        Option_.cpp OptionsParser.cpp OptionHandler_.cpp)
 
 set(InfoParse_HEADERS
         versioning.hpp utils.hpp
         Option_.hpp OptionHandler_.hpp OptionsParser.hpp)
 
-add_library(infoparse SHARED versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES} versioning.cpp)
-add_library(ips STATIC versioning.hpp ${InfoParse_HEADERS} ${InfoParse_SOURCES})
+add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
+add_library(ips STATIC ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(ips PROPERTIES LINKER_LANGUAGE CXX)
 
@@ -51,7 +52,7 @@ foreach (header ${InfoParse_HEADERS})
         set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header};${pub}")
     endif ()
     # Static library
-    get_target_property(pub infoparse PUBLIC_HEADER)
+    get_target_property(pub ips PUBLIC_HEADER)
     if ("${pub}" STREQUAL "pub-NOTFOUND")
         set_target_properties(ips PROPERTIES PUBLIC_HEADER "${header}")
     else ()
@@ -66,6 +67,6 @@ install(TARGETS infoparse EXPORT InfoParseConfig
         )
 install(TARGETS ips EXPORT InfoParseConfig
         RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-        ARCHIVE DESTINATION ${INSTALL_LIB_DIR}/static
+        ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
         )
 install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})

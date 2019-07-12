@@ -6,7 +6,7 @@ class InfoparseConan(ConanFile):
     version = "1.3"
     license = "BSD 3-Clause"
     author = "bodand bodand@pm.me"
-    url = "<Package recipe repository url here, for issues about the package>"
+    url = "https://github.com/isbodand/"
     description = "C++17 Parameter parser like Perl's Getopt::Long"
     topics = ("parser", "getopt-long", "c++17")
     settings = "os", "compiler", "build_type", "arch"
