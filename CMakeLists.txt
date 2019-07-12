@@ -11,7 +11,7 @@ project(InfoParse)
 
 set(InfoParse_VERSION_MAJOR 1)
 set(InfoParse_VERSION_MINOR 3)
-set(InfoParse_VERSION_PATCH 4)
+set(InfoParse_VERSION_PATCH 5)
 set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${InfoParse_VERSION_PATCH}")
 
 configure_file(

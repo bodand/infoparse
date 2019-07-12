@@ -3,7 +3,7 @@ from conans import ConanFile, CMake
 
 class InfoparseConan(ConanFile):
     name = "InfoParse"
-    version = "1.3.4"
+    version = "1.3.5"
     license = "BSD 3-Clause"
     author = "bodand bodand@pm.me"
     url = "https://github.com/isbodand/"
@@ -12,7 +12,7 @@ class InfoparseConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
-    exports_sources = "*.[ch]pp"
+    exports_sources = ["*.[ch]pp", "*.in"]
     generators = "cmake"
 
     def source(self):
