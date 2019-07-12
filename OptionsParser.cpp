@@ -27,10 +27,11 @@ std::string InfoParse::OptionsParser::parse(const std::string& args) {
 }
 
 std::string InfoParse::OptionsParser::explodeBundledFlags(const std::string& args) {
+    bool _ = true;
     std::string parsable(args);
     std::size_t bundleStart = 0;
     std::string bundleSequence(" -");
-    do {
+    for (; _;) {
         bundleStart = parsable.find(bundleSequence, bundleStart);
         if (bundleStart == -1) break;
         if (parsable[bundleStart + 2] == '-' && ++bundleStart) continue;
@@ -51,7 +52,7 @@ std::string InfoParse::OptionsParser::explodeBundledFlags(const std::string& arg
 
         parsable.insert(bundleStart, explodedBundle);
         bundleStart++;
-    } while (true);
+    }
     return parsable;
 }
 
