@@ -17,17 +17,6 @@
 
 namespace InfoParse {
 
-  std::string makeMonolithArgs(int argc, char** argv) {
-      std::ostringstream retStream;
-      retStream << " ";
-      for (int i = 0; i < argc; ++i) {
-          std::string s(argv[i]);
-          itrStr(s);
-          retStream << s << " ";
-      }
-      return retStream.str();
-  }
-
   void replaceAll(std::string& str, const std::string& from, const std::string& to) {
       if (from.empty())
           return;

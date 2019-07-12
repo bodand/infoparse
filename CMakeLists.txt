@@ -10,8 +10,9 @@ set(CMAKE_CXX_STANDARD 17)
 project(InfoParse)
 
 set(InfoParse_VERSION_MAJOR 1)
-set(InfoParse_VERSION_MINOR 2)
-set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}")
+set(InfoParse_VERSION_MINOR 3)
+set(InfoParse_VERSION_PATCH 4)
+set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${InfoParse_VERSION_PATCH}")
 
 configure_file(
         "${PROJECT_SOURCE_DIR}/versioning.hpp.in"
@@ -55,6 +56,6 @@ install(TARGETS infoparse EXPORT InfoParseConfig
         RUNTIME DESTINATION ${INSTALL_BIN_DIR}
         LIBRARY DESTINATION ${INSTALL_LIB_DIR}
         ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
+        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}/infoparse
         )
 install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})

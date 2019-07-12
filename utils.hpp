@@ -116,4 +116,15 @@ namespace InfoParse {
         >;
     }
   }
+
+  inline std::string makeMonolithArgs(int argc, char** argv) {
+      std::ostringstream retStream;
+      retStream << " ";
+      for (int i = 0; i < argc; ++i) {
+          std::string s(argv[i]);
+          itrStr(s);
+          retStream << s << " ";
+      }
+      return retStream.str();
+  }
 }

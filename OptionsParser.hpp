@@ -46,7 +46,7 @@ namespace InfoParse {
        */
       template<class T>
       std::enable_if_t<Internals::can_stream<T>()>
-      addOption(const std::string& longName, char shortName, T* exporter);
+      addOption[[gnu::used]](const std::string& longName, char shortName, T* exporter);
 
       /**
        * Adds an option with T type parameter to be
@@ -66,7 +66,7 @@ namespace InfoParse {
        */
       template<class T>
       std::enable_if_t<Internals::can_stream<T>()>
-      addOption(const std::string& name, T* exporter);
+      addOption[[gnu::used]](const std::string& name, T* exporter);
 
       /**
        * Parses the given arguments using parameters in
@@ -83,7 +83,7 @@ namespace InfoParse {
        * @note argv is not checked for `nullptr`
        * @note for any i < argc; argv[i] is not checked for `nullptr`
        */
-      std::string parse(int argc, char** argv);
+      std::string parse[[gnu::used]](int argc, char** argv);
 
       /**
        * Parses the given string as if it was directly input from
@@ -92,7 +92,7 @@ namespace InfoParse {
        * @param args The string to parse
        * @return The remnants of the parsed string, matched options removed.
        */
-      std::string parse(const std::string& args);
+      std::string parse[[gnu::used]](const std::string& args);
   private:
       std::string explodeBundledFlags(const std::string& args);
       std::string equalizeWhitespace(const std::string& args);

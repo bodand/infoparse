@@ -9,6 +9,7 @@
 
 #define InfoParse_MAJOR @InfoParse_VERSION_MAJOR@
 #define InfoParse_MINOR @InfoParse_VERSION_MINOR@
+#define InfoParse_PATCH @InfoParse_VERSION_PATCH@
 #define InfoParse_VERSION "@InfoParse_VERSION@"
 #define InfoParse_WIDE_VERSION L"@InfoParse_VERSION@"
 
@@ -16,11 +17,11 @@
 
 namespace InfoParse {
   static inline const std::string getVersion() {
-      return InfoParse_VERSION "built (__DATE__ at __TIME__)";
+      return InfoParse_VERSION " built (" __DATE__ " at " __TIME__ ")";
   }
 
   static inline const std::wstring getWideVersion() {
-      return InfoParse_WIDE_VERSION L"built (__DATE__ at __TIME__)";
+      return InfoParse_WIDE_VERSION L" built (" __DATE__ L" at " __TIME__ ")";
   }
 
 #if defined(_WIN32) || defined(_WIN64)
