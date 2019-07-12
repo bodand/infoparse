@@ -109,8 +109,8 @@ BOOST_AUTO_TEST_CASE(Test_Option_OptionEquality) {
 
 BOOST_AUTO_TEST_CASE(Test_Option_BoolSpecializationEquality) {
     bool i;
-    auto* optc = new Option_<decltype(i)>("test", 'c', &i);
-    auto* optk = new Option_<decltype(i)>("test", 'k', &i);
+    auto* optc = new Option_<decltype(i)>("test", &i);
+    auto* optk = new Option_<decltype(i)>("test", &i);
     BOOST_CHECK_EQUAL(*optc, *optk);
     delete optc;
     delete optk;

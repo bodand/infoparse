@@ -15,6 +15,8 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <iterator>
+#include <regex>
 
 #include "utils.hpp"
 #include "OptionHandler_.hpp"
@@ -129,6 +131,47 @@ namespace InfoParse {
       }
       return parsable;
   }
-}
 
-//#pragma clang diagnostic pop
+  inline std::string OptionsParser::parse(int argc, char** argv) {
+      return parse(InfoParse::makeMonolithArgs(argc, argv));
+  }
+
+  inline std::string OptionsParser::explodeBundledFlags(const std::string& args) {
+      bool _ = true;
+      std::string parsable(args);
+      std::size_t bundleStart = 0;
+      std::string bundleSequence(" -");
+
+      //&!off
+      for (;_;) {
+      //&!on
+          bundleStart = parsable.find(bundleSequence, bundleStart);
+          if (bundleStart == -1) break;
+          if (parsable[bundleStart + 2] == '-' && ++bundleStart) continue;
+
+          std::size_t bundleEnd = parsable.find(' ', bundleStart + 1);
+          std::size_t bundleSize = bundleEnd - bundleStart - 1;
+          if (bundleSize <= 1 && ++bundleStart) continue;
+
+          std::string bundle = parsable.substr(bundleStart, bundleSize + 1);
+          parsable.erase(bundleStart, bundleSize + 1);
+          std::stringstream explodedBundleStream;
+          for (const auto& ch : bundle) {
+              unless (ch == ' ' || ch == '-') {
+                  explodedBundleStream << " -" << ch << ' ';
+              }
+          }
+          std::string explodedBundle = explodedBundleStream.str();
+
+          parsable.insert(bundleStart, explodedBundle);
+          bundleStart++;
+      }
+
+      return parsable;
+  }
+
+  inline std::string OptionsParser::equalizeWhitespace(const std::string& args) {
+      return std::regex_replace(args, std::regex("\\s+"), " ");
+  }
+
+}

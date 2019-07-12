@@ -277,7 +277,7 @@ namespace InfoParse {
   };
 
   template<class T>
-  std::string Option_<T>::match(const std::string& args) const {
+  inline std::string Option_<T>::match(const std::string& args) const {
       std::string parsable(args);
       std::string shortNameString(std::string("") + shortName);
       std::size_t startMatch;
@@ -294,20 +294,20 @@ namespace InfoParse {
   }
 
   template<class T>
-  Option_<T>::Option_(std::string longName, char shortName, T* exporter):
+  inline Option_<T>::Option_(std::string longName, char shortName, T* exporter):
           longName(std::move(longName)),
           shortName(shortName),
           exporter(exporter) {}
 
   template<class T>
-  Option_<T>::Option_(const std::string& name, T* exporter):
+  inline Option_<T>::Option_(const std::string& name, T* exporter):
           longName(name),
           shortName(name[0]),
           exporter(exporter) {}
 
   template<class T>
-  void Option_<T>::handleParameterParsing(std::size_t startMatch, std::string& args,
-                                          const std::string& name, const std::string& sequence) const {
+  inline void Option_<T>::handleParameterParsing(std::size_t startMatch, std::string& args,
+                                                 const std::string& name, const std::string& sequence) const {
       if constexpr (!std::is_same_v<std::remove_pointer_t<decltype(exporter)>, std::wstring> &&
                     !std::is_same_v<std::remove_pointer_t<decltype(exporter)>, wchar_t>) {
           std::stringstream exportStream(_getOptionValueAsString(startMatch, args,
@@ -325,10 +325,10 @@ namespace InfoParse {
   }
 
   template<class T>
-  std::string Option_<T>::_getOptionValueAsString(std::size_t startMatch,
-                                                  std::string& args,
-                                                  const std::string& name,
-                                                  const std::string& sequence) const {
+  inline std::string Option_<T>::_getOptionValueAsString(std::size_t startMatch,
+                                                         std::string& args,
+                                                         const std::string& name,
+                                                         const std::string& sequence) const {
       std::size_t matchEnd = args.find(' ', startMatch + sequence.length() + 1);
       std::size_t matchLength = matchEnd - startMatch;
       std::string match = args.substr(startMatch, matchLength);
@@ -338,10 +338,10 @@ namespace InfoParse {
   }
 
   template<class T>
-  std::wstring Option_<T>::_getOptionValueAsWString(std::size_t startMatch,
-                                                    std::string& args,
-                                                    const std::string& name,
-                                                    const std::string& sequence) const {
+  inline std::wstring Option_<T>::_getOptionValueAsWString(std::size_t startMatch,
+                                                           std::string& args,
+                                                           const std::string& name,
+                                                           const std::string& sequence) const {
       std::size_t matchEnd = args.find(' ', startMatch + sequence.length() + 1);
       std::size_t matchLength = matchEnd - startMatch;
       std::string match = args.substr(startMatch, matchLength);
@@ -353,50 +353,111 @@ namespace InfoParse {
   }
 
   template<class U>
-  std::ostream& operator<<(std::ostream& os, const Option_<U>& option) {
+  inline std::ostream& operator<<(std::ostream& os, const Option_<U>& option) {
       os << "Option_<" << typeid(U).name() << ">[longName: " << option.longName
          << ", shortName: " << option.shortName << "]";
       return os;
   }
 
   template<class T>
-  bool Option_<T>::operator==(const Option_& rhs) const {
+  inline bool Option_<T>::operator==(const Option_& rhs) const {
       return longName == rhs.longName
              && shortName == rhs.shortName;
   }
 
   template<class T>
-  bool Option_<T>::operator!=(const Option_& rhs) const {
+  inline bool Option_<T>::operator!=(const Option_& rhs) const {
       return !(rhs == *this);
   }
 
   template<class T>
-  bool Option_<T>::operator==(const std::string& name) const {
+  inline bool Option_<T>::operator==(const std::string& name) const {
       return longName == name;
   }
 
   template<class T>
-  bool Option_<T>::operator!=(const std::string& name) const {
+  inline bool Option_<T>::operator!=(const std::string& name) const {
       return !(longName == name);
   }
 
   template<class T>
-  bool Option_<T>::operator==(const char* cname) const {
+  inline bool Option_<T>::operator==(const char* cname) const {
       return *this == std::string(cname);
   }
 
   template<class T>
-  bool Option_<T>::operator!=(const char* cname) const {
+  inline bool Option_<T>::operator!=(const char* cname) const {
       return *this != std::string(cname);
   }
 
   template<class T>
-  bool Option_<T>::operator==(char c) const {
+  inline bool Option_<T>::operator==(char c) const {
       return shortName == c;
   }
 
   template<class T>
-  bool Option_<T>::operator!=(char c) const {
+  inline bool Option_<T>::operator!=(char c) const {
+      return !(*this == c);
+  }
+
+  inline Option_<bool>::Option_(std::string longName, char shortName, bool* exporter)
+          : longName(std::move(longName)),
+            shortName(shortName),
+            exporter(exporter) {}
+
+  inline Option_<bool>::Option_(const std::string& name, bool* exporter)
+          : longName(name),
+            shortName(name[0]),
+            exporter(exporter) {}
+
+  inline std::string InfoParse::Option_<bool>::match(const std::string& args) const {
+      std::string parsable(args);
+      std::string shortNameString(1, shortName);
+      std::size_t startMatch;
+      const auto longSequence = std::string(" --") + longName + " ";
+      const auto shortSequence = std::string(" -") + shortName + " ";
+
+      unless ((startMatch = parsable.find(longSequence)) == -1) {
+          parsable.erase(startMatch, longSequence.length() - 1);
+          *exporter = true;
+      } else unless ((startMatch = parsable.find(shortSequence)) == -1) {
+          parsable.erase(startMatch, shortSequence.length() - 1);
+          *exporter = true;
+      }
+
+      return parsable;
+  }
+
+  inline bool Option_<bool>::operator==(const Option_& rhs) const {
+      return longName == rhs.longName
+             && shortName == rhs.shortName;
+  }
+
+  inline bool Option_<bool>::operator!=(const Option_& rhs) const {
+      return !(rhs == *this);
+  }
+
+  inline bool Option_<bool>::operator==(const std::string& name) const {
+      return longName == name;
+  }
+
+  inline bool Option_<bool>::operator!=(const std::string& name) const {
+      return !(longName == name);
+  }
+
+  inline bool Option_<bool>::operator==(const char* cname) const {
+      return *this == std::string(cname);
+  }
+
+  inline bool Option_<bool>::operator!=(const char* cname) const {
+      return *this != std::string(cname);
+  }
+
+  inline bool Option_<bool>::operator==(const char c) const {
+      return shortName == c;
+  }
+
+  inline bool Option_<bool>::operator!=(const char c) const {
       return !(*this == c);
   }
 }
