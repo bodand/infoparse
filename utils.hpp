@@ -33,9 +33,8 @@ namespace InfoParse {
 
   std::string makeMonolithArgs(int argc, char** argv);
 
-  template<class CharT>
-  void
-  replaceAll(std::basic_string<CharT>& str, const std::basic_string<CharT>& from, const std::basic_string<CharT>& to);
+  void replaceAll(std::string& str, const std::string& from, const std::string& to);
+  void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to);
 
   std::vector<std::string> splitByWhitespace(const std::string& str);
 
@@ -129,10 +128,17 @@ namespace InfoParse {
       return retStream.str();
   }
 
-  template<class CharT>
-  inline void replaceAll(std::basic_string<CharT>& str,
-                         const std::basic_string<CharT>& from,
-                         const std::basic_string<CharT>& to) {
+  inline void replaceAll(std::string& str, const std::string& from, const std::string& to) {
+      if (from.empty())
+          return;
+      size_t start_pos = 0;
+      while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
+          str.replace(start_pos, from.length(), to);
+          start_pos += to.length();
+      }
+  }
+
+  inline void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to) {
       if (from.empty())
           return;
       size_t start_pos = 0;
