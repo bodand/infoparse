@@ -7,8 +7,8 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install cmake make gcc libboost-all-dev doxygen
   - sudo apt-get install python3 perl
-  - sudo pip3 install --upgrade pip
-  - sudo pip3 install --user conan mkdocs
+  - sudo python3 -m pip install --upgrade pip
+  - sudo python3 -m pip install --user conan mkdocs
 
 install:
   - mkdir build && cd build
