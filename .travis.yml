@@ -9,10 +9,11 @@ before_install:
   - sudo apt-get install perl
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install --user conan mkdocs
+  - export PATH="$PATH:/home/travis/.local/bin"
 
 install:
   - mkdir build && cd build
-  - python -m conan install .. --build missing
+  - conan install .. --build missing
 
 script:
   - cmake .. -G "UNIX Makefiles"
@@ -22,7 +23,7 @@ script:
 after_success:
   - doxygen .doxygen
   - perl ./mkdox.pl
-  - python -m mkdocs build
+  - mkdocs build
 
 deploy:
   provider: pages
