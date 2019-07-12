@@ -27,9 +27,7 @@ set(InfoParse_HEADERS
         Option_.hpp OptionHandler_.hpp OptionsParser.hpp)
 
 add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
-add_library(ips STATIC ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(ips PROPERTIES LINKER_LANGUAGE CXX)
 
 add_subdirectory(test)
 
@@ -51,22 +49,11 @@ foreach (header ${InfoParse_HEADERS})
     else ()
         set_target_properties(infoparse PROPERTIES PUBLIC_HEADER "${header};${pub}")
     endif ()
-    # Static library
-    get_target_property(pub ips PUBLIC_HEADER)
-    if ("${pub}" STREQUAL "pub-NOTFOUND")
-        set_target_properties(ips PROPERTIES PUBLIC_HEADER "${header}")
-    else ()
-        set_target_properties(ips PROPERTIES PUBLIC_HEADER "${header};${pub}")
-    endif ()
 endforeach ()
 
 install(TARGETS infoparse EXPORT InfoParseConfig
         RUNTIME DESTINATION ${INSTALL_BIN_DIR}
         LIBRARY DESTINATION ${INSTALL_LIB_DIR}
         PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
-        )
-install(TARGETS ips EXPORT InfoParseConfig
-        RUNTIME DESTINATION ${INSTALL_BIN_DIR}
-        ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
         )
 install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})

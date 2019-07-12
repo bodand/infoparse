@@ -36,7 +36,7 @@ if (Boost_FOUND)
     endforeach ()
 
     add_executable(ip_test ${Test_HEADERS} testmain.cpp ${InfoParse_FILES})
-    target_link_libraries(ip_test ips)
+    target_link_libraries(ip_test infoparse)
     set_target_properties(ip_test PROPERTIES LINKER_LANGUAGE CXX)
 else ()
     message(STATUS "[InfoParse] Could not find Boost, disabling testing")
