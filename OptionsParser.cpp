@@ -17,14 +17,14 @@
 std::string InfoParse::OptionsParser::parse(int argc, char** argv) {
     return parse(InfoParse::makeMonolithArgs(argc, argv));
 }
-
-std::string InfoParse::OptionsParser::parse(const std::string& args) {
-    std::string parsable(equalizeWhitespace(explodeBundledFlags(args)));
-    for (const auto& handler : optionHandlers) {
-        parsable = handler.second.second(handler.second.first, parsable);
-    }
-    return parsable;
-}
+//
+//std::string InfoParse::OptionsParser::parse(const std::string& args) {
+//    std::string parsable(equalizeWhitespace(explodeBundledFlags(args)));
+//    for (const auto& handler : optionHandlers) {
+//        parsable = handler.second.second(handler.second.first, parsable);
+//    }
+//    return parsable;
+//}
 
 std::string InfoParse::OptionsParser::explodeBundledFlags(const std::string& args) {
     bool _ = true;

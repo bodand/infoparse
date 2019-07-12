@@ -12,7 +12,6 @@ class InfoparseConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
-    exports = "*"
     generators = "cmake"
 
     def source(self):

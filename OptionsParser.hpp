@@ -97,7 +97,7 @@ namespace InfoParse {
   };
 
   template<class T>
-  std::enable_if_t<Internals::can_stream<T>()>
+  inline std::enable_if_t<Internals::can_stream<T>()>
   OptionsParser::addOption(const std::string& longName, char shortName, T* exporter) {
       if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
           optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
@@ -111,7 +111,7 @@ namespace InfoParse {
   }
 
   template<class T>
-  std::enable_if_t<Internals::can_stream<T>()>
+  inline std::enable_if_t<Internals::can_stream<T>()>
   OptionsParser::addOption(const std::string& name, T* exporter) {
       if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
           optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
@@ -120,6 +120,14 @@ namespace InfoParse {
           };
       }
       ((OptionHandler_<T>*) optionHandlers[typeid(T)].first)->addOption(name, exporter);
+  }
+
+  inline std::string OptionsParser::parse(const std::string& args) {
+      std::string parsable(equalizeWhitespace(explodeBundledFlags(args)));
+      for (const auto& handler : optionHandlers) {
+          parsable = handler.second.second(handler.second.first, parsable);
+      }
+      return parsable;
   }
 }
 
