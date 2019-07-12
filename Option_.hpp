@@ -65,9 +65,9 @@ namespace InfoParse {
       Option_(const std::string& name, T* exporter);
 
       Option_<T>(Option_<T>& other) = default;
-      Option_<T>(Option_<T>&& other) noexcept = default;
+      Option_<T>(Option_<T>&& other) = default;
       Option_<T>& operator=(const Option_<T>& other) = default;
-      Option_<T>& operator=(Option_<T>&& other) noexcept = default;
+      Option_<T>& operator=(Option_<T>&& other) = default;
 
       virtual ~Option_() = default;
 
@@ -206,9 +206,9 @@ namespace InfoParse {
       Option_(const std::string& name, bool* exporter);
 
       Option_<bool>(Option_<bool>& other) = default;
-      Option_<bool>(Option_<bool>&& other) noexcept = default;
+      Option_<bool>(Option_<bool>&& other) = default;
       Option_<bool>& operator=(const Option_<bool>& other) = default;
-      Option_<bool>& operator=(Option_<bool>&& other) noexcept = default;
+      Option_<bool>& operator=(Option_<bool>&& other) = default;
 
       virtual ~Option_() = default;
 
