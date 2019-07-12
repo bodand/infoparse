@@ -11,7 +11,7 @@ class InfoparseConan(ConanFile):
     topics = ("parser", "getopt-long", "c++17")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
-    default_options = "shared=False"
+    default_options = "shared=True"
     generators = "cmake"
 
     def source(self):
