@@ -64,13 +64,6 @@ namespace InfoParse {
        */
       Option_(const std::string& name, T* exporter);
 
-      Option_<T>(Option_<T>& other) = default;
-      Option_<T>(Option_<T>&& other) = default;
-      Option_<T>& operator=(const Option_<T>& other) = default;
-      Option_<T>& operator=(Option_<T>&& other) = default;
-
-      virtual ~Option_() = default;
-
       /**
        * Tries to match either of the names of the Option_
        * to the supplied string.
@@ -204,13 +197,6 @@ namespace InfoParse {
        * @note `exporter` is not checked for `nullptr`
        */
       Option_(const std::string& name, bool* exporter);
-
-      Option_<bool>(Option_<bool>& other) = default;
-      Option_<bool>(Option_<bool>&& other) = default;
-      Option_<bool>& operator=(const Option_<bool>& other) = default;
-      Option_<bool>& operator=(Option_<bool>&& other) = default;
-
-      virtual ~Option_() = default;
 
       /**
         * Tries to match either of the names of the Option_
