@@ -10,8 +10,9 @@ class InfoparseConan(ConanFile):
     description = "C++17 Parameter parser like Perl's Getopt::Long"
     topics = ("parser", "getopt-long", "c++17")
     settings = "os", "compiler", "build_type", "arch"
-    options = {}
-    default_options = ""
+    options = {"shared": [True, False]}
+    default_options = "shared=True"
+    exports = "*"
     generators = "cmake"
 
     def source(self):
