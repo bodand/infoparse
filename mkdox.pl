@@ -3,7 +3,8 @@ use v5.10;
 use strict;
 use warnings;
 
-use File::Copy qw/copy/;
+use File::Copy qw/cp/;
+use File::Path qw/make_path/;
 
 
 sub do_all(&_) {
@@ -19,8 +20,7 @@ sub do_all(&_) {
         }
         else {
             eval {
-                local $_ = "$dirname/$_";
-                $sub->($_);
+                $sub->($_, $dirname);
             }
         }
     }
@@ -29,6 +29,9 @@ sub do_all(&_) {
 
 $_ = "./dox/html";
 do_all {
-    say "Copying $_ -> " . (my $dest = s{^./dox/html/(.*)$}{./docs/doxygen/$1}gr);
-    say copy($_, $dest) ? "Success" : "Failure";
+    my ($file, $dir) = @_;
+    my $newdir = "./dox_site/doxygen" . substr $dir, length "./dox/html";
+    say "Copying $dir/$file -> $newdir/$file";
+    make_path($newdir);
+    cp("$dir/$file", "$newdir/$file")
 }

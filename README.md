@@ -1,13 +1,34 @@
 # InfoParse
 C++ 17 parameter parser like Perl's Getopt::Long.
 
+## Installation
+
+### Conan
+
+InfoParse is available as a conan dependency `InfoParse/1.3.5@bodand/stable` 
+at `https://conan.isdevnet.com`.
+
+Add the server by: 
+```shell 
+$ conan remote add InfoSoft-Conan-Server https://conan.isdevnet.com    
+```
+Then using `conanfile.txt`
+```text
+[requirements]
+InfoParse/1.3.5@bodand/stable
+```
+
+### Build it
+
+You can build InfoParse from source as described in the docs.
+
 ## Usage
 
 ### Include
 First include the necessary header, wherever it may be hiding
 on your hard-drive.
-```objectivec
-#include <OptionsParser.hpp>
+```objectivec2
+#include "infoparse/OptionsParser.hpp"
 ```
 With including that one header you have all you *need* to work with
 InfoParse, more headers as described in the documentation are available,
@@ -26,8 +47,8 @@ constructor.
 
 ### Optionize
 Having created the parser object you need to add the options you wish it to parse.
-The results are spit back into already allocated and constructed resources using 
-a reference stored when adding the option.
+The results are spit back into already user-owned resources using 
+a pointer stored when adding the option.
 Option addition is achievable using the following method calls:
 ```objectivec
 
@@ -36,17 +57,17 @@ Option addition is achievable using the following method calls:
 // local shell's partitioning will be stored in resultString. If
 // option is not present, the empty string.
 std::string resultString;
-parser.addOption("string-long-opt", resultString); 
+parser.addOption("string-long-opt", &resultString); 
 
 // Creates a "--long-bool-opt" option with "-b" short variant
 // resultBool contains true if option present false otherwise.
 bool resultBool;
-parser.addOption("long-bool-opt", 'b', resultBool);
+parser.addOption("long-bool-opt", 'b', &resultBool);
 
 // addOption accepts all types that overload operator>> for std::istream
 // Otherwise a nice SFINAE error will greet you
 MyType resultMyType;
-parser.addOption("funky-option", 'f', resultMyType);
+parser.addOption("funky-option", 'f', &resultMyType);
 ```
 
 ### Parse
@@ -71,7 +92,8 @@ removing the parsed text from the passed string (or c-array of c-strings).
 
 ## Documentation
 
-WIP
+Full documentation is available [here](https://isbodand.github.io/infoparse), 
+at this repo's GitHub page.
 
 ## License
 
