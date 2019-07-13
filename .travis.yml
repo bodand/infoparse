@@ -27,12 +27,12 @@ before_install:
   - sudo python -m pip install conan mkdocs --ignore-installed
   - echo [Boosting Time]
 #  - sudo apt-get -qq install python-dev autotools-dev libicu-dev build-essential libbz2-dev libboost-all-dev
-  - exprort BOOST_ROOT="$(pwd)/boost"
+  - exprort BOOST_ROOT="$(pwd)/boost_1_68_0"
   - exprort BOOST_INCLUDEDIR="$BOOST_ROOT/boost"
-  - mkdir -p boost
-  - curl -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2 | tar xjC boost --strip-components=1
+#  - mkdir -p boost
+  - curl -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2 | tar xj --strip-components=1
   - sudo mkdir -p /usr/local/inlude/
-  - sudo ln -s ./boost/boost/ /usr/local/include/boost
+  - sudo ln -s ".$BOOST_ROOT/boost/" /usr/local/include/boost
   - eval "${MATRIX_EVAL}"
   - export PATH="$PATH:/home/travis/.local/bin:/usr/local/include/"
 
