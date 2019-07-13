@@ -7,6 +7,8 @@
 
 # Testing -> Boost.Test
 message(STATUS "[InfoParse] Checking for Boost for testing")
+SET(CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} "/usr/local/include/")
+SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "/usr/local/lib/")
 set(Boost_DEBUG 1)
 find_package(Boost COMPONENTS unit_test_framework)
 if (Boost_FOUND)
