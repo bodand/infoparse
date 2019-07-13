@@ -36,10 +36,9 @@ install:
   - conan install .. --build missing
 
 script:
-  - cmake ..
+  - cmake .. -DBOOST_ROOT=../../boost/
   - make
-  - cd test
-  - ctest -V
+  - cd test && ctest -V
 
 after_success:
   - doxygen .doxygen
@@ -51,7 +50,7 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   keep_history: true
-  file: "docs"
+  local_dir:  "docs"
   on:
     branch: master
 

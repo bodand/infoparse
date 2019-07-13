@@ -30,6 +30,7 @@ set(InfoParse_HEADERS
 add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
 
+set(Boost_DEBUG 1)
 add_subdirectory(test)
 
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
