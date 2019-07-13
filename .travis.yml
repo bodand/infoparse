@@ -16,8 +16,9 @@ install:
   - conan install .. --build missing
 
 script:
-  - cmake .. -G "UNIX Makefiles"
-  - cmake --build .
+  - cmake ..
+  - make
+  - cd test
   - ctest
 
 after_success:
