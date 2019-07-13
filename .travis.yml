@@ -19,7 +19,7 @@ script:
   - cmake ..
   - make
   - cd test
-  - ctest
+  - ctest -V
 
 after_success:
   - doxygen .doxygen
