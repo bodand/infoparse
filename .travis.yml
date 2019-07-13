@@ -16,13 +16,14 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-8
+            - cmake
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
 before_install:
   - sudo apt-get update
   - echo Requirements for InfoParse
-  - sudo apt-get -qq install cmake make doxygen
+  - sudo apt-get -qq install make doxygen
   - sudo apt-get -qq install perl
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
