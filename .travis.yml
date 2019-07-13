@@ -16,7 +16,7 @@ before_install:
   # GCC
   - echo [Downloading GCC 9.1 Source]
   - mkdir gcc
-  - curl http://robotlab.itk.ppke.hu/gcc/releases/gcc-9.1.0/gcc-9.1.0.tar.xz | tar cvJC gcc --strip-components=1
+  - curl http://robotlab.itk.ppke.hu/gcc/releases/gcc-9.1.0/gcc-9.1.0.tar.xz | tar xvJC gcc --strip-components=1
   - cd gcc
   # GCC > GMP
   - echo [-Downloading GMP Source]
