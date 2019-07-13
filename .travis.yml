@@ -22,13 +22,16 @@ before_install:
   - sudo apt-get install perl
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
-  - echo [Boosting Time]
-  - sudo apt-get install python-dev autotools-dev libicu-dev build-essential libbz2-dev libboost-all-dev
-  - mkdir boost
-  - curl https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.bz2 | tar xjC boost --strip-components=1
-  - cd boost
-  - ./bootstrap.sh
-  - ./b2 install
+#  - echo [Boosting Time]
+#  - sudo apt-get install python-dev autotools-dev libicu-dev build-essential libbz2-dev libboost-all-dev
+#  - mkdir boost
+#  - curl https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.bz2 | tar xjC boost --strip-components=1
+#  - cd boost
+#  - ./bootstrap.sh
+#  - ./b2 install
+  - sudo add-apt-repository ppa:boost-latest/ppa
+  - sudo apt-get update
+  - sudo apt-get install libboost-all-dev
   - eval "${MATRIX_EVAL}"
   - export PATH="$PATH:/home/travis/.local/bin"
 
