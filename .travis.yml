@@ -29,7 +29,7 @@ before_install:
   # Configuring GCC
   - echo [Configuring GCC]
   - mkdir build && cd build
-  - ./configure
+  - ../configure
   # Building GCC
   - ehoc [Building GCC]
   - make
