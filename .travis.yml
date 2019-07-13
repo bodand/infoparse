@@ -3,6 +3,10 @@ language: cpp
 perl:
   - "5.28"
 
+cache:
+  directories:
+    - gcc
+
 before_install:
   - sudo apt-get update
   - echo Requirements for InfoParse
