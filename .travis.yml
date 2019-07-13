@@ -3,9 +3,17 @@ language: cpp
 perl:
   - "5.28"
 
-cache:
-  directories:
-    - gcc
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
 before_install:
   - sudo apt-get update
@@ -15,35 +23,8 @@ before_install:
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
   - echo Requirements for GCC 9.1
-  - sudo apt-get install gawk binutils tar gzip lzip lunzip xzip
-  - sudo apt-get install libzstd-dev libzstd1
-  # GCC
-  - echo [Downloading GCC 9.1 Source]
-  - mkdir gcc
-  - curl http://robotlab.itk.ppke.hu/gcc/releases/gcc-9.1.0/gcc-9.1.0.tar.xz | tar xJC gcc --strip-components=1
-  - cd gcc
-  # GCC > GMP
-  - echo [-Downloading GMP Source]
-  - mkdir gmp
-  - curl https://gmplib.org/download/gmp/gmp-6.1.2.tar.lz | tar x --lzip -C gmp --strip-components=1
-  # GCC > MPFR
-  - echo [-Downloading MPFR Source]
-  - mkdir mpfr
-  - curl https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.xz | tar xJC mpfr --strip-components=1
-  # GCC > MPC
-  - echo [-Downloading MPC Source]
-  - mkdir mpc
-  - curl https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz | tar xzC mpc --strip-components=1
-  # Configuring GCC
-  - echo [Configuring GCC]
-  - mkdir build && cd build
-  - ../configure --disable-multilib -q
-  # Building GCC
-  - echo [Building GCC]
-  - make -s
-  - sudo make install
-  - export CXX=g++-9
-  - export CC=gcc-9
+#  - sudo bash mkGCC.sh
+  - eval "${MATRIX_EVAL}"
   - export PATH="$PATH:/home/travis/.local/bin"
 
 install:
