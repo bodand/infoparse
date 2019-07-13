@@ -11,7 +11,7 @@ before_install:
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
   - echo Requirements for GCC 9.1
-  - sudo apt-get install gawk binutils tar gzip gunzip lzip lunzip
+  - sudo apt-get install gawk binutils tar gzip lzip lunzip xz
   - sudo apt-get install libzstd-dev libzstd1
   # GCC
   - echo [Downloading GCC 9.1 Source]
@@ -26,9 +26,12 @@ before_install:
   - echo [-Downloading MPFR Source]
   - mkdir mpfr
   - curl https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.xz | tar xvJ -C mpfr --strip-components=1
+  # Configuring GCC
   - echo [Configuring GCC]
   - mkdir build && cd build
   - ./configure
+  # Building GCC
+  - ehoc [Building GCC]
   - make
   - sudo make install
   - export CXX=g++-9
