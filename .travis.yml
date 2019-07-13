@@ -25,7 +25,10 @@ before_install:
   # GCC > MPFR
   - echo [-Downloading MPFR Source]
   - mkdir mpfr
-  - curl https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.xz | tar xJ -C mpfr --strip-components=1
+  - curl https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.xz | tar xJC mpfr --strip-components=1
+  - echo [-Downloading MPC Source]
+  - mkdir mpc
+  - curl https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz | tar xzC mpc --strip-components=1
   # Configuring GCC
   - echo [Configuring GCC]
   - mkdir build && cd build
