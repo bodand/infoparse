@@ -41,7 +41,7 @@ install:
   - conan install .. --build missing
 
 script:
-  - cmake ..
+  - cmake .. -DBOOST_ROOT="$BOOST_ROOT" -DBOOST_INCLUDEDIR="$BOOST_INCLUDEDIR"
   - make
   - cd test && ctest -V
 
