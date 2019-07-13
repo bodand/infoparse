@@ -31,6 +31,7 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   keep_history: true
+  file: "docs"
   on:
     branch: master
 
