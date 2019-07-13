@@ -27,7 +27,7 @@ before_install:
   - mkdir boost
   - curl -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.bz2 | tar xjC boost --strip-components=1
   - cd boost
-  - mkdir -p /usr/local/inlude/
+  - sudo mkdir -p /usr/local/inlude/
   - sudo ln -s ./boost/ /usr/local/include/boost
   - eval "${MATRIX_EVAL}"
   - export PATH="$PATH:/home/travis/.local/bin:/usr/local/include/"
