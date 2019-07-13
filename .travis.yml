@@ -40,7 +40,7 @@ install:
   - conan install .. --build missing
 
 script:
-  - cmake .. -DBOOST_ROOT=../../boost/
+  - cmake ..
   - make
   - cd test && ctest -V
 

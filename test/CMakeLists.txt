@@ -7,6 +7,7 @@
 
 # Testing -> Boost.Test
 message(STATUS "[InfoParse] Checking for Boost for testing")
+set(Boost_DEBUG 1)
 find_package(Boost COMPONENTS unit_test_framework)
 if (Boost_FOUND)
     message(STATUS "[InfoParse] Found Boost, enabling testing")
