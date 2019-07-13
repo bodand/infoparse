@@ -31,7 +31,7 @@ before_install:
 #  - ./b2 install
   - sudo add-apt-repository ppa:boost-latest/ppa
   - sudo apt-get update
-  - sudo apt-get install libboost-all-dev
+  - sudo apt-get install libboost-test-dev
   - eval "${MATRIX_EVAL}"
   - export PATH="$PATH:/home/travis/.local/bin"
 
