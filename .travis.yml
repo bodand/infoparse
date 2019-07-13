@@ -3,6 +3,10 @@ language: cpp
 perl:
   - "5.28"
 
+cache:
+  directories:
+    - ./boost
+
 matrix:
   include:
     - os: linux
@@ -25,7 +29,7 @@ before_install:
   - echo [Boosting Time]
 #  - sudo apt-get -qq install python-dev autotools-dev libicu-dev build-essential libbz2-dev libboost-all-dev
   - mkdir boost
-  - curl -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.bz2 | tar xjC boost --strip-components=1
+  - "[ -d ./boost/ ] && curl -L https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.bz2 | tar xjC boost --strip-components=1"
   - sudo mkdir -p /usr/local/inlude/
   - sudo ln -s ./boost/boost/ /usr/local/include/boost
   - eval "${MATRIX_EVAL}"
