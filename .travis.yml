@@ -25,8 +25,8 @@ before_install:
   - sudo python -m pip install conan mkdocs --ignore-installed
   - echo [Boosting Time]
 #  - sudo apt-get -qq install python-dev autotools-dev libicu-dev build-essential libbz2-dev libboost-all-dev
-  - "[ -d ./boost/ ] || mkdir boost"
-  - "[ -z ./boost/ ] && curl -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2 | tar xjC boost --strip-components=1"
+  - mkdir -p boost
+  - curl -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2 | tar xjC boost --strip-components=1
   - sudo mkdir -p /usr/local/inlude/
   - sudo ln -s ./boost/boost/ /usr/local/include/boost
   - eval "${MATRIX_EVAL}"
