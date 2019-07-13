@@ -3,6 +3,8 @@ language: cpp
 perl:
   - "5.28"
 
+cache: pip
+
 matrix:
   include:
     - os: linux
