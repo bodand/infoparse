@@ -5,10 +5,34 @@ perl:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install cmake make gcc-6 libboost-all-dev doxygen
+  - echo Requirements for InfoParse
+  - sudo apt-get install cmake make libboost-all-dev doxygen
   - sudo apt-get install perl
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
+  - echo Requirements for GCC 9.1
+  - sudo apt-get install gawk binutils tar gzip gunzip lzip lunzip
+  - sudo apt-get install libzstd-dev libzstd1
+  # GCC
+  - echo [Downloading GCC 9.1 Source]
+  - mkdir gcc
+  - curl http://robotlab.itk.ppke.hu/gcc/releases/gcc-9.1.0/gcc-9.1.0.tar.xz | tar cvJC gcc --strip-components=1
+  - cd gcc
+  # GCC > GMP
+  - echo [-Downloading GMP Source]
+  - mkdir gmp
+  - curl https://gmplib.org/download/gmp/gmp-6.1.2.tar.lz | tar xv --lzip -C gmp --strip-components=1
+  # GCC > MPFR
+  - echo [-Downloading MPFR Source]
+  - mkdir mpfr
+  - curl https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.xz | tar xvJ -C mpfr --strip-components=1
+  - echo [Configuring GCC]
+  - mkdir build && cd build
+  - ./configure
+  - make
+  - sudo make install
+  - export CXX=g++-9
+  - export CC=gcc-9
   - export PATH="$PATH:/home/travis/.local/bin"
 
 install:
