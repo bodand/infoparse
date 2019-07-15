@@ -22,7 +22,7 @@ matrix:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
 before_install:
-  - sudo apt-get updateú
+  - sudo apt-get update
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
   - sudo bash mkBoost.sh
