@@ -30,6 +30,10 @@ set(InfoParse_HEADERS
 add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
 
+if (NOT WIN32)
+    execute_process(bash "-c" "echo | cpp -xc++ -Wp,-v")
+endif ()
+
 add_subdirectory(test)
 
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
