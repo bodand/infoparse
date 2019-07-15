@@ -35,11 +35,11 @@ install:
 
 script:
   - cmake ..
-  - g++-8 -E -Wp,-v -xc++ /dev/null
   - make
   - cd test && ctest -V
 
 after_success:
+  - cd ..
   - doxygen .doxygen
   - perl ./mkdox.pl
   - mkdocs build
@@ -49,7 +49,6 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   keep_history: true
-  local_dir:  "docs"
   on:
     branch: master
 
