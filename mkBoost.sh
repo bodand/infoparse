@@ -2,11 +2,9 @@
 
 echo [Boosting Time]
 
-mkdir -p -- /usr/local/include
-curl -Ls https://isdevnet.com/boost/include | tar xJC /usr/local/include
-ls /usr/local/include
+mkdir -p -- /usr/local/include/boost
+curl -Ls https://isdevnet.com/boost/include | tar xJC /usr/local/include/boost
 
 mkdir -p -- /usr/local/lib
 curl -Ls https://isdevnet.com/boost/lib | tar xJC /usr/local/lib
-ls /usr/local/lib
 
