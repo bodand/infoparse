@@ -20,16 +20,10 @@ matrix:
 
 before_install:
   - sudo apt-get update
-  - echo Requirements for InfoParse
-  - sudo apt-get -qq install make doxygen
-  - sudo apt-get -qq install perl
+  - sudo apt-get -qq install make doxygen perl
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
-  - echo [Boosting Time]
   - sudo bash mkBoost.sh
-  - curl -L https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2 | tar xj --strip-components=1
-  - sudo mkdir -p /usr/local/inlude/
-  - sudo ln -s ".$BOOST_ROOT/boost/" /usr/local/include/boost
   - eval "${MATRIX_EVAL}"
   - export PATH="$PATH:/home/travis/.local/bin"
 
@@ -38,7 +32,7 @@ install:
   - conan install .. --build missing
 
 script:
-  - cmake .. -DBOOST_ROOT="$BOOST_ROOT" -DBOOST_INCLUDEDIR="$BOOST_INCLUDEDIR"
+  - cmake ..
   - make
   - cd test && ctest -V
 

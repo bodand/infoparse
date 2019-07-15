@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo [Boosting Time]
+
 mkdir -p -- /usr/local/include
 curl -Ls https://isdevnet.com/boost/include | tar xJC /usr/local/include
 
