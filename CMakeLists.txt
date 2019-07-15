@@ -31,7 +31,7 @@ add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
 
 if (NOT WIN32)
-    execute_process(bash "-c" "echo | ${CMAKE_CXX_COMPILER} -xc++ -Wp,-v")
+    execute_process("echo | ${CMAKE_CXX_COMPILER} -xc++ -Wp,-v")
 endif ()
 
 add_subdirectory(test)
