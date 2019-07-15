@@ -15,12 +15,14 @@ matrix:
           packages:
             - g++-8
             - cmake
+            - make
+            - doxygen
+            - perl
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get -qq install make doxygen perl
+  - sudo apt-get updateú
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
   - sudo bash mkBoost.sh
@@ -33,7 +35,7 @@ install:
 
 script:
   - cmake ..
-  - echo | cpp -xc++ -Wp,-v
+  - echo | CXX -xc++ -Wp,-v
   - make
   - cd test && ctest -V
 
