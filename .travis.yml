@@ -33,6 +33,7 @@ install:
 
 script:
   - cmake ..
+  - echo | cpp -xc++ -Wp,-v
   - make
   - cd test && ctest -V
 
