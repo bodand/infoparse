@@ -35,6 +35,7 @@ install:
 
 script:
   - cmake ..
+  - g++-8 -E -Wp,-v -xc++ /dev/null
   - make
   - cd test && ctest -V
 
