@@ -18,6 +18,7 @@ matrix:
             - make
             - doxygen
             - perl
+            - texlive
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
@@ -37,11 +38,13 @@ script:
   - cd test && ctest -V
 
 after_success:
-  - cd ..
+  - cd ../..
   - doxygen .doxygen
   - perl ./mkdox.pl
+  - cd dox/latex
+  - make pdf
   - mkdocs build
-  - system 'tar cJf docs.tar.xz infoparse/';
+  - tar cJf docs.tar.xz infoparse/*
   - perl ./deployDocs.pl
 
 notifications:

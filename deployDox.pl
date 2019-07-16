@@ -5,8 +5,6 @@ use Digest::MD5 qw/md5_hex md5_base64/;
 use MIME::Base64;
 use JSON::MaybeXS qw/encode_json to_json/;
 
-use Data::Dumper;
-
 my $deployer = "https://deployer.isdevnet.com";
 
 sub read_base64 {
