@@ -22,12 +22,10 @@ matrix:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
 
 before_install:
-  - sudo apt-get update
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
   - sudo bash mkBoost.sh
   - eval "${MATRIX_EVAL}"
-  - export PATH="$PATH:/home/travis/.local/bin"
 
 install:
   - mkdir build && cd build
@@ -43,14 +41,8 @@ after_success:
   - doxygen .doxygen
   - perl ./mkdox.pl
   - mkdocs build
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  on:
-    branch: master
+  - system 'tar cJf docs.tar.xz infoparse/';
+  - perl ./deployDocs.pl
 
 notifications:
   email: false

@@ -1,6 +1,6 @@
 site_name: InfoParse
 
-site_dir: docs
+site_dir: infoparse
 
 docs_dir: dox_site
 
