@@ -41,11 +41,19 @@ after_success:
   - cd ../..
   - doxygen .doxygen
   - perl ./mkdox.pl
-  - cd dox/latex
-  - make pdf
   - mkdocs build
   - tar cJf docs.tar.xz infoparse/*
   - perl ./deployDocs.pl
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: infoparse
+  repo: isbodand/infoparsed
+  on:
+    branch: master
+
 
 notifications:
   email: false

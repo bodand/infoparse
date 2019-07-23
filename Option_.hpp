@@ -28,7 +28,7 @@ namespace InfoParse {
    * @tparam T The type of the parameter to stuff the
    *           found value into.
    *
-   * @specialized Option_<bool>
+   * @see Option_<bool>
    */
   template<class T>
   class Option_ {
@@ -55,7 +55,7 @@ namespace InfoParse {
        * SHORT name. The SHORT name is generated as the first character
        * of the LONG name.
        *
-       * @param longName The LONG name for the option. First character will
+       * @param name The LONG name for the option. First character will
        *                 used as the SHORT name
        * @param exporter The pointer to a constructed memory whereto
        *                 dump the found value
@@ -190,7 +190,7 @@ namespace InfoParse {
        * SHORT name. The SHORT name is generated as the first character
        * of the LONG name.
        *
-       * @param longName The LONG name for the option. First character will
+       * @param name The LONG name for the option. First character will
        *                 used as the SHORT name
        * @param exporter The bool pointer to dump whether the switch was found
        *
