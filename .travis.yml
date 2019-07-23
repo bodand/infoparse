@@ -51,8 +51,7 @@ deploy:
   github_token: $GITHUB_TOKEN
   local_dir: infoparse
   repo: isbodand/infoparsed
-  on:
-    branch: master
+  target_branch: master
 
 
 notifications:
