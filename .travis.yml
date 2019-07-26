@@ -25,7 +25,7 @@ matrix:
 before_install:
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
-  - sudo bash mkBoost.sh
+  - sudo bash utility/mkBoost.sh
   - eval "${MATRIX_EVAL}"
 
 install:
@@ -40,10 +40,10 @@ script:
 after_success:
   - cd ../..
   - doxygen .doxygen
-  - perl ./mkdox.pl
+  - perl utility/mkdox.pl
   - mkdocs build
   - tar cJf docs.tar.xz infoparse/*
-  - perl ./deployDocs.pl
+  - perl utility/deployDocs.pl
 
 deploy:
   provider: pages

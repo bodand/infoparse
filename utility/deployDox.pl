@@ -8,14 +8,14 @@ use JSON::MaybeXS qw/encode_json to_json/;
 my $deployer = "https://deployer.isdevnet.com";
 
 sub read_base64 {
-    open my $file, "<:raw", shift
+    open(my $file, "<:raw", shift)
         or die "Unusable file supplied";
     local $/ = undef;
     encode_base64(<$file>)
 }
 
 sub read_md5 {
-    open my $file, "<:raw", shift
+    open(my $file, "<:raw", shift)
         or die "Unusable file supplied";
     local $/ = undef;
     md5_hex(<$file>)
