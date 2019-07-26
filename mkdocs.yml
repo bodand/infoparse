@@ -5,5 +5,10 @@ site_dir: infoparse
 docs_dir: dox_site
 
 nav:
-  - Home: index.md
+  - Home:
+      - Home: index.md
+      - Installation: installation.md
+      - 'Build it yourself': build.md
+  - Source:
+      - Conventions: convention.md
   - Doxygen: doxygen/index.html

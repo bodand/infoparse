@@ -73,7 +73,7 @@ namespace InfoParse {
        * @return The string with the removed options' name and value
        *         For example: " text -b 4 more text" -> " text more text "
        */
-      std::string match(const std::string& args) const;
+      _retval std::string match(const std::string& args) const;
 
       template<class U>
       friend std::ostream& operator<<(std::ostream& os, const Option_<U>& option);
@@ -87,25 +87,25 @@ namespace InfoParse {
        *
        * lhs == rhs iff A ∨ B
        */
-      bool operator==(const Option_& rhs) const;
+      _retval bool operator==(const Option_& rhs) const;
 
       /**
        * Checks equality with checking
        * whether the given string equals to LONG name
        */
-      bool operator==(const std::string& name) const;
+      _retval bool operator==(const std::string& name) const;
 
       /**
        * Checks equality with checking
        * whether the given c-string equals to LONG name
        */
-      bool operator==(const char* cname) const;
+      _retval bool operator==(const char* cname) const;
 
       /**
        * Checks equality with checking
        * whether the given char equals to SHORT name
        */
-      bool operator==(char c) const;
+      _retval bool operator==(char c) const;
 
       /**
        * Checks inequality by negating the
@@ -115,38 +115,40 @@ namespace InfoParse {
        *
        * lhs != rhs iff !(A ∨ B)
        */
-      bool operator!=(const Option_& rhs) const;
+      _retval bool operator!=(const Option_& rhs) const;
 
       /**
         * Checks inequality with checking
         * whether the given string does
         * not equal to LONG name
         */
-      bool operator!=(const std::string& name) const;
+      _retval bool operator!=(const std::string& name) const;
 
       /**
         * Checks inequality with checking
         * whether the given c-string does
         * not equal to LONG name
         */
-      bool operator!=(const char* cname) const;
+      _retval bool operator!=(const char* cname) const;
 
       /**
         * Checks inequality with checking
         * whether the given char does
         * not equal to SHORT name
         */
-      bool operator!=(char c) const;
+      _retval bool operator!=(char c) const;
 
   private:
       void handleParameterParsing(std::size_t startMatch, std::string& args,
                                   const std::string& name, const std::string& sequence) const;
 
-      std::string _getOptionValueAsString(std::size_t startMatch, std::string& args,
-                                          const std::string& name, const std::string& sequence) const;
+      _retval std::string _getOptionValueAsString(std::size_t startMatch, std::string& args,
+                                                  const std::string& name,
+                                                  const std::string& sequence) const;
 
-      std::wstring _getOptionValueAsWString(std::size_t startMatch, std::string& args,
-                                            const std::string& name, const std::string& sequence) const;
+      _retval std::wstring _getOptionValueAsWString(std::size_t startMatch, std::string& args,
+                                                    const std::string& name,
+                                                    const std::string& sequence) const;
   };
 
   /**
@@ -207,7 +209,7 @@ namespace InfoParse {
         * @return The string with the removed options' name
         *         For example: " text -s more text" -> " text more text "
         */
-      std::string match(const std::string& args) const;
+      _retval std::string match(const std::string& args) const;
 
       template<class U>
       friend std::ostream& operator<<(std::ostream& os, const Option_<U>& option);
@@ -222,25 +224,25 @@ namespace InfoParse {
        *
        * lhs == rhs iff A ∨ B
        */
-      bool operator==(const Option_& rhs) const;
+      _retpure bool operator==(const Option_& rhs) const;
 
       /**
        * Checks equality with checking
        * whether the given string equals to LONG name
        */
-      bool operator==(const std::string& name) const;
+      _retpure bool operator==(const std::string& name) const;
 
       /**
        * Checks equality with checking
        * whether the given c-string equals to LONG name
        */
-      bool operator==(const char* cname) const;
+      _retpure bool operator==(const char* cname) const;
 
       /**
        * Checks equality with checking
        * whether the given char equals to SHORT name
        */
-      bool operator==(char c) const;
+      _retpure bool operator==(char c) const;
 
       /**
        * Checks inequality by negating the
@@ -252,28 +254,28 @@ namespace InfoParse {
        *
        * lhs != rhs iff !(A ∨ B)
        */
-      bool operator!=(const Option_& rhs) const;
+      _retpure bool operator!=(const Option_& rhs) const;
 
       /**
         * Checks inequality with checking
         * whether the given string does
         * not equal to LONG name
         */
-      bool operator!=(const std::string& name) const;
+      _retpure bool operator!=(const std::string& name) const;
 
       /**
         * Checks inequality with checking
         * whether the given c-string does
         * not equal to LONG name
         */
-      bool operator!=(const char* cname) const;
+      _retpure bool operator!=(const char* cname) const;
 
       /**
         * Checks inequality with checking
         * whether the given char does
         * not equal to SHORT name
         */
-      bool operator!=(char c) const;
+      _retpure bool operator!=(char c) const;
   };
 
   template<class T>
@@ -397,67 +399,6 @@ namespace InfoParse {
 
   template<class T>
   inline bool Option_<T>::operator!=(char c) const {
-      return !(*this == c);
-  }
-
-  inline Option_<bool>::Option_(std::string longName, char shortName, bool* exporter)
-          : longName(std::move(longName)),
-            shortName(shortName),
-            exporter(exporter) {}
-
-  inline Option_<bool>::Option_(const std::string& name, bool* exporter)
-          : longName(name),
-            shortName(name[0]),
-            exporter(exporter) {}
-
-  inline std::string InfoParse::Option_<bool>::match(const std::string& args) const {
-      std::string parsable(args);
-      std::string shortNameString(1, shortName);
-      std::size_t startMatch;
-      const auto longSequence = std::string(" --") + longName + " ";
-      const auto shortSequence = std::string(" -") + shortName + " ";
-
-      unless ((startMatch = parsable.find(longSequence)) == -1) {
-          parsable.erase(startMatch, longSequence.length() - 1);
-          *exporter = true;
-      } else unless ((startMatch = parsable.find(shortSequence)) == -1) {
-          parsable.erase(startMatch, shortSequence.length() - 1);
-          *exporter = true;
-      }
-
-      return parsable;
-  }
-
-  inline bool Option_<bool>::operator==(const Option_& rhs) const {
-      return longName == rhs.longName
-             && shortName == rhs.shortName;
-  }
-
-  inline bool Option_<bool>::operator!=(const Option_& rhs) const {
-      return !(rhs == *this);
-  }
-
-  inline bool Option_<bool>::operator==(const std::string& name) const {
-      return longName == name;
-  }
-
-  inline bool Option_<bool>::operator!=(const std::string& name) const {
-      return !(longName == name);
-  }
-
-  inline bool Option_<bool>::operator==(const char* cname) const {
-      return *this == std::string(cname);
-  }
-
-  inline bool Option_<bool>::operator!=(const char* cname) const {
-      return *this != std::string(cname);
-  }
-
-  inline bool Option_<bool>::operator==(const char c) const {
-      return shortName == c;
-  }
-
-  inline bool Option_<bool>::operator!=(const char c) const {
       return !(*this == c);
   }
 }

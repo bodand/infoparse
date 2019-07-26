@@ -23,11 +23,6 @@ class InfoparseConan(ConanFile):
         cmake.configure(source_folder="infoparse")
         cmake.build()
 
-        # Explicit way:
-        # self.run('cmake %s/hello %s'
-        #          % (self.source_folder, cmake.command_line))
-        # self.run("cmake --build . %s" % cmake.build_config)
-
     def package(self):
         self.copy("*.hpp", dst="include/infoparse", src="infoparse")
         self.copy("*infoparse.lib", dst="lib", keep_path=False)

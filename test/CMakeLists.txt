@@ -19,6 +19,8 @@ if (Boost_FOUND)
             Test_Option.hpp
             Test_Utils.hpp
             Test_OptionsParser.hpp
+            Test_Lazy.hpp
+            Test_OptionString.hpp
             )
 
     foreach (case ${Test_HEADERS})

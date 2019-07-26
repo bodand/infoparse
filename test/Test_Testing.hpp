@@ -17,9 +17,15 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-// I always have some trivial passing test to test the setup
-BOOST_AUTO_TEST_CASE(Test_test) {
-    BOOST_CHECK_EQUAL(1, 1);
-}
+BOOST_AUTO_TEST_SUITE(Trivial)
+
+  /**
+   * I always have some trivial passing test to test the setup
+   */
+  BOOST_AUTO_TEST_CASE(Test_test) {
+      BOOST_CHECK_MESSAGE(true, "Your Boost.Test setup is working");
+  }
+
+BOOST_AUTO_TEST_SUITE_END()
 
 #pragma clang diagnostic pop

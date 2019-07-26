@@ -15,17 +15,47 @@ set(InfoParse_VERSION_PATCH 5)
 set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${InfoParse_VERSION_PATCH}")
 
 configure_file(
-        "${PROJECT_SOURCE_DIR}/versioning.hpp.in"
-        "${PROJECT_SOURCE_DIR}/versioning.hpp"
+        "${PROJECT_SOURCE_DIR}/src/versioning.hpp.in"
+        "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
+)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fextended-identifiers")
+
+message(STATUS "[InfoParse] Looking for a Presinstalled Boost")
+find_package(Boost)
+if (Boost_FOUND)
+    message(STATUS "[InfoParse] Found a Preinstalled Boost, using Boost.Algorithm")
+else()
+
+endif()
+
+configure_file(
+        "${PROJECT_SOURCE_DIR}/src/config.hpp.in"
+        "${PROJECT_SOURCE_DIR}/src/config.hpp"
 )
 
 set(InfoParse_SOURCES
-        versioning.cpp utils.cpp
-        Option_.cpp OptionsParser.cpp OptionHandler_.cpp)
+        src/versioning.cpp src/utils.cpp
+        src/Option_.cpp
+        src/OptionHandler_.cpp
+        src/OptionString.cpp
+        src/OptionsParser.cpp
+        src/Lazy.cpp
+        )
 
 set(InfoParse_HEADERS
-        versioning.hpp utils.hpp
-        Option_.hpp OptionHandler_.hpp OptionsParser.hpp)
+        # Config'd
+        src/versioning.hpp
+        src/config.hpp
+        # Procedural headers
+        src/utils.hpp
+        # Classes
+        src/Option_.hpp
+        src/OptionHandler_.hpp
+        src/OptionsParser.hpp
+        src/OptionString.hpp
+        src/Lazy.hpp
+        )
 
 add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)

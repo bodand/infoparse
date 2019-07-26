@@ -1,3 +1,4 @@
+## Generic stuff
 *build*/
 cmake-build-debug/
 
@@ -10,11 +11,20 @@ cmake-build-debug/
 
 compile_commands.json
 
+## IntelliJ stuff
 .idea/
 *.imp
 
+## ??
 *.stackdump
 
-versioning.hpp
+## Configured by CMake
+src/versioning.hpp
+config.hpp
 
+## Perl Idea plugin thingy
 _Deparsed_XSubs.pm
+
+## Documentation
+dox/
+infoparse/
