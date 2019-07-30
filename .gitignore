@@ -28,3 +28,6 @@ _Deparsed_XSubs.pm
 ## Documentation
 dox/
 infoparse/
+
+## Locally auto-installed Boost
+boost_*/

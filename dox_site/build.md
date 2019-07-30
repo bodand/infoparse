@@ -3,12 +3,14 @@
 The following are required for the ability to build infoparse:
  
  - A C++17 compliant C++ compiler 
-  \[Note: According to their docs this means GCC 7+ or clang 3.9+]
+  \[Note: According to their docs this means GCC 7+, clang 3.9+ ]
+  \[Note: Currently I cannot guarantee that MSVC works. On my system
+  it shits itself quite badly while both GCC 8.1 and 9.1 happily work.]
  - CMake 3.11+
  
 If using a non-Windows os, a `make` implementation is necessary as well.
-\[Note: Or maybe not if you use `ninja`, I don't know]
-
+Or maybe not if you use `ninja`, I don't know.
+ 
 # Downloading Sources
 
 Our hopefully painless journey of building infoparse
@@ -58,8 +60,8 @@ or you broke it at some point in time:
 ```cmd
 > bitsadmin /transfer InfoParseDownload /priority high https://github.com/isbodand/infoparse/archive/master.zip %home%/Downloads/infoparse.zip
 ```
-If using cmd you have no real way of unzipping files, so figuring out this is left 
-as an exercise to the reader.
+If using cmd you have no build-in way of unzipping files, so figuring out this is left 
+as an exercise to the reader, possible procedures range from `7z` to abusing `jar`. 
 
 # Configuring CMake
 

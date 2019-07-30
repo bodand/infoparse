@@ -17,7 +17,7 @@
 
 #include "Option_.hpp"
 
-namespace InfoParse {
+namespace InfoParse::Internals {
 
   /**
    * Groups multiple Option_<T>-s together

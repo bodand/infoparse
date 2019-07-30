@@ -20,6 +20,7 @@
 #include "../src/Option_.hpp"
 
 using namespace InfoParse;
+using namespace InfoParse::Internals;
 
 BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
 

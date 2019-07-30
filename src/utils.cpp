@@ -12,8 +12,7 @@
 #include <iostream>
 #include "utils.hpp"
 
-#define BOOST_ALGORITHM_STRING_HEADER "../boost_1_70_0/boost/algorithm/string.hpp"
-#include BOOST_ALGORITHM_STRING_HEADER
+#include <boost/algorithm/string.hpp>
 
 namespace InfoParse {
   std::string makeMonolithArgs(int argc, char** argv) {
@@ -139,6 +138,7 @@ namespace InfoParse {
   std::vector<std::string> split(const std::string& toSplit, char c) {
       std::vector<std::string> retVal;
 #ifdef __clang__
+      // Yes this is the best way to use the preprocessor
       boost::split(retVal, toSplit, [&](char λc) { return λc == c; });
 #else
       boost::split(retVal, toSplit, [&](char c_) { return c_ == c; });

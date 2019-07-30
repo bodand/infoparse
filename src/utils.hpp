@@ -27,10 +27,18 @@
 #elif defined(__GNUG__) && __cplusplus >= 201103L
   #define _pure [[gnu::const]]
   #define _retpure [[gnu::pure]]
-  #define _retval
+  #define _retval [[gnu::warn_unused_result]]
 #elif defined(__GNUG__)
   #define _pure __attribute__((const))
   #define _retpure __attribute__((pure))
+  #define _retval __attribute__ ((warn_unused_result))
+#elif __cplusplus >= 201703L
+  #define _pure [[nodiscard]]
+  #define _retpure [[nodiscard]]
+  #define _retval [[nodiscard]]
+#else
+  #define _pure
+  #define _retpure
   #define _retval
 #endif
 

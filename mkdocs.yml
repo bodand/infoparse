@@ -8,7 +8,10 @@ nav:
   - Home:
       - Home: index.md
       - Installation: installation.md
-      - 'Build it yourself': build.md
+  - Docs:
+      - API: api.md
+      - Parsing rules: parsing.md
   - Source:
       - Conventions: convention.md
+      - 'Build it yourself': build.md
   - Doxygen: doxygen/index.html

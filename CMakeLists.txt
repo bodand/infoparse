@@ -19,20 +19,50 @@ configure_file(
         "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
 )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fextended-identifiers")
-
-message(STATUS "[InfoParse] Looking for a Presinstalled Boost")
+message(STATUS "[InfoParse] Looking for a presinstalled Boost")
 find_package(Boost)
 if (Boost_FOUND)
-    message(STATUS "[InfoParse] Found a Preinstalled Boost, using Boost.Algorithm")
-else()
+    set(USE_AUTO_INSTALLED_BOOST 0)
+    message(STATUS "[InfoParse] Found a preinstalled Boost")
+else ()
+    set(USE_AUTO_INSTALLED_BOOST 1)
+    message(STATUS "[InfoParse] Did not find a preinstalled Boost")
+    message(STATUS "[InfoParse] Installing the latest Boost Headers for project-level comsumption")
+    if ((NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz") AND (NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0"))
+        message(STATUS "Downloading archive")
+        file(DOWNLOAD
+                https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz
+                ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz
+                EXPECTED_HASH SHA256=882b48708d211a5f48e60b0124cf5863c1534cd544ecd0664bb534a4b5d506e9
+                SHOW_PROGRESS
+                )
+    else ()
+        message(STATUS "Already downloaded or installed")
+    endif ()
+    if ((EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz") AND (NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0"))
+        message(STATUS "Extracting archive")
+        if (WIN32)
+            execute_process(
+                    COMMAND cmd /c ${CMAKE_COMMAND} -E tar xzf boost_1_70_0.tar.gz
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            )
+        else ()
+            execute_process(
+                    COMMAND ${CMAKE_COMMAND} -E tar xzf boost_1_70_0.tar.gz
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            )
+        endif ()
+    else ()
+        message(STATUS "Already installed")
+    endif ()
+    if (EXISTS ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz)
+        message(STATUS "Deleting archive")
+        file(REMOVE ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz)
+    endif()
+    file(GLOB AUTO_BOOST_DIR RELATIVE ${CMAKE_SOURCE_DIR} boost_*)
+    include_directories("${AUTO_BOOST_DIR}")
+endif ()
 
-endif()
-
-configure_file(
-        "${PROJECT_SOURCE_DIR}/src/config.hpp.in"
-        "${PROJECT_SOURCE_DIR}/src/config.hpp"
-)
 
 set(InfoParse_SOURCES
         src/versioning.cpp src/utils.cpp
@@ -46,7 +76,6 @@ set(InfoParse_SOURCES
 set(InfoParse_HEADERS
         # Config'd
         src/versioning.hpp
-        src/config.hpp
         # Procedural headers
         src/utils.hpp
         # Classes

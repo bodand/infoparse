@@ -22,6 +22,8 @@
 #include "OptionHandler_.hpp"
 
 namespace InfoParse {
+  using Internals::OptionHandler_;
+
   /**
    * The only class which is supposed to be used.
    * Stores options for parsing, and parses.
@@ -94,8 +96,8 @@ namespace InfoParse {
        */
       std::string parse(const std::string& args);
   private:
-      std::string explodeBundledFlags(const std::string& args);
-      std::string equalizeWhitespace(const std::string& args);
+      _pure std::string explodeBundledFlags(const std::string& args);
+      _pure std::string equalizeWhitespace(const std::string& args);
   };
 
   template<class T>
@@ -136,6 +138,9 @@ namespace InfoParse {
       return parse(InfoParse::makeMonolithArgs(argc, argv));
   }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfor-loop-analysis"
+#pragma ide diagnostic ignored "OCDFAInspection"
   inline std::string OptionsParser::explodeBundledFlags(const std::string& args) {
       bool _ = true;
       std::string parsable(args);
@@ -169,6 +174,7 @@ namespace InfoParse {
 
       return parsable;
   }
+#pragma clang diagnostic pop
 
   inline std::string OptionsParser::equalizeWhitespace(const std::string& args) {
       return std::regex_replace(args, std::regex("\\s+"), " ");
