@@ -66,33 +66,31 @@ BOOST_AUTO_TEST_SUITE(Test_Lazy)
       BOOST_CHECK_EQUAL(count, 1);
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Lazy_CastingToBoolWorks) {
-      Lazy<int> l([]() { return std::make_shared<int>(5); });
-      BOOST_CHECK(!l);
-      int i = l;
-      BOOST_REQUIRE_EQUAL(i, 5);
-      BOOST_CHECK(l);
-  }
-
-  BOOST_AUTO_TEST_CASE(Test_Lazy_CastingToBoolDoesNotInit) {
-      Lazy<int> l([]() { return std::make_shared<int>(5); });
-      BOOST_CHECK(!l);
-      BOOST_CHECK(!l);
-  }
-
   BOOST_AUTO_TEST_CASE(Test_Lazy_DereferenceOperatorEqualsGetMethod) {
       Lazy<int> l([]() { return std::make_shared<int>(5); });
       BOOST_CHECK_EQUAL(*l, 5);
   }
 
-  class Foo {
-      int i;
-  public:
-      Foo(int i) : i(i) {}
+  BOOST_AUTO_TEST_CASE(Test_Lazy_ParensOperatorInstantiatesTWithParamRequirements) {
+      Lazy<int, int> l([](int i) { return std::make_shared<int>(i); });
+      BOOST_CHECK_EQUAL(l(4), 4);
+  }
 
-      _retpure int bar() const {
-          return i;
-      };
-  };
+  BOOST_AUTO_TEST_CASE(Test_Lazy_AfterInitedDerefernceOperatorWorksWithArgumentRequiringT) {
+      Lazy<int, int> l([](int i) { return std::make_shared<int>(i); });
+      BOOST_REQUIRE_EQUAL(l(4), 4);
+      BOOST_CHECK_EQUAL(*l, 4);
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_Lazy_DereferenceOpartorThrowExceptionWhenTRequiresArgs) {
+      Lazy<int, int> l([](int i) { return std::make_shared<int>(i); });
+      try {
+          auto i = *l;
+      } catch (bad_lazy_eval& e) {
+          BOOST_CHECK_MESSAGE(true, "bad_lazy_eval thrown");
+          return;
+      }
+      BOOST_CHECK_MESSAGE(false, "bad_lazy_eval was not thrown");
+  }
 
 BOOST_AUTO_TEST_SUITE_END()
