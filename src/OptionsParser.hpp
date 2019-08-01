@@ -20,35 +20,51 @@
 
 #include "utils.hpp"
 #include "OptionHandler_.hpp"
+#include "OptionString.hpp"
 
 namespace InfoParse {
   using Internals::OptionHandler_;
 
+  class OptionsParser;
+  namespace Internals {
+    class OptionAdder {
+        /// Interface
+    public:
+        template<class T>
+        const OptionAdder& operator()(Internals::OptionString name, T* val) const;
+
+        /// Lifecycle
+    public:
+        OptionAdder(OptionsParser* parser);
+
+        /// Fields
+    private:
+        OptionsParser* parser;
+    };
+  }
+  using Internals::OptionAdder;
+
   /**
-   * The only class which is supposed to be used.
    * Stores options for parsing, and parses.
    */
   class OptionsParser {
-      std::map<std::type_index, std::pair<void*,
-              std::function<std::string(void*, const std::string&)>>> optionHandlers;
-
+      /// Interface
   public:
       /**
-       * Adds an option with T type parameter to be
-       * stored and later invoked to do its parsing
-       * @tparam T Type for the exported value
-       * @param longName The LONG name of the option (--longname)
-       * @param shortName The SHORT name of the option (-s)
-       * @param exporter A pointer to a memory block of type T, into
-       *                 which the value will be put
-       *
-       * @note nullptr for exporter is not checked, yet
-       * @note T must support operator>> from istream, this
-       *       is made sure by SFINAE so it will die compile time
-       */
-      template<class T>
-      std::enable_if_t<Internals::can_stream<T>()>
-      addOption(const std::string& longName, char shortName, T* exporter);
+ * Adds multiple options to the parser.
+ *
+ * Returns an instance of an internal OptionAdder object
+ * which offers an operator() which returns a reference
+ * to object allowing chain calling.
+ *
+ * @example
+ * parser.addOptions()
+ *    ("opt1", &a)
+ *    ("opt2", &b);
+ *
+ * @return An object to call operator() on.
+ */
+      OptionAdder addOptions();
 
       /**
        * Adds an option with T type parameter to be
@@ -67,8 +83,10 @@ namespace InfoParse {
        *       shadowed by earlier created options' SHORT names
        */
       template<class T>
-      std::enable_if_t<Internals::can_stream<T>()>
-      addOption(const std::string& name, T* exporter);
+      std::enable_if_t<Internals::can_stream<T>()
+                       && std::is_default_constructible_v<T>,
+              OptionsParser*>
+      addOption(Internals::OptionString name, T* exporter);
 
       /**
        * Parses the given arguments using parameters in
@@ -95,28 +113,31 @@ namespace InfoParse {
        * @return The remnants of the parsed string, matched options removed.
        */
       std::string parse(const std::string& args);
+
+      /// Fields
+  private:
+      std::map<std::type_index, std::pair<void*,
+              std::function<std::string(void*, const std::string&)>>> optionHandlers;
+
+      /// Methods & stuff
   private:
       _pure std::string explodeBundledFlags(const std::string& args);
       _pure std::string equalizeWhitespace(const std::string& args);
   };
 
   template<class T>
-  inline std::enable_if_t<Internals::can_stream<T>()>
-  OptionsParser::addOption(const std::string& longName, char shortName, T* exporter) {
-      if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
-          optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
-          optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
-            return ((OptionHandler_<T>*) optionVoid)->handle(args);
-          };
-      }
-      ((OptionHandler_<T>*) optionHandlers[typeid(T)].first)->addOption(longName,
-                                                                        shortName,
-                                                                        exporter);
+  const Internals::OptionAdder&
+  Internals::OptionAdder::operator()(Internals::OptionString name,
+                                     T* val) const {
+      parser->addOption(std::move(name), val);
+      return *this;
   }
 
   template<class T>
-  inline std::enable_if_t<Internals::can_stream<T>()>
-  OptionsParser::addOption(const std::string& name, T* exporter) {
+  inline std::enable_if_t<Internals::can_stream<T>()
+                          && std::is_default_constructible_v<T>,
+          OptionsParser*>
+  OptionsParser::addOption(Internals::OptionString name, T* exporter) {
       if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
           optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
           optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
@@ -124,6 +145,7 @@ namespace InfoParse {
           };
       }
       ((OptionHandler_<T>*) optionHandlers[typeid(T)].first)->addOption(name, exporter);
+      return this;
   }
 
   inline std::string OptionsParser::parse(const std::string& args) {
@@ -141,6 +163,7 @@ namespace InfoParse {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wfor-loop-analysis"
 #pragma ide diagnostic ignored "OCDFAInspection"
+
   inline std::string OptionsParser::explodeBundledFlags(const std::string& args) {
       bool _ = true;
       std::string parsable(args);
@@ -174,10 +197,15 @@ namespace InfoParse {
 
       return parsable;
   }
+
 #pragma clang diagnostic pop
 
   inline std::string OptionsParser::equalizeWhitespace(const std::string& args) {
       return std::regex_replace(args, std::regex("\\s+"), " ");
+  }
+
+  OptionAdder OptionsParser::addOptions() {
+      return OptionAdder(this);
   }
 
 }

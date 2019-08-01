@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
       auto& opts = handler->getOptions();
       BOOST_CHECK_NE(opts.size(), 0);
       auto i = opts.begin();
-      while (*i != "name" && i != opts.end()) {
+      while (*i != "Option<i>[name]" && i != opts.end()) {
           ++i;
       }
       BOOST_CHECK(i != opts.end());
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
   BOOST_AUTO_TEST_CASE(Test_OptionHandler_AdditionOfConstructedOptionWithExplicitShortName) {
       int data;
       CREATE_HANDLER;
-      handler->addOption("name", 'p', &data);
+      handler->addOption("name|p", &data);
       auto& opts = handler->getOptions();
       BOOST_CHECK_NE(opts.size(), 0);
       auto i = opts.begin();

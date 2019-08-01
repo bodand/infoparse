@@ -20,8 +20,8 @@ namespace InfoParse::Internals {
   template<class T>
   using searchableOf = std::tuple<
           std::basic_string<T>,
-          Lazy<knuth_morris_pratt<typename std::basic_string<T>::const_iterator>>,
-          Lazy<boyer_moore<typename std::basic_string<T>::const_iterator>>
+          Lazy<knuth_morris_pratt<typename std::basic_string<T>::const_iterator>, const std::string&>,
+          Lazy<boyer_moore<typename std::basic_string<T>::const_iterator>, const std::string&>
   >;
 
   class OptionString {
@@ -33,12 +33,17 @@ namespace InfoParse::Internals {
       /// Constructor
   public:
       OptionString(const std::string& name);
+      OptionString(const char* name);
+
+      /// Operators
+  public:
+      const std::string& operator[](std::vector<std::string>::size_type i) const;
 
       /// Fields
   private:
       std::vector<std::string> names;
-      std::vector<Lazy<knuth_morris_pratt<StrIter>>> kmpSearch;
-      std::vector<Lazy<boyer_moore<StrIter>>> bmSearch;
+      std::vector<Lazy<knuth_morris_pratt<StrIter>, const std::string&>> kmpSearch;
+      std::vector<Lazy<boyer_moore<StrIter>, const std::string&>> bmSearch;
 
       /// Methods
   private:

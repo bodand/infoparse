@@ -10,3 +10,7 @@
 //
 
 #include "OptionsParser.hpp"
+
+InfoParse::Internals::OptionAdder::OptionAdder(OptionsParser* parser)
+        : parser(parser) {}
+

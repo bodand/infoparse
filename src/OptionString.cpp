@@ -8,10 +8,10 @@
 InfoParse::Internals::OptionString::OptionString(const std::string& str)
         : names(OptionString::prependDashes(InfoParse::split(str, '|'))) {
     for (auto&& name : names) {
-        kmpSearch.emplace_back([&]() {
+        kmpSearch.emplace_back([](const std::string& name) {
           return std::make_shared<knuth_morris_pratt<StrIter>>(name.begin(), name.end());
         });
-        bmSearch.emplace_back([&]() {
+        bmSearch.emplace_back([](const std::string& name) {
           return std::make_shared<boyer_moore<StrIter>>(name.begin(), name.end());
         });
     }
@@ -38,4 +38,11 @@ std::vector<InfoParse::Internals::searchableOf<char>> InfoParse::Internals::Opti
         retVal.emplace_back(std::make_tuple(names[i], kmpSearch[i], bmSearch[i]));
     }
     return retVal;
+}
+
+InfoParse::Internals::OptionString::OptionString(const char* name)
+        : OptionString(std::string(name)) {}
+
+const std::string& InfoParse::Internals::OptionString::operator[](std::vector<std::string>::size_type i) const {
+    return names[i];
 }

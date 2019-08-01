@@ -47,34 +47,18 @@ namespace InfoParse::Internals {
        */
       _retval std::string match(const std::string& args) const;
 
-
   public:
       /**
        * Constructs the Option_ with explicitly
        * given SHORT name.
        *
-       * @param longName The LONG name for the option.
-       * @param shortName The SHORT name for the option
+       * @param names The names of the param split by '|'
        * @param exporter The pointer to a constructed memory whereto
        *                 dump the found value
        *
        * @note `exporter` is not checked for `nullptr`
        */
-      Option_(std::string longName, char shortName, T* exporter);
-
-      /**
-       * Constructs the Option_ with implicitly deducted
-       * SHORT name. The SHORT name is generated as the first character
-       * of the LONG name.
-       *
-       * @param name The LONG name for the option. First character will
-       *                 used as the SHORT name
-       * @param exporter The pointer to a constructed memory whereto
-       *                 dump the found value
-       *
-       * @note `exporter` is not checked for `nullptr`
-       */
-      Option_(const std::string& name, T* exporter);
+      Option_(OptionString names, T* exporter);
 
       /// Operators
   public:
@@ -144,36 +128,38 @@ namespace InfoParse::Internals {
       /// Fields
   private:
       OptionString names;
-      std::string longName;
-      char shortName;
+      [[deprecated("Old(<1.4.x) Internal API")]]
+      std::string name = names[0].substr(1);
+      [[deprecated("Old(<1.4.x) Internal API")]]
+      char shortName = names.getNames().size() >= 2 ? names[1][1] : name[1];
       T* exporter;
+      typedef std::string::const_iterator StrCIter;
 
       /// Methods
   private:
       void handleParameterParsing(std::size_t startMatch, std::string& args,
                                   const std::string& name, const std::string& sequence) const;
 
-      _retval std::string _getOptionValueAsString(std::size_t startMatch, std::string& args,
-                                                  const std::string& name,
-                                                  const std::string& sequence) const;
+      _retval [[deprecated("Old(<1.4.x) Internal API")]]
+      std::string _getOptionValueAsString(std::size_t startMatch, std::string& args,
+                                          const std::string& name,
+                                          const std::string& sequence) const;
 
-      _retval std::wstring _getOptionValueAsWString(std::size_t startMatch, std::string& args,
-                                                    const std::string& name,
-                                                    const std::string& sequence) const;
+      _retval [[deprecated("Old(<1.4.x) Internal API")]]
+      std::wstring _getOptionValueAsWString(std::size_t startMatch, std::string& args,
+                                            const std::string& name,
+                                            const std::string& sequence) const;
 
       _pure static bool anyOf(char c, std::string set);
 
-      int handleFlagParse(std::string& parsee,
-                          std::string::const_iterator f,
-                          std::string::const_iterator l) const;
+      int handleFlagParse(std::string& parsee, StrCIter f, StrCIter l) const;
 
       int handleOptionalNegatedFlagParse(std::string& parsee,
-                                         std::string::const_iterator f,
-                                         std::string::const_iterator l) const;
+                                         StrCIter f, StrCIter l) const;
 
-      int parse(std::string& parsee,
-                std::string::const_iterator f,
-                std::string::const_iterator l) const;
+      int parseFlag(std::string& parsee, StrCIter f, StrCIter l) const;
+
+      int parseValue(std::string& parsee, StrCIter f, StrCIter l) const;
   };
 
   /*
@@ -214,17 +200,18 @@ namespace InfoParse::Internals {
   inline std::string Option_<bool>::match(const std::string& args) const {
       std::string parsee(args);
       for (auto &&[name, kmp, bm] : names.get()) {
-          if (name.size() > 15 || name.size() * 5 >= parsee.size()) {
-              // If relative long jumps are possible use boyer-moore
-              auto[first, last] = (*bm)(parsee.begin(), parsee.end());
-              if (parse(parsee, first, last))
-                  return parsee;
-          } else {
-              // otherwise fall-back on knuth-morris-pratt
-              auto[first, last] = (*kmp)(parsee.begin(), parsee.end());
-              if (parse(parsee, first, last))
-                  return parsee;
-          }
+//          if (name.size() > 15 || name.size() * 5 >= parsee.size()) {
+//              // If relative long jumps are possible use boyer-moore
+//              auto[first, last] = (*bm)(parsee.begin(), parsee.end());
+//              if (parseFlag(parsee, first, last))
+//                  return parsee;
+//          } else {
+          // otherwise fall-back on knuth-morris-pratt
+          auto dbg_s = parsee;
+          auto[first, last] = (kmp(name))(parsee.begin(), parsee.end());
+          if (parseFlag(parsee, first, last))
+              return parsee;
+//          }
       }
       return parsee;
   }
@@ -234,11 +221,11 @@ namespace InfoParse::Internals {
       std::string parsable(args);
       std::string shortNameString(std::string("") + shortName);
       std::size_t startMatch;
-      const auto longSequence = std::string(" --") + longName + " ";
+      const auto longSequence = std::string(" --") + name + " ";
       const auto shortSequence = std::string(" -") + shortName + " ";
 
       unless ((startMatch = parsable.find(longSequence)) == -1) {
-          handleParameterParsing(startMatch, parsable, longName, longSequence);
+          handleParameterParsing(startMatch, parsable, name, longSequence);
       } else unless ((startMatch = parsable.find(shortSequence)) == -1) {
           handleParameterParsing(startMatch, parsable, shortNameString, shortSequence);
       }
@@ -247,19 +234,9 @@ namespace InfoParse::Internals {
   }
 
   template<class T>
-  inline Option_<T>::Option_(std::string longName, char shortName, T* exporter):
-          longName(std::move(longName)),
-          shortName(shortName),
-          exporter(exporter),
-          names([&]() {
-            std::ostringstream ss;
-            ss << longName << "|" << shortName;
-            return ss.str();
-          }()) {}
-
-  template<class T>
-  inline Option_<T>::Option_(const std::string& name, T* exporter)
-          : Option_(name, name[0], exporter) {}
+  inline Option_<T>::Option_(OptionString names, T* exporter)
+          : exporter(exporter),
+            names(std::move(names)) {}
 
   template<class T>
   inline void Option_<T>::handleParameterParsing(std::size_t startMatch, std::string& args,
@@ -310,14 +287,13 @@ namespace InfoParse::Internals {
 
   template<class U>
   inline std::ostream& operator<<(std::ostream& os, const Option_<U>& option) {
-      os << "Option_<" << typeid(U).name() << ">[longName: " << option.longName
-         << ", shortName: " << option.shortName << "]";
+      os << "Option_<" << typeid(U).name() << ">[" << option.names.getNames()[0].substr(1) << "]";
       return os;
   }
 
   template<class T>
   inline bool Option_<T>::operator==(const Option_& rhs) const {
-      return longName == rhs.longName
+      return name == rhs.name
              && shortName == rhs.shortName;
   }
 
@@ -328,12 +304,12 @@ namespace InfoParse::Internals {
 
   template<class T>
   inline bool Option_<T>::operator==(const std::string& name) const {
-      return longName == name;
+      return name == name;
   }
 
   template<class T>
   inline bool Option_<T>::operator!=(const std::string& name) const {
-      return !(longName == name);
+      return !(name == name);
   }
 
   template<class T>
@@ -367,13 +343,13 @@ namespace InfoParse::Internals {
 
   template<class T>
   int Option_<T>::handleFlagParse(std::string& parsee,
-                                  std::string::const_iterator f,
-                                  std::string::const_iterator l) const {
+                                  StrCIter f,
+                                  StrCIter l) const {
       namespace ba = boost::algorithm;
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
       int bonus = fp + 2 != lp;
-      auto evalVal = [](std::string val) {
+      auto evalVal = [](const std::string& val) {
         if (val == "yes" || val == "true") { // true values
             return true;
         } else if (val == "no" || val == "false") { // false values
@@ -387,51 +363,53 @@ namespace InfoParse::Internals {
         }
       };
 
-      if (*l == ' ') { // --flagtext is not valid for --flag
-          parsee.erase(f - bonus, l + 1);
-          *exporter = true;
-          return 1;
-      }
-      if (l == parsee.end()) {
-          parsee.erase(f - bonus, l);
-          *exporter = true;
-          return 1;
-      }
       // before anyone asks why the fuck did I even consider and then implement
       // the ability to supply truthyness evaluation as a value to flags;
       // it exists to make this possible:
       // ./prog --use-wget=$(which wget 2>/dev/null || echo -n)
-      if (*l == '=') { // extended flag invocation
-          // +1 for we need not the =
-          auto val = parsee.substr(lp + 1, parsee.find(' ', lp) - (lp + 1));
-          ba::to_lower(val);
-          *exporter = evalVal(val);
-          parsee.erase(fp - bonus, lp - (fp - bonus) + 2 + val.size()); // +2 for '=' & trailing space
-          return 1;
-      }
-      if (*l == ':') {
-          if (l + 1 == parsee.end()) {
-              *exporter = false;
-              parsee.erase(fp - bonus, lp - (fp - bonus) + 1); // +1 for ':'
+      switch (*l) {
+          case ' ': // --flagtext is not valid for --flag
+              parsee.erase(f - bonus, l + 1);
+              *exporter = true;
+              return 1;
+          case '=': {
+              // +1 for we need not the =
+              auto val = parsee.substr(lp + 1, parsee.find(' ', lp) - (lp + 1));
+              ba::to_lower(val);
+              *exporter = evalVal(val);
+              parsee.erase(fp - bonus, lp - (fp - bonus) + 2 + val.size()); // +2 for '=' & trailing space
               return 1;
           }
-          auto firstNonSpace = parsee.find_first_not_of(' ', lp + 1); // +1 for we need not the :
-          auto whitespaces = firstNonSpace - (lp + 1);
-          auto endOfValue = parsee.find(' ', firstNonSpace);
-          auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
-          ba::to_lower(val);
-          *exporter = evalVal(val);
-          parsee.erase(fp - bonus,
-                       lp - (fp - bonus) + whitespaces + 2 + val.size()); // +2 for ':' & trailing space
-          return 1;
+          case ':': {
+              if (l + 1 == parsee.end()) {
+                  *exporter = false;
+                  parsee.erase(fp - bonus, lp - (fp - bonus) + 1); // +1 for ':'
+                  return 1;
+              }
+              auto firstNonSpace = parsee.find_first_not_of(' ', lp + 1); // +1 for we need not the :
+              auto whitespaces = firstNonSpace - (lp + 1);
+              auto endOfValue = parsee.find(' ', firstNonSpace);
+              auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
+              ba::to_lower(val);
+              *exporter = evalVal(val);
+              parsee.erase(fp - bonus,
+                           lp - (fp - bonus) + whitespaces + 2 + val.size()); // +2 for ':' & trailing space
+              return 1;
+          }
+          default:
+              if (l == parsee.end()) {
+                  parsee.erase(f - bonus, l);
+                  *exporter = true;
+                  return 1;
+              }
+              return 0;
       }
-      return 0;
   }
 
   template<class T>
   int Option_<T>::handleOptionalNegatedFlagParse(std::string& parsee,
-                                                 std::string::const_iterator f,
-                                                 std::string::const_iterator l) const {
+                                                 StrCIter f,
+                                                 StrCIter l) const {
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
       std::string noStr = "--no";
@@ -452,9 +430,9 @@ namespace InfoParse::Internals {
   }
 
   template<class T>
-  int Option_<T>::parse(std::string& parsee,
-                        std::string::const_iterator f,
-                        std::string::const_iterator l) const {
+  int Option_<T>::parseFlag(std::string& parsee,
+                            StrCIter f,
+                            StrCIter l) const {
       if (f == l) { // 404
           return 0;
       }
@@ -467,6 +445,58 @@ namespace InfoParse::Internals {
           return handleFlagParse(parsee, f, l);
       }
       return 0;
+  }
+
+  template<class T>
+  int Option_<T>::parseValue(std::string& parsee,
+                             StrCIter f,
+                             StrCIter l) const {
+      if (f == l) { // 404
+          return 0;
+      }
+      auto evalVal = [](const std::string& val) -> T {
+        return T(); //todo
+      };
+
+      namespace ba = boost::algorithm;
+      auto lp = std::distance(parsee.cbegin(), l);
+      auto fp = std::distance(parsee.cbegin(), f);
+      int bonus = fp + 2 != lp;
+
+      switch (*l) {
+          case '=': {
+              // +1 for we need not the =
+              auto val = parsee.substr(lp + 1, parsee.find(' ', lp) - (lp + 1));
+              ba::to_lower(val);
+              *exporter = evalVal(val);
+              parsee.erase(fp - bonus, lp - (fp - bonus) + 2 + val.size()); // +2 for '=' & trailing space
+              return 1;
+          }
+          case ' ':
+          case ':': {
+              if (l + 1 == parsee.end()) {
+                  *exporter = T();
+                  parsee.erase(fp - bonus, lp - (fp - bonus) + 1); // +1 for ':'/' '
+                  return 1;
+              }
+              auto firstNonSpace = parsee.find_first_not_of(' ', lp + 1); // +1 for we need not the ':'/' '
+              auto whitespaces = firstNonSpace - (lp + 1);
+              auto endOfValue = parsee.find(' ', firstNonSpace);
+              auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
+              ba::to_lower(val);
+              *exporter = evalVal(val);
+              parsee.erase(fp - bonus,
+                           lp - (fp - bonus) + whitespaces + 2 + val.size()); // +2 for ':' & trailing space
+              return 1;
+          }
+          default:
+              if (l == parsee.end()) {
+                  parsee.erase(f - bonus, l);
+                  *exporter = T();
+                  return 1;
+              }
+              return 0;
+      }
   }
 
 }

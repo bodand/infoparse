@@ -27,14 +27,34 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       delete parser;
   }
 
+  BOOST_AUTO_TEST_CASE(Test_OptionsParser_MultipleOptionAdditionWorks) {
+      auto* parser = new OptionsParser;
+      bool a, b;
+      parser->addOptions()
+              ("abool|a", &a)
+              ("bbool|b", &b);
+      parser->parse("-a -b");
+      BOOST_CHECK_MESSAGE(a && b, "Multiple addition of options succeeded.");
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_OptionsParser_SequentialOptionAdditionWorks) {
+      auto* parser = new OptionsParser;
+      bool a, b;
+      parser->addOption("abool|a", &a)
+              ->addOption("bbool|b", &b);
+      parser->parse("-a -b");
+      BOOST_CHECK_MESSAGE(a && b, "Sequential addition of options succeeded.");
+  }
+
   BOOST_AUTO_TEST_CASE(Test_OptionsParser_OptionParserParsesLongFlags) {
       auto* parser = new OptionsParser;
       BOOST_REQUIRE_NE(parser, nullptr);
       bool a, b, c;
-      parser->addOption("alpha", &a);
-      parser->addOption("beta", &b);
-      parser->addOption("gamma", &c);
-      parser->parse(" --alpha --gamma ");
+      parser->addOptions()
+              ("alpha|a", &a)
+              ("beta|b", &b)
+              ("gamma|g", &c);
+      parser->parse("--alpha --gamma");
       BOOST_CHECK(a);
       BOOST_CHECK(!b);
       BOOST_CHECK(c);
@@ -45,9 +65,9 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       auto* parser = new OptionsParser;
       BOOST_REQUIRE_NE(parser, nullptr);
       int a = 0, b = 0, c = 0;
-      parser->addOption("alpha", &a);
-      parser->addOption("beta", &b);
-      parser->addOption("gamma", &c);
+      parser->addOption("alpha|a", &a);
+      parser->addOption("beta|b", &b);
+      parser->addOption("gamma|g", &c);
       parser->parse(" --alpha 42 --gamma 123 ");
       BOOST_CHECK_EQUAL(a, 42);
       BOOST_CHECK_EQUAL(b, 0);
@@ -59,10 +79,10 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       auto* parser = new OptionsParser;
       BOOST_REQUIRE_NE(parser, nullptr);
       bool a, b, c;
-      parser->addOption("alpha", &a);
-      parser->addOption("beta", &b);
-      parser->addOption("gamma", &c);
-      parser->parse(" -a -g ");
+      parser->addOption("alpha|a", &a);
+      parser->addOption("beta|b", &b);
+      parser->addOption("gamma|g", &c);
+      parser->parse("-a -g");
       BOOST_CHECK(a);
       BOOST_CHECK(!b);
       BOOST_CHECK(c);
@@ -73,9 +93,9 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       auto* parser = new OptionsParser;
       BOOST_REQUIRE_NE(parser, nullptr);
       int a = 0, b = 0, c = 0;
-      parser->addOption("alpha", &a);
-      parser->addOption("beta", &b);
-      parser->addOption("gamma", &c);
+      parser->addOption("alpha|a", &a);
+      parser->addOption("beta|b", &b);
+      parser->addOption("gamma|g", &c);
       parser->parse(" -a 42 -g 123 ");
       BOOST_CHECK_EQUAL(a, 42);
       BOOST_CHECK_EQUAL(b, 0);
@@ -88,12 +108,12 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       BOOST_REQUIRE_NE(parser, nullptr);
       int a = 0, b = 0, c = 0;
       bool aa, bb, cc;
-      parser->addOption("alpha", &a);
-      parser->addOption("beta", &b);
-      parser->addOption("gamma", &c);
-      parser->addOption("die", &aa);
-      parser->addOption("sleep", &bb);
-      parser->addOption("observe", &cc);
+      parser->addOption("alpha|a", &a);
+      parser->addOption("beta|b", &b);
+      parser->addOption("gamma|g", &c);
+      parser->addOption("die|d", &aa);
+      parser->addOption("sleep|d", &bb);
+      parser->addOption("observe|o", &cc);
       parser->parse(" -dsa 42 -g 123 ");
       BOOST_CHECK_EQUAL(a, 42);
       BOOST_CHECK_EQUAL(b, 0);

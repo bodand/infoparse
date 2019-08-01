@@ -32,14 +32,14 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionCanBeInstantiatedWithExplicitShortName) {
       int i;
-      auto opt = new Option_("test", 'c', &i);
+      auto opt = new Option_("test|c", &i);
       BOOST_CHECK_NE(opt, nullptr);
       delete opt;
   }
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameSole) {
       int i;
-      auto opt = new Option_("test", 'c', &i);
+      auto opt = new Option_("test|c", &i);
       auto res = opt->match("text --test 4 text");
       BOOST_CHECK_EQUAL(i, 4);
       BOOST_CHECK_EQUAL(res, "text text");
@@ -48,7 +48,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameSole) {
       int i;
-      auto opt = new Option_("test", 'c', &i);
+      auto opt = new Option_("test|c", &i);
       auto res = opt->match("text -c 4 text");
       BOOST_CHECK_EQUAL(i, 4);
       BOOST_CHECK_EQUAL(res, "text text");
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithLongNameSole) {
       std::string s;
-      auto opt = new Option_("test", 'c', &s);
+      auto opt = new Option_("test|c", &s);
       auto res = opt->match("text --test string text");
       BOOST_CHECK_EQUAL(s, "string");
       BOOST_CHECK_EQUAL(res, "text text");
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameSole) {
       std::string s;
-      auto opt = new Option_("test", 'c', &s);
+      auto opt = new Option_("test|c", &s);
       auto res = opt->match("text -c string text");
       BOOST_CHECK_EQUAL(s, "string");
       BOOST_CHECK_EQUAL(res, "text text");
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameCherryPick) {
       int i;
-      auto opt = new Option_("test", 'c', &i);
+      auto opt = new Option_("test|c", &i);
       auto res = opt->match("text --test 42 -w whatever -o inflate --exclude humanity text");
       BOOST_CHECK_EQUAL(i, 42);
       BOOST_CHECK_EQUAL(res, "text -w whatever -o inflate --exclude humanity text");
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameCherryPick) {
       int i;
-      auto opt = new Option_("test", 'c', &i);
+      auto opt = new Option_("test|c", &i);
       auto res = opt->match("text --explode -c 42 -w whatever -o inflate text");
       BOOST_CHECK_EQUAL(i, 42);
       BOOST_CHECK_EQUAL(res, "text --explode -w whatever -o inflate text");
@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithLongNameCherryPick) {
       std::string i;
-      auto opt = new Option_("test", 'c', &i);
+      auto opt = new Option_("test|c", &i);
       auto res = opt->match("text --test cocaine -w whatever -o inflate --exclude humanity text");
       BOOST_CHECK_EQUAL(i, "cocaine");
       BOOST_CHECK_EQUAL(res, "text -w whatever -o inflate --exclude humanity text");
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameCherryPick) {
       std::string i;
-      auto opt = new Option_("test", 'c', &i);
+      auto opt = new Option_("test|c", &i);
       auto res = opt->match("text --explode -c apple -w whatever -o inflate text");
       BOOST_CHECK_EQUAL(i, "apple");
       BOOST_CHECK_EQUAL(res, "text --explode -w whatever -o inflate text");
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_ShortFlagsParsedCorrectly) {
       bool b;
-      auto* opt = new Option_("test", &b);
+      auto* opt = new Option_("test|t", &b);
       auto res = opt->match("text text -t text text");
       BOOST_CHECK_MESSAGE(b, "Boolean short flag parsed correctly");
       BOOST_CHECK_EQUAL(res, "text text text text");
@@ -247,8 +247,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_ExtendedFlagInvocationShortYesNo) {
       bool yes, no;
-      auto* yopt = new Option_("yflag", &yes);
-      auto* nopt = new Option_("nflag", &no);
+      auto* yopt = new Option_("yflag|y", &yes);
+      auto* nopt = new Option_("nflag|n", &no);
       std::string parsee("text -y=yes text -n=no text");
       auto yres = yopt->match(parsee);
       auto res = nopt->match(yres);
@@ -261,8 +261,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_ExtendedFlagInvocationShortTrueFalse) {
       bool yes, no;
-      auto* yopt = new Option_("yflag", &yes);
-      auto* nopt = new Option_("nflag", &no);
+      auto* yopt = new Option_("yflag|y", &yes);
+      auto* nopt = new Option_("nflag|n", &no);
       std::string parsee("text -y=true text -n=false text");
       auto yres = yopt->match(parsee);
       auto res = nopt->match(yres);
@@ -275,8 +275,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_ExtendedFlagInvocationShort10) {
       bool yes, no;
-      auto* yopt = new Option_("yflag", &yes);
-      auto* nopt = new Option_("nflag", &no);
+      auto* yopt = new Option_("yflag|y", &yes);
+      auto* nopt = new Option_("nflag|n", &no);
       std::string parsee("text -y=1 text -n=0 text");
       auto yres = yopt->match(parsee);
       auto res = nopt->match(yres);
@@ -289,10 +289,10 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_ExtendedFlagInvocationShortArbirtaryTruthynessCheck) {
       bool num, text, noNum, noTxt;
-      auto* numOpt = new Option_("nflag", &num);
-      auto* txtOpt = new Option_("tflag", &text);
-      auto* nNmOpt = new Option_("nnflag", 'x', &noNum);
-      auto* nTxOpt = new Option_("ntflag", 'y', &noTxt);
+      auto* numOpt = new Option_("nflag|n", &num);
+      auto* txtOpt = new Option_("tflag|t", &text);
+      auto* nNmOpt = new Option_("nnflag|x", &noNum);
+      auto* nTxOpt = new Option_("ntflag|y", &noTxt);
       std::string parsee("text -n=14Miles text -t=text text -x=0deaths -y= text");
       auto numRes = numOpt->match(parsee);
       auto txtRes = txtOpt->match(numRes);
@@ -376,8 +376,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_SeekingExtendedFlagInvocationShortYesNo) {
       bool yes, no;
-      auto* yopt = new Option_("yflag", &yes);
-      auto* nopt = new Option_("nflag", &no);
+      auto* yopt = new Option_("yflag|y", &yes);
+      auto* nopt = new Option_("nflag|n", &no);
       std::string parsee("text -y:yes text -n: no text");
       auto yres = yopt->match(parsee);
       auto res = nopt->match(yres);
@@ -390,8 +390,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_SeekingExtendedFlagInvocationShortTrueFalse) {
       bool yes, no;
-      auto* yopt = new Option_("yflag", &yes);
-      auto* nopt = new Option_("nflag", &no);
+      auto* yopt = new Option_("yflag|y", &yes);
+      auto* nopt = new Option_("nflag|n", &no);
       std::string parsee("text -y:true text -n: false text");
       auto yres = yopt->match(parsee);
       auto res = nopt->match(yres);
@@ -404,8 +404,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_SeekingExtendedFlagInvocationShort10) {
       bool yes, no;
-      auto* yopt = new Option_("yflag", &yes);
-      auto* nopt = new Option_("nflag", &no);
+      auto* yopt = new Option_("yflag|y", &yes);
+      auto* nopt = new Option_("nflag|n", &no);
       std::string parsee("text -y:1 text -n:0 text");
       auto yres = yopt->match(parsee);
       auto res = nopt->match(yres);
@@ -418,10 +418,10 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_AUTO_TEST_CASE(Test_Option_SeekingExtendedFlagInvocationShortArbirtaryTruthynessCheck) {
       bool num, text, noNum, noTxt;
-      auto* numOpt = new Option_("nflag", &num);
-      auto* txtOpt = new Option_("tflag", &text);
-      auto* nNmOpt = new Option_("nnflag", 'x', &noNum);
-      auto* nTxOpt = new Option_("ntflag", 'y', &noTxt);
+      auto* numOpt = new Option_("nflag|n", &num);
+      auto* txtOpt = new Option_("tflag|t", &text);
+      auto* nNmOpt = new Option_("nnflag|x", &noNum);
+      auto* nTxOpt = new Option_("ntflag|y", &noTxt);
       std::string parsee("text -n:    14Miles text -t: text text -x: 0deaths -y:");
       auto numRes = numOpt->match(parsee);
       auto txtRes = txtOpt->match(numRes);

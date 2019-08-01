@@ -16,6 +16,7 @@
 #include <functional>
 
 #include "Option_.hpp"
+#include "OptionString.hpp"
 
 namespace InfoParse::Internals {
 
@@ -49,28 +50,11 @@ namespace InfoParse::Internals {
        * parameters within the inner collection thus
        * skipping a move operation.
        *
-       * @param longName The LONG name of the option (--longname)
-       * @param shortName The SHORT name of the option (-s)
+       * @param names The names of the param split by '|'
        * @param exporter A pointer to a memory block of type T, into
        *                 which the value will be put
        */
-      void addOption(std::string longName, char shortName, T* exporter);
-
-      /**
-       * Constructs an Option_<T> with the supplied
-       * parameters within the inner collection thus
-       * skipping a move operation.
-       *
-       * @param name The LONG name of the option. Short name is
-       *             explicitly set to the first character of the name.
-       * @param exporter A pointer to a memory block of type T, into
-       *                 which the value will be pu
-       *
-       * @note The creation of the SHORT name doesn't check if there already
-       *       exists an option with the same SHORT name, thus it can be
-       *       shadowed by earlier created options' SHORT names
-       */
-      void addOption(std::string name, T* exporter);
+      void addOption(OptionString names, T* exporter);
 
       /**
        * Triggers the execution of argument processing on all
@@ -111,12 +95,7 @@ namespace InfoParse::Internals {
   }
 
   template<class T>
-  void OptionHandler_<T>::addOption(std::string longName, char shortName, T* exporter) {
-      options.emplace_back(std::move(longName), shortName, exporter);
-  }
-
-  template<class T>
-  void OptionHandler_<T>::addOption(std::string name, T* exporter) {
+  void OptionHandler_<T>::addOption(OptionString name, T* exporter) {
       options.emplace_back(std::move(name), exporter);
   }
 
