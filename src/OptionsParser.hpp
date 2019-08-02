@@ -22,24 +22,77 @@
 #include "OptionHandler_.hpp"
 #include "OptionString.hpp"
 
+/**
+ * Main namespace for the library.
+ *
+ * Contains all the API the library provides
+ * in the form of classes and/or functions.
+ */
 namespace InfoParse {
   using Internals::OptionHandler_;
 
   class OptionsParser;
+  /**
+   * Contains implementation
+   * details of the library.
+   *
+   * Nothing it contains should be used by
+   * any user of the library, albeit possible.
+   */
   namespace Internals {
+    /**
+     * Adds options to an OptionsParser
+     * objects using the operator()(OptionsString, T*).
+     *
+     * Allows the OptionsParser::addOptions()
+     * function to exist, as that function returns a
+     * object of this class, which then can be used for
+     * adding multiple options to the "mother" OptionParser
+     * object.
+     *
+     * @see OptionsParser::addOptions()
+     * @see operator()()
+     */
     class OptionAdder {
         /// Interface
     public:
+        /**
+         * Adds option to the mother object by callit her
+         * addOption(OptionString, T*) method.
+         *
+         * @tparam T The type of variable to be spit back
+         * @param[in] name The name of the variable in the form
+         *                  of an OptionString object.
+         * @param[out] val A pointer to an object of type T which
+         *                  supports operator>>
+         *
+         * @return A reference to this object to allow chain-calling
+         *          operator()()
+         *
+         * @see OptionsParser::addOption()
+         */
         template<class T>
-        const OptionAdder& operator()(Internals::OptionString name, T* val) const;
+        const OptionAdder& operator()(OptionString name, T* val) const;
 
         /// Lifecycle
     public:
+        /**
+         * Constructs the OptionAdder object
+         * with a pointer to its mother.
+         *
+         * @param[in] parser The mother object
+         *                    of the OptionAdder object.
+         *                    Options are added to this
+         *                    object by operator()()
+         *
+         * @see OptionAdder::operator()()
+         */
         OptionAdder(OptionsParser* parser);
 
         /// Fields
     private:
-        OptionsParser* parser;
+        /// The "mother" object to add the options to
+        OptionsParser* mother;
     };
   }
   using Internals::OptionAdder;
@@ -51,36 +104,41 @@ namespace InfoParse {
       /// Interface
   public:
       /**
- * Adds multiple options to the parser.
- *
- * Returns an instance of an internal OptionAdder object
- * which offers an operator() which returns a reference
- * to object allowing chain calling.
- *
- * @example
- * parser.addOptions()
- *    ("opt1", &a)
- *    ("opt2", &b);
- *
- * @return An object to call operator() on.
- */
+       * Adds multiple options to the parser.
+       *
+       * Returns an instance of an internal OptionAdder object
+       * which offers an operator() which returns a reference
+       * to object allowing chain calling.
+       *
+       * @code
+       * parser.addOptions()
+       *    ("alpha|a", &a)
+       *    ("beta|b", &b)
+       *    ("silent|quiet|s|q", &stfu)
+       * ;
+       * @endcode
+       *
+       * @return An object to call operator() on.
+       *
+       * @see Internals::OptionAdder
+       */
       OptionAdder addOptions();
 
       /**
        * Adds an option with T type parameter to be
        * stored and later invoked to do its parsing
+       *
        * @tparam T Type for the exported value
-       * @param name The LONG name of the option. SHORT name is
+       * @param[in] name The LONG name of the option. SHORT name is
        *             deduced from the first character of the LONG name.
-       * @param exporter A pointer to a memory block of type T, into
+       * @param[out] exporter A pointer to a memory block of type T, into
        *                 which the parsed value will be put
        *
        * @note `nullptr` for exporter is not checked, yet
        * @note T must support operator>> from istream, this
        *       is made sure by SFINAE so it will die compile time
-       * @note The creation of the SHORT name doesn't check if there already
-       *       exists an option with the same SHORT name, thus it can be
-       *       shadowed by earlier created options' SHORT names
+       * @note Option names are not checked, so one of the options
+       *        will shadow the other, depending their position in the std::map
        */
       template<class T>
       std::enable_if_t<Internals::can_stream<T>()
@@ -92,10 +150,10 @@ namespace InfoParse {
        * Parses the given arguments using parameters in
        * the style of `int main` parameters.
        *
-       * @param argc The length of argv
-       * @param argv An array of char arrays which store the
+       * @param[in] argc The length of argv
+       * @param[in] argv An array of char arrays which store the
        *             parameters split up by the local shell
-       * @return The remnants of the parsed concatenated string,
+       * @returns The remnants of the parsed concatenated string,
        *         matched options removed.
        *
        * @note In the future the return value might change to return
@@ -109,7 +167,7 @@ namespace InfoParse {
        * Parses the given string as if it was directly input from
        * the local shell
        *
-       * @param args The string to parse
+       * @param[in] args The string to parse
        * @return The remnants of the parsed string, matched options removed.
        */
       std::string parse(const std::string& args);
@@ -129,7 +187,7 @@ namespace InfoParse {
   const Internals::OptionAdder&
   Internals::OptionAdder::operator()(Internals::OptionString name,
                                      T* val) const {
-      parser->addOption(std::move(name), val);
+      mother->addOption(std::move(name), val);
       return *this;
   }
 
@@ -204,7 +262,7 @@ namespace InfoParse {
       return std::regex_replace(args, std::regex("\\s+"), " ");
   }
 
-  OptionAdder OptionsParser::addOptions() {
+  inline OptionAdder OptionsParser::addOptions() {
       return OptionAdder(this);
   }
 

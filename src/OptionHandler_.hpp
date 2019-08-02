@@ -41,7 +41,7 @@ namespace InfoParse::Internals {
        * Adds an option to the internal collection
        * of Option_<T> type options
        *
-       * @param option The Option_<T> to be added
+       * @param[in] option The Option_<T> to be added
        */
       void addOption(Option_<T>&& option);
 
@@ -50,8 +50,8 @@ namespace InfoParse::Internals {
        * parameters within the inner collection thus
        * skipping a move operation.
        *
-       * @param names The names of the param split by '|'
-       * @param exporter A pointer to a memory block of type T, into
+       * @param[in] names The names of the param split by '|'
+       * @param[out] exporter A pointer to a memory block of type T, into
        *                 which the value will be put
        */
       void addOption(OptionString names, T* exporter);
@@ -61,7 +61,7 @@ namespace InfoParse::Internals {
        * stored Option_<T>-s, each following the other in insertion
        * order.
        *
-       * @param args The argument string to process
+       * @param[in] args The argument string to process
        * @return The remains of the processed string
        */
       std::string handle(const std::string& args) const;
@@ -75,7 +75,7 @@ namespace InfoParse::Internals {
       /**
        * Removes the option with "name".
        * No-op if it is not found internally
-       * @param name
+       * @param[in] name
        */
       void rmOption(const std::string& name);
   };

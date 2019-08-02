@@ -124,7 +124,7 @@ class Name : public GreatClass,
 public:
     /* Public and/or static methods */
     
-    /// Constructors & destructor
+    /// Lifecycle
 public:
     Name() = default;
     Name(const Name& cp) = default;
@@ -146,7 +146,7 @@ private:
     /* Internal methods */
 };
 ``` 
-Classes before this schema was finalized currently as `InfoSoft CodeStyle C++ 2.0`,
+Classes before this schema was finalized currently as `InfoSoft CodeStyle C++ 2.1`,
 may not use any kind of noticeable schema, or use `InfoSoft CodeStyle C++ 1.x`.
 Differences to `1.x` are:
 
@@ -157,5 +157,8 @@ Differences to `1.x` are:
  - Group names were using only two slashes and were put after the accesiblity modifier on the same line
  like so: `public: // Implemented public methods`
 
+Difference to `2.0` is:
+ 
+ - /// Lifecycle is /// Constructor(s?) (& destructor)?
 
 Transitioning old schemas into the new one is curently in 

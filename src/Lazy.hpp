@@ -11,12 +11,24 @@
 #include "utils.hpp"
 
 namespace InfoParse::Internals {
+  /**
+   * @brief Exception class; thrown
+   *        if requesting casting Lazy<T> to T
+   *        and T is not initializable without args
+   *
+   * Exception class thrown
+   * if a Lazy<T> object is requested
+   * to construct and initialize its
+   * internal T object, however upon construction
+   * of the Lazy<T> object the initializer function
+   * requires arguments.
+   */
   class bad_lazy_eval : public virtual std::exception {
       /// Interface
   public:
       const char* what() const noexcept override;
 
-      /// Constructor
+      /// Lifecycle
   public:
       bad_lazy_eval(std::string typname);
 
@@ -44,7 +56,7 @@ namespace InfoParse::Internals {
       /**
        * Returns and possibly instantiates
        * an instance of type T with arguments TArgs
-       * @param args Arguments with which T is instantiated
+       * @param[in] args Arguments with which T is instantiated
        * @return A reference to new or an already instantiated
        *            heap-allocated object.
        *
@@ -89,7 +101,7 @@ namespace InfoParse::Internals {
       /**
        * Returns and possibly instantiates
        * an instance of type T with arguments TArgs
-       * @param args Arguments with which T is instantiated
+       * @param[in] args Arguments with which T is instantiated
        * @return A reference to new or an already instantiated
        *            heap-allocated object.
        *
@@ -97,22 +109,25 @@ namespace InfoParse::Internals {
        */
       _retpure const T& operator()(TArgs... args) const;
 
-      /// Constructors
+      /// Lifecycle
   public:
       Lazy() = delete;
       /**
        * Constructs Lazy<T> by initializing the initer function of
        * type `TArgs -> std::shared_ptr<T>`.
        *
-       * @param initer The function to instantiate and initialize
+       * @param[in] initer The function to instantiate and initialize
        *                the instance of type T whenever requested
        */
       Lazy(const std::function<std::shared_ptr<T>(TArgs...)>& initer);
 
       /// Fields
   private:
+      /// Function to initialize `val`
       const std::function<std::shared_ptr<T>(TArgs...)> initer;
+      /// The lazily allocated heap-object
       mutable std::shared_ptr<T> val;
+      /// Determines whether `val` has been initialized already
       mutable bool inited;
   };
 

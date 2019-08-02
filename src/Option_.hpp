@@ -40,7 +40,7 @@ namespace InfoParse::Internals {
        * Tries to match either of the names of the Option_
        * to the supplied string.
        *
-       * @param args The string to match the LONG then
+       * @param[in] args The string to match the LONG then
        *             if not found the SHORT name to
        * @return The string with the removed options' name and value
        *         For example: " text -b 4 more text" -> " text more text "
@@ -52,8 +52,8 @@ namespace InfoParse::Internals {
        * Constructs the Option_ with explicitly
        * given SHORT name.
        *
-       * @param names The names of the param split by '|'
-       * @param exporter The pointer to a constructed memory whereto
+       * @param[in] names The names of the param split by '|'
+       * @param[out] exporter The pointer to a constructed memory whereto
        *                 dump the found value
        *
        * @note `exporter` is not checked for `nullptr`
@@ -199,19 +199,19 @@ namespace InfoParse::Internals {
   template<>
   inline std::string Option_<bool>::match(const std::string& args) const {
       std::string parsee(args);
-      for (auto &&[name, kmp, bm] : names.get()) {
-//          if (name.size() > 15 || name.size() * 5 >= parsee.size()) {
-//              // If relative long jumps are possible use boyer-moore
-//              auto[first, last] = (*bm)(parsee.begin(), parsee.end());
-//              if (parseFlag(parsee, first, last))
-//                  return parsee;
-//          } else {
-          // otherwise fall-back on knuth-morris-pratt
-          auto dbg_s = parsee;
-          auto[first, last] = (kmp(name))(parsee.begin(), parsee.end());
-          if (parseFlag(parsee, first, last))
-              return parsee;
-//          }
+      for (auto &&[name, kmp, bm] : *names) {
+          if (name.size() > 15 || name.size() * 5 >= parsee.size()) {
+              // If relative long jumps are possible use boyer-moore
+              auto[first, last] = bm(name)(parsee.begin(), parsee.end());
+              if (parseFlag(parsee, first, last))
+                  return parsee;
+          } else {
+              // otherwise fall-back on knuth-morris-pratt
+              auto dbg_s = parsee;
+              auto[first, last] = kmp(name)(parsee.begin(), parsee.end());
+              if (parseFlag(parsee, first, last))
+                  return parsee;
+          }
       }
       return parsee;
   }

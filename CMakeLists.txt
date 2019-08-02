@@ -19,6 +19,21 @@ configure_file(
         "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
 )
 
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+    set(USE_CLANG_PARSING "YES")
+    set(COMPILATION_DB_PATH ${PROJECT_BINARY_DIR}/compile_command.json)
+else ()
+    set(USE_CLANG_PARSING "NO")
+    set(COMPILATION_DB_PATH "")
+endif ()
+
+configure_file(
+        ${PROJECT_SOURCE_DIR}/.doxygen.in
+        ${PROJECT_SOURCE_DIR}/.doxygen
+        @ONLY
+)
+
 message(STATUS "[InfoParse] Looking for a presinstalled Boost")
 find_package(Boost)
 if (Boost_FOUND)
@@ -58,7 +73,7 @@ else ()
     if (EXISTS ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz)
         message(STATUS "Deleting archive")
         file(REMOVE ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz)
-    endif()
+    endif ()
     file(GLOB AUTO_BOOST_DIR RELATIVE ${CMAKE_SOURCE_DIR} boost_*)
     include_directories("${AUTO_BOOST_DIR}")
 endif ()

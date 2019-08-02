@@ -1,2 +1,4 @@
 /docs/* linguist-detectable=false
 /dox/* linguist-detectable=false
+/dox_site/* linguist-detectable=false
+/infoparse/* linguist-detectable=false

@@ -31,7 +31,8 @@ std::vector<std::string> InfoParse::Internals::OptionString::prependDashes(std::
     return retVal;
 }
 
-std::vector<InfoParse::Internals::searchableOf<char>> InfoParse::Internals::OptionString::get() const {
+std::vector<InfoParse::Internals::searchableOf<char>>
+InfoParse::Internals::OptionString::get() const {
     typedef std::vector<InfoParse::Internals::searchableOf<char>> Vec;
     Vec retVal;
     for (Vec::size_type i = 0; i < names.size(); ++i) {
@@ -44,5 +45,18 @@ InfoParse::Internals::OptionString::OptionString(const char* name)
         : OptionString(std::string(name)) {}
 
 const std::string& InfoParse::Internals::OptionString::operator[](std::vector<std::string>::size_type i) const {
-    return names[i];
+    return names.at(i);
+}
+
+std::vector<InfoParse::Internals::searchableOf<char>>
+InfoParse::Internals::OptionString::operator*() const {
+    return get();
+}
+
+bool InfoParse::Internals::OptionString::operator==(const InfoParse::Internals::OptionString& rhs) const {
+    return names == rhs.names;
+}
+
+bool InfoParse::Internals::OptionString::operator!=(const InfoParse::Internals::OptionString& rhs) const {
+    return !(rhs == *this);
 }

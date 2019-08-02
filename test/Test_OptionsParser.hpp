@@ -31,10 +31,11 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       auto* parser = new OptionsParser;
       bool a, b;
       parser->addOptions()
-              ("abool|a", &a)
-              ("bbool|b", &b);
+              ("alpha|a", &a)
+              ("beta|b", &b);
       parser->parse("-a -b");
       BOOST_CHECK_MESSAGE(a && b, "Multiple addition of options succeeded.");
+      delete parser;
   }
 
   BOOST_AUTO_TEST_CASE(Test_OptionsParser_SequentialOptionAdditionWorks) {
@@ -44,6 +45,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
               ->addOption("bbool|b", &b);
       parser->parse("-a -b");
       BOOST_CHECK_MESSAGE(a && b, "Sequential addition of options succeeded.");
+      delete parser;
   }
 
   BOOST_AUTO_TEST_CASE(Test_OptionsParser_OptionParserParsesLongFlags) {
