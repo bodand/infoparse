@@ -15,13 +15,46 @@
 #pragma ide diagnostic ignored "MemberFunctionCanBeStaticInspection"
 #pragma ide diagnostic ignored "cert-err58-cpp"
 
+#include <tuple>
+#include <random>
+
 #include <boost/test/included/unit_test.hpp>
+#include <boost/test/data/test_case.hpp>
+#include <boost/test/data/monomorphic.hpp>
 #include "../src/Option_.hpp"
 
 using namespace InfoParse;
 using namespace InfoParse::Internals;
+namespace bdata = boost::unit_test::data;
 
 BOOST_AUTO_TEST_SUITE(Test_Option)
+  typedef std::tuple<std::string, std::string, std::string> strings;
+
+  strings mkParseString(bool useShort, bool useNoise,
+                        const std::string& valSep,
+                        const std::string& value) {
+      std::string noise(useNoise ? "--whatever --overthrow humanity"
+                                 : "");
+      std::string begin("text " + noise + " text ");
+      std::string end(" text " + noise + " text");
+      std::string parse((useShort ? "-c"
+                                  : "--test")
+                        + valSep + value);
+      return {
+              begin + parse + end,
+              "text text text text",
+              begin + value + end
+      };
+  }
+
+  auto valSeps = bdata::make({
+                                     std::make_tuple(std::string(""), true),
+                                     std::make_tuple(std::string(" "), true),
+                                     std::make_tuple(std::string("="), true),
+                                     std::make_tuple(std::string("= "), false),
+                                     std::make_tuple(std::string(":"), true),
+                                     std::make_tuple(std::string(": "), true)
+                             });
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionCanBeInstantiatedWithDeductedShortName) {
       int i;
@@ -37,75 +70,131 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameSole) {
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameSole,
+                       valSeps, sample, match) {
       int i;
       auto opt = new Option_("test|c", &i);
-      auto res = opt->match("text --test 4 text");
-      BOOST_CHECK_EQUAL(i, 4);
-      BOOST_CHECK_EQUAL(res, "text text");
+      auto[matchee, exp, fail] = mkParseString(false, false, sample, "4");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(i, 4);
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameSole) {
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameSole,
+                       valSeps, sample, match) {
       int i;
       auto opt = new Option_("test|c", &i);
-      auto res = opt->match("text -c 4 text");
-      BOOST_CHECK_EQUAL(i, 4);
-      BOOST_CHECK_EQUAL(res, "text text");
+      auto[matchee, exp, fail] = mkParseString(true, false, sample, "4");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(i, 4);
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithLongNameSole) {
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchStringWithLongNameSole,
+                       valSeps, sample, match) {
       std::string s;
       auto opt = new Option_("test|c", &s);
-      auto res = opt->match("text --test string text");
-      BOOST_CHECK_EQUAL(s, "string");
-      BOOST_CHECK_EQUAL(res, "text text");
+      auto[matchee, exp, fail] = mkParseString(false, false, sample, "string");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(s, "string");
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(s, "");
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameSole) {
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameSole,
+                       valSeps, sample, match) {
       std::string s;
       auto opt = new Option_("test|c", &s);
-      auto res = opt->match("text -c string text");
-      BOOST_CHECK_EQUAL(s, "string");
-      BOOST_CHECK_EQUAL(res, "text text");
+      auto[matchee, exp, fail] = mkParseString(true, false, sample, "string");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(s, "string");
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(s, "");
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameCherryPick) {
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameCherryPick,
+                       valSeps, sample, match) {
       int i;
       auto opt = new Option_("test|c", &i);
-      auto res = opt->match("text --test 42 -w whatever -o inflate --exclude humanity text");
-      BOOST_CHECK_EQUAL(i, 42);
-      BOOST_CHECK_EQUAL(res, "text -w whatever -o inflate --exclude humanity text");
+      auto[matchee, exp, fail] = mkParseString(false, true, sample, "42");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(i, 42);
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameCherryPick) {
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameCherryPick,
+                       valSeps, sample, match) {
       int i;
       auto opt = new Option_("test|c", &i);
-      auto res = opt->match("text --explode -c 42 -w whatever -o inflate text");
-      BOOST_CHECK_EQUAL(i, 42);
-      BOOST_CHECK_EQUAL(res, "text --explode -w whatever -o inflate text");
+      auto[matchee, exp, fail] = mkParseString(true, true, sample, "42");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(i, 42);
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithLongNameCherryPick) {
-      std::string i;
-      auto opt = new Option_("test|c", &i);
-      auto res = opt->match("text --test cocaine -w whatever -o inflate --exclude humanity text");
-      BOOST_CHECK_EQUAL(i, "cocaine");
-      BOOST_CHECK_EQUAL(res, "text -w whatever -o inflate --exclude humanity text");
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchStringWithLongNameCherryPick,
+                       valSeps, sample, match) {
+      std::string s;
+      auto opt = new Option_("test|c", &s);
+      auto[matchee, exp, fail] = mkParseString(false, true, sample, "string");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(s, "string");
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(s, "");
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 
-  BOOST_AUTO_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameCherryPick) {
-      std::string i;
-      auto opt = new Option_("test|c", &i);
-      auto res = opt->match("text --explode -c apple -w whatever -o inflate text");
-      BOOST_CHECK_EQUAL(i, "apple");
-      BOOST_CHECK_EQUAL(res, "text --explode -w whatever -o inflate text");
+  BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchStringWithShortNameCherryPick,
+                       valSeps, sample, match) {
+      std::string s;
+      auto opt = new Option_("test|c", &s);
+      auto[matchee, exp, fail] = mkParseString(true, true, sample, "string");
+      auto res = opt->match(matchee);
+      if (match) {
+          BOOST_CHECK_EQUAL(s, "string");
+          BOOST_CHECK_EQUAL(res, exp);
+      } else {
+          BOOST_CHECK_EQUAL(s, "");
+          BOOST_CHECK_EQUAL(res, fail);
+      }
       delete opt;
   }
 

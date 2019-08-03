@@ -12,7 +12,7 @@ InfoParse::Internals::OptionString::OptionString(const std::string& str)
           return std::make_shared<knuth_morris_pratt<StrIter>>(name.begin(), name.end());
         });
         bmSearch.emplace_back([](const std::string& name) {
-          return std::make_shared<boyer_moore<StrIter>>(name.begin(), name.end());
+          return std::make_shared<boyer_moore_horspool<StrIter>>(name.begin(), name.end());
         });
     }
 }
@@ -59,4 +59,12 @@ bool InfoParse::Internals::OptionString::operator==(const InfoParse::Internals::
 
 bool InfoParse::Internals::OptionString::operator!=(const InfoParse::Internals::OptionString& rhs) const {
     return !(rhs == *this);
+}
+
+bool InfoParse::Internals::OptionString::hasShort() const {
+    for (auto&& name : names) {
+        if (name.size() == 2)
+            return true;
+    }
+    return false;
 }

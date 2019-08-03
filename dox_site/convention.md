@@ -159,6 +159,6 @@ Differences to `1.x` are:
 
 Difference to `2.0` is:
  
- - /// Lifecycle is /// Constructor(s?) (& destructor)?
+ - /// Lifecycle was /// Constructor(s?) (& destructor)?
 
 Transitioning old schemas into the new one is curently in 

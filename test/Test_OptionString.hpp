@@ -26,6 +26,30 @@ BOOST_AUTO_TEST_SUITE(Test_OptionString)
       );
   }
 
+  BOOST_AUTO_TEST_CASE(Test_OptionString_HasShortReturnCorrectlyTrue) {
+      OptionString os("apple|a|ap");
+      std::vector<std::string> ex{"-apple", "-a", "-ap"};
+      BOOST_REQUIRE_NE(&os, nullptr);
+      auto& names = os.getNames();
+      BOOST_REQUIRE_EQUAL_COLLECTIONS(
+              names.begin(), names.end(),
+              ex.begin(), ex.end()
+      );
+      BOOST_CHECK(os.hasShort());
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_OptionString_HasShortReturnCorrectlyFalse) {
+      OptionString os("apple|ap");
+      std::vector<std::string> ex{"-apple", "-ap"};
+      BOOST_REQUIRE_NE(&os, nullptr);
+      auto& names = os.getNames();
+      BOOST_REQUIRE_EQUAL_COLLECTIONS(
+              names.begin(), names.end(),
+              ex.begin(), ex.end()
+      );
+      BOOST_CHECK(!os.hasShort());
+  }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 #pragma clang diagnostic pop

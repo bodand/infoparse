@@ -11,11 +11,11 @@
 #include "utils.hpp"
 
 #include <boost/algorithm/searching/knuth_morris_pratt.hpp>
-#include <boost/algorithm/searching/boyer_moore.hpp>
+#include <boost/algorithm/searching/boyer_moore_horspool.hpp>
 
 namespace InfoParse::Internals {
   using boost::algorithm::knuth_morris_pratt;
-  using boost::algorithm::boyer_moore;
+  using boost::algorithm::boyer_moore_horspool;
   using StrIter = std::string::const_iterator;
   /**
    * An std::tuple containing
@@ -26,7 +26,7 @@ namespace InfoParse::Internals {
   using searchableOf = std::tuple<
           std::basic_string<T>,
           Lazy<knuth_morris_pratt<typename std::basic_string<T>::const_iterator>, const std::string&>,
-          Lazy<boyer_moore<typename std::basic_string<T>::const_iterator>, const std::string&>
+          Lazy<boyer_moore_horspool<typename std::basic_string<T>::const_iterator>, const std::string&>
   >;
 
   /**
@@ -78,6 +78,11 @@ namespace InfoParse::Internals {
        * @see OptionString::get()
        */
       _retpure std::vector<searchableOf<char>> get() const;
+      /**
+       * Return true if at least one of the
+       * names is a short-type parameter (-<char>)
+       */
+      _retpure bool hasShort() const;
 
       /// Lifecycle
   public:
@@ -126,7 +131,7 @@ namespace InfoParse::Internals {
       /// Lazily constructed Knuth-Morris-Pratt search objects for each name
       std::vector<Lazy<knuth_morris_pratt<StrIter>, const std::string&>> kmpSearch;
       /// Lazily constructed Boyer-Moore search objects for each name
-      std::vector<Lazy<boyer_moore<StrIter>, const std::string&>> bmSearch;
+      std::vector<Lazy<boyer_moore_horspool<StrIter>, const std::string&>> bmSearch;
 
       /// Methods
   private:
