@@ -147,7 +147,7 @@ namespace InfoParse::Internals {
       int handleOptionalNegatedFlagParse(std::string& parsee,
                                          StrCIter f, StrCIter l) const;
 
-      std::string iterateNamesOnWith(std::string parsee, bool flag) const;
+      _retpure std::string iterateNamesOnWith(std::string parsee, bool flag) const;
   };
 
   /*
@@ -378,6 +378,7 @@ namespace InfoParse::Internals {
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
       int bonus = fp + 2 != lp;
+      int addendum = 1; // to skip ':' or leading ' '
 
       switch (*l) {
           case '=': {
@@ -387,29 +388,30 @@ namespace InfoParse::Internals {
               parsee.erase(fp - bonus, lp - (fp - bonus) + 2 + val.size()); // +2 for '=' & trailing space
               return 1;
           }
-          case ' ': [[fallthrough]];
-          case ':': {
-              if (l + 1 == parsee.end()) {
-                  *exporter = T();
-                  parsee.erase(fp - bonus, lp - (fp - bonus) + 1); // +1 for ':'/' '
-                  return 1;
-              }
-              auto firstNonSpace = parsee.find_first_not_of(' ', lp + 1); // +1 for we need not the ':'/' '
-              auto whitespaces = firstNonSpace - (lp + 1);
-              auto endOfValue = parsee.find(' ', firstNonSpace);
-              auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
-              *exporter = evalVal(val);
-              parsee.erase(fp - bonus,
-                           lp - (fp - bonus) + whitespaces + 2 + val.size()); // +2 for ':' & trailing space
-              return 1;
-          }
           default:
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
                   *exporter = T();
                   return 1;
               }
-              return 0;
+              addendum--;
+              [[fallthrough]];
+          case ' ': [[fallthrough]];
+          case ':': {
+              if (l + 1 == parsee.end()) {
+                  *exporter = T();
+                  parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
+                  return 1;
+              }
+              auto firstNonSpace = parsee.find_first_not_of(' ', lp + addendum);
+              auto whitespaces = firstNonSpace - (lp + addendum);
+              auto endOfValue = parsee.find(' ', firstNonSpace);
+              auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
+              *exporter = evalVal(val);
+              parsee.erase(fp - bonus,
+                           lp - (fp - bonus) + whitespaces + addendum + 1 + val.size()); // +1 for trailing space
+              return 1;
+          }
       }
   }
 

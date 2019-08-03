@@ -33,16 +33,16 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
   strings mkParseString(bool useShort, bool useNoise,
                         const std::string& valSep,
                         const std::string& value) {
-      std::string noise(useNoise ? "--whatever --overthrow humanity"
+      std::string noise(useNoise ? "--whatever --overthrow humanity "
                                  : "");
-      std::string begin("text " + noise + " text ");
-      std::string end(" text " + noise + " text");
+      std::string begin("text " + noise + "text ");
+      std::string end(" text " + noise + "text");
       std::string parse((useShort ? "-c"
                                   : "--test")
                         + valSep + value);
       return {
               begin + parse + end,
-              "text text text text",
+              begin + end.substr(1),
               begin + value + end
       };
   }
@@ -75,6 +75,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
       int i;
       auto opt = new Option_("test|c", &i);
       auto[matchee, exp, fail] = mkParseString(false, false, sample, "4");
+      std::cout << matchee << std::endl;
       auto res = opt->match(matchee);
       if (match) {
           BOOST_CHECK_EQUAL(i, 4);
