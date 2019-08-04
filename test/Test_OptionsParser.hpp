@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       parser->addOption("beta|b", &b);
       parser->addOption("gamma|g", &c);
       parser->addOption("die|d", &aa);
-      parser->addOption("sleep|d", &bb);
+      parser->addOption("sleep|s", &bb);
       parser->addOption("observe|o", &cc);
       parser->parse(" -dsa 42 -g 123 ");
       BOOST_CHECK_EQUAL(a, 42);

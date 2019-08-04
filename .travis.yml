@@ -16,14 +16,18 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - clang-8
             - cmake
             - make
             - doxygen
             - perl
+      env:
+        - MATRIX_EVAL="CC=clang-8 && CXX=clang++-8"
 
 before_install:
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
+  - eval "${MATRIX_EVAL}"
 
 install:
   - mkdir build && cd build

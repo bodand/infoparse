@@ -84,13 +84,7 @@ BOOST_AUTO_TEST_SUITE(Test_Lazy)
 
   BOOST_AUTO_TEST_CASE(Test_Lazy_DereferenceOpartorThrowExceptionWhenTRequiresArgs) {
       Lazy<int, int> l([](int i) { return std::make_shared<int>(i); });
-      try {
-          auto i = *l;
-      } catch (bad_lazy_eval& e) {
-          BOOST_CHECK_MESSAGE(true, "bad_lazy_eval thrown");
-          return;
-      }
-      BOOST_CHECK_MESSAGE(false, "bad_lazy_eval was not thrown");
+      BOOST_CHECK_THROW(auto i = *l, bad_lazy_eval);
   }
 
 BOOST_AUTO_TEST_SUITE_END()
