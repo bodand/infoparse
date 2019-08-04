@@ -24,6 +24,14 @@ matrix:
 before_install:
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
+  - echo [libc++ for clang]
+  - svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
+  - cd libcxx/lib && bash buildit
+  - sudo cp ./libc++.so.1.0 /usr/lib/
+  - sudo mkdir /usr/include/c++/v1
+  - cd .. && sudo cp -r include/* /usr/include/c++/v1/
+  - cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so
+  - sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd
 
 install:
   - mkdir build && cd build
