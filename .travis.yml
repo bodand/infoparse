@@ -31,6 +31,7 @@ install:
   - conan install .. --build missing
 
 script:
+  - clang -v
   - cmake ..
   - make
   - cd test && ctest -V
