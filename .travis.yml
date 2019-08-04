@@ -17,7 +17,6 @@ matrix:
             - make
             - doxygen
             - perl
-            - texlive
       env:
         - MATRIX_EVAL="CC=clang && CXX=clang++"
 
@@ -32,7 +31,7 @@ install:
 
 script:
   - clang -v
-  - cmake ..
+  - cmake .. -DCMAKE_VERBOSE_MAKEFILE=ON
   - make
   - cd test && ctest -V
 
