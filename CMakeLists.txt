@@ -35,7 +35,7 @@ configure_file(
 )
 
 message(STATUS "[InfoParse] Looking for a presinstalled Boost")
-find_package(Boost)
+find_package(Boost COMPONENTS unit_test_framework)
 if (Boost_FOUND)
     set(USE_AUTO_INSTALLED_BOOST 0)
     message(STATUS "[InfoParse] Found a preinstalled Boost")

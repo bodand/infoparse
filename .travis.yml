@@ -13,19 +13,17 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-8
             - cmake
             - make
             - doxygen
             - perl
             - texlive
       env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        - MATRIX_EVAL="CC=clang && CXX=clang++"
 
 before_install:
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
-  - sudo bash utility/mkBoost.sh
   - eval "${MATRIX_EVAL}"
 
 install:

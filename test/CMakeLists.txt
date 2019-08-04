@@ -6,41 +6,40 @@
 #
 
 # Testing -> Boost.Test
-message(STATUS "[InfoParse] Checking for Boost for testing")
-find_package(Boost COMPONENTS unit_test_framework)
-if (Boost_FOUND)
-    message(STATUS "[InfoParse] Found Boost, enabling testing")
-    enable_testing()
-    add_definitions(-DBOOST_TEST_DYN_LINK)
+enable_testing()
 
-    set(Test_HEADERS
-            Test_Testing.hpp
-            Test_OptionHandler.hpp
-            Test_Option.hpp
-            Test_Utils.hpp
-            Test_OptionsParser.hpp
-            Test_Lazy.hpp
-            Test_OptionString.hpp
-            )
+set(Test_HEADERS
+        Test_Testing.hpp
+        Test_OptionHandler.hpp
+        Test_Option.hpp
+        Test_Utils.hpp
+        Test_OptionsParser.hpp
+        Test_Lazy.hpp
+        Test_OptionString.hpp
+        )
 
-    foreach (case ${Test_HEADERS})
-        set(Test_TEST_CASES "${Test_TEST_CASES}
+foreach (case ${Test_HEADERS})
+    set(Test_TEST_CASES "${Test_TEST_CASES}
 #include \"${case}\"")
-    endforeach ()
+endforeach ()
 
-    configure_file(
-            "${PROJECT_SOURCE_DIR}/test/testmain.cpp.in"
-            "${PROJECT_SOURCE_DIR}/test/testmain.cpp"
-    )
+configure_file(
+        "${PROJECT_SOURCE_DIR}/test/testmain.cpp.in"
+        "${PROJECT_SOURCE_DIR}/test/testmain.cpp"
+)
 
-    foreach (file ${InfoParse_HEADERS})
-        set(InfoParse_FILES "../${file}")
-    endforeach ()
+foreach (file ${InfoParse_HEADERS})
+    message(${file})
+    set(InfoParse_FILES "../${file}")
+endforeach ()
 
-    add_executable(ip_test ${Test_HEADERS} testmain.cpp ${InfoParse_FILES})
-    target_link_libraries(ip_test infoparse)
-    set_target_properties(ip_test PROPERTIES LINKER_LANGUAGE CXX)
-    add_test("Run-BoostTests" ip_test "--logger=HRF,all")
-else ()
-    message(STATUS "[InfoParse] Could not find Boost, disabling testing")
-endif ()
+add_executable(ip_test ${Test_HEADERS} testmain.cpp ${InfoParse_FILES})
+
+target_link_libraries(ip_test infoparse)
+set_target_properties(ip_test PROPERTIES
+        LINKER_LANGUAGE CXX
+        CXX_STANDARD 17
+        CXX_EXTENSIONS OFF
+        )
+
+add_test("Run-BoostTests" ip_test "--logger=HRF,all")

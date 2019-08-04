@@ -115,7 +115,7 @@ If using C++17 or greater `[[nodiscard]]` otherwise nothing.
 
 All classes try to follow the following convention of class 
 layouts. Parts may be missing according to required usage of the class,
-for example completely defaulted constructors & non-virtual destructor
+for example a trivially constructable & destructable classes
 may leave out the `Contstructors & destructor` and `Operators` parts.
 ```objectivec
 class Name : public GreatClass,
@@ -159,6 +159,6 @@ Differences to `1.x` are:
 
 Difference to `2.0` is:
  
- - /// Lifecycle was /// Constructor(s?) (& destructor)?
+ - `/// Lifecycle` was `/// Constructor(s?) (& destructor)?`
 
 Transitioning old schemas into the new one is curently in 
