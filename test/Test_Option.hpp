@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 4);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(i, decltype(i)());
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 4);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(i, decltype(i)());
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 42);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(i, decltype(i)());
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 42);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, 0);
+          BOOST_CHECK_EQUAL(i, decltype(i)());
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;

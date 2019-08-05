@@ -29,17 +29,12 @@ configure_file(
 )
 
 foreach (file ${InfoParse_HEADERS})
-    message(${file})
     set(InfoParse_FILES "../${file}")
 endforeach ()
 
 add_executable(ip_test ${Test_HEADERS} testmain.cpp ${InfoParse_FILES})
 
 target_link_libraries(ip_test infoparse)
-set_target_properties(ip_test PROPERTIES
-        LINKER_LANGUAGE CXX
-        CXX_STANDARD 17
-        CXX_EXTENSIONS OFF
-        )
+set_target_properties(ip_test PROPERTIES LINKER_LANGUAGE CXX)
 
 add_test("Run-BoostTests" ip_test "--logger=HRF,all")
