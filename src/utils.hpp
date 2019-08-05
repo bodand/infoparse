@@ -120,19 +120,38 @@ namespace InfoParse {
 
     /**
      * Checks whether the supplied type T can
-     * be streamed into a stream of type S, using
+     * be streamed from a stream of type S, using
      * operator>>.
      *
      * @tparam T The type to check streamability of
-     * @tparam S The stream type to check streamability into
+     * @tparam S The stream type to check streamability from
      * @tparam Args Arguments for constructing an instance of type T
      *
      * @return Boolean depending on operator>>(S&, T&) exits.
      */
     template<class T, class S = std::istream, class... Args>
-    constexpr bool can_stream() {
+    constexpr bool can_stream_in() {
         return std::is_same_v<
                 std::decay_t<decltype(std::declval<S&>() >> std::declval<T&>(std::declval<Args>()...))>,
+                S
+        >;
+    }
+
+    /**
+     * Checks whether the supplied type T can
+     * be streamed into a stream of type S, using
+     * operator<<.
+     *
+     * @tparam T The type to check streamability of
+     * @tparam S The stream type to check streamability into
+     * @tparam Args Arguments for constructing an instance of type T
+     *
+     * @return Boolean depending on operator<<(S&, T&) exits.
+     */
+    template<class T, class S = std::ostream, class... Args>
+    constexpr bool can_stream_out() {
+        return std::is_same_v<
+                std::decay_t<decltype(std::declval<S&>() << std::declval<T&>(std::declval<Args>()...))>,
                 S
         >;
     }

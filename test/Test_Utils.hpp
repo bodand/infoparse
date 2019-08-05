@@ -159,13 +159,23 @@ BOOST_AUTO_TEST_SUITE(Test_Utils)
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_int) {
-      bool ret = Internals::can_stream<int>();
-      BOOST_CHECK_MESSAGE(ret, "can_stream failed for built-in type `int`");
+      bool ret = Internals::can_stream_in<int>();
+      BOOST_CHECK_MESSAGE(ret, "can_stream_in succeeded for built-in type `int`");
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_bool) {
-      bool ret = Internals::can_stream<bool>();
-      BOOST_CHECK_MESSAGE(ret, "can_stream failed for built-in type `bool`");
+      bool ret = Internals::can_stream_in<bool>();
+      BOOST_CHECK_MESSAGE(ret, "can_stream_in succeeded for built-in type `bool`");
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_out_int) {
+      bool ret = Internals::can_stream_out<int>();
+      BOOST_CHECK_MESSAGE(ret, "can_stream_out succeeded for built-in type `int`");
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_out_bool) {
+      bool ret = Internals::can_stream_out<bool>();
+      BOOST_CHECK_MESSAGE(ret, "can_stream_out succeeded for built-in type `bool`");
   }
 
 BOOST_AUTO_TEST_SUITE_END()

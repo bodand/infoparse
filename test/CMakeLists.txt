@@ -37,4 +37,4 @@ add_executable(ip_test ${Test_HEADERS} testmain.cpp ${InfoParse_FILES})
 target_link_libraries(ip_test infoparse)
 set_target_properties(ip_test PROPERTIES LINKER_LANGUAGE CXX)
 
-add_test("Run-BoostTests" ip_test "--logger=HRF,all")
+add_test("Run-BoostTests" ip_test)

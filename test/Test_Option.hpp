@@ -73,10 +73,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
   BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameSole,
                        valSeps, sample, match) {
       int i = 0;
-      BOOST_REQUIRE_EQUAL(int(), 0);
       auto opt = new Option_("test|c", &i);
       auto[matchee, exp, fail] = mkParseString(false, false, sample, "4");
-      std::cout << matchee << std::endl;
       auto res = opt->match(matchee);
       if (match) {
           BOOST_CHECK_EQUAL(i, 4);
