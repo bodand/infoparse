@@ -337,7 +337,7 @@ namespace InfoParse::Internals {
       // no negation just random 'o' before flag
       // note that *o-flag is invalid
       // and short options are not negatable
-      return 0;
+      /* so just */ return 0;
   }
 
   template<class T>
@@ -379,6 +379,7 @@ namespace InfoParse::Internals {
       auto fp = std::distance(parsee.cbegin(), f);
       int bonus = fp + 2 != lp;
       int addendum = 1; // to skip ':' or leading ' '
+      using ConstructableT = std::decay_t<std::remove_pointer_t<decltype(exporter)>>;
 
       switch (*l) {
           case '=': {
@@ -391,7 +392,7 @@ namespace InfoParse::Internals {
           default:
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
-                  *exporter = std::decay_t<std::remove_pointer_t<decltype(exporter)>>();
+                  *exporter = evalVal(std::to_string(ConstructableT()));
                   return 1;
               }
               addendum--;
@@ -399,8 +400,7 @@ namespace InfoParse::Internals {
           case ' ': [[fallthrough]];
           case ':': {
               if (l + 1 == parsee.end()) {
-                  using C = std::decay_t<std::remove_pointer_t<decltype(exporter)>>;
-                  *exporter = C();
+                  *exporter = evalVal(std::to_string(ConstructableT()));
                   parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
                   return 1;
               }
