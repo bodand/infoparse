@@ -402,7 +402,8 @@ namespace InfoParse::Internals {
           case ' ': [[fallthrough]];
           case ':': {
               if (l + 1 == parsee.end()) {
-                  *exporter = T{};
+                  T val{};
+                  *exporter = std::move(val);
                   parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
                   return 1;
               }
