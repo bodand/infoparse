@@ -78,12 +78,7 @@ namespace InfoParse {
      * @return Whether the inheritance relationship is in check
      */
     template<class B, class I>
-    constexpr bool extends() {
-        return std::is_base_of_v<
-                typename std::remove_reference<B>::type,
-                typename std::remove_reference<I>::type
-        >;
-    }
+    constexpr bool extends();
 
     /**
      * Checks if the supplied Factory can create a Product using Args
@@ -96,12 +91,7 @@ namespace InfoParse {
      */
     template<class F, class P,
             class... Args>
-    constexpr bool can_construct_with() {
-        return std::is_same_v<
-                decltype(std::declval<F>().manufacture(std::declval<Args>()...)),
-                P
-        >;
-    }
+    constexpr bool can_construct_with();
 
     /**
      * Checks if the supplied Factory can create a Product
@@ -114,9 +104,25 @@ namespace InfoParse {
      * @see can_construct_with<F, P, Args...>()
      */
     template<class F, class P>
-    constexpr bool can_construct() {
-        return can_construct_with<F, P>();
-    }
+    constexpr bool can_construct();
+
+    /**
+     * Checks whether the supplied type T can
+     * be streamed from a stream of type Si, using
+     * operator>> AND can be stream into a stream of
+     * type So using operator<<.
+     *
+     * @tparam T The type to check streamability of
+     * @tparam Si The stream type to check streamability from
+     * @tparam So The stream type to check streamability into
+     * @tparam Args Arguments for constructing an instance of type T
+     *
+     * @return Boolean depending on operator>>(Si&, T&) and
+     *          operator<<(So&, T&) exit.
+     */
+    template<class T, class Si = std::istream,
+            class So = std::ostream, class... Args>
+    constexpr bool can_stream();
 
     /**
      * Checks whether the supplied type T can
@@ -130,12 +136,7 @@ namespace InfoParse {
      * @return Boolean depending on operator>>(S&, T&) exits.
      */
     template<class T, class S = std::istream, class... Args>
-    constexpr bool can_stream_in() {
-        return std::is_same_v<
-                std::decay_t<decltype(std::declval<S&>() >> std::declval<T&>(std::declval<Args>()...))>,
-                S
-        >;
-    }
+    constexpr bool can_stream_in();
 
     /**
      * Checks whether the supplied type T can
@@ -149,11 +150,50 @@ namespace InfoParse {
      * @return Boolean depending on operator<<(S&, T&) exits.
      */
     template<class T, class S = std::ostream, class... Args>
+    constexpr bool can_stream_out();
+
+    template<class B, class I>
+    constexpr bool extends() {
+        return std::is_base_of_v<
+                typename std::remove_reference<B>::type,
+                typename std::remove_reference<I>::type
+        >;
+    }
+
+    template<class F, class P, class... Args>
+    constexpr bool can_construct_with() {
+        return std::is_same_v<
+                decltype(std::declval<F>().manufacture(std::declval<Args>()...)),
+                P
+        >;
+    }
+
+    template<class F, class P>
+    constexpr bool can_construct() {
+        return can_construct_with<F, P>();
+    }
+
+    template<class T, class S, class... Args>
+    constexpr bool can_stream_in() {
+        return std::is_same_v<
+                std::decay_t<decltype(std::declval<S&>() >> std::declval<T&>(std::declval<Args>()...))>,
+                S
+        >;
+    }
+
+    template<class T, class S, class... Args>
     constexpr bool can_stream_out() {
         return std::is_same_v<
                 std::decay_t<decltype(std::declval<S&>() << std::declval<T&>(std::declval<Args>()...))>,
                 S
         >;
     }
+
+    template<class T, class Si, class So, class... Args>
+    constexpr bool can_stream() {
+        return can_stream_in<T, Si, Args...>()
+               && can_stream_out<T, So, Args...>();
+    }
+
   }
 }
