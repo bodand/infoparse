@@ -135,8 +135,18 @@ namespace InfoParse {
        *                 which the parsed value will be put
        *
        * @note `nullptr` for exporter is not checked, yet
-       * @note T must support operator>> from istream, this
+       * @note T must support operator>> from istream,
+       *       and operator<< from ostream; this
        *       is made sure by SFINAE so it will die compile time
+       * @note The following is advised, otherwise the library doesn't
+       *        define any explicit behaviour
+       *        @code
+       *        T inVal, outVal;
+       *        std::stringstream ss; // or any stream, i && o stream is only
+       *                              // required for this example
+       *        (ss << inVal) >> outVal;
+       *        inVal == outVal;
+       *        @endcode
        * @note Option names are not checked, so one of the options
        *        will shadow the other, depending their position in the std::map
        */
@@ -192,7 +202,7 @@ namespace InfoParse {
   }
 
   template<class T>
-  inline std::enable_if_t<Internals::can_stream_in<T>()
+  inline std::enable_if_t<Internals::can_stream<T>()
                           && std::is_default_constructible_v<T>,
           OptionsParser*>
   OptionsParser::addOption(Internals::OptionString name, T* exporter) {
