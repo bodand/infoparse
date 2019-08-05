@@ -394,7 +394,7 @@ namespace InfoParse::Internals {
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
                   if constexpr (std::is_same_v<T, int>) {
-                      *exporter = std::move(int{0});
+                      *exporter = std::move(int{});
                   } else {
                       *exporter = std::move(T{});
                   }

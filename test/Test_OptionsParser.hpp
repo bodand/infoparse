@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       auto* parser = new OptionsParser;
       BOOST_REQUIRE_NE(parser, nullptr);
       int a = 0, b = 0, c = 0;
-      bool aa, bb, cc;
+      bool aa, bb, cc = false;
       parser->addOption("alpha|a", &a);
       parser->addOption("beta|b", &b);
       parser->addOption("gamma|g", &c);
