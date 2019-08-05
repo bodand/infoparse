@@ -16,7 +16,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - libc++1-7
             - libc++-7-dev
             - libc++abi-7-dev
             - cmake
