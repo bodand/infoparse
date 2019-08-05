@@ -400,15 +400,7 @@ namespace InfoParse::Internals {
           case ':': {
               if (l + 1 == parsee.end()) {
                   using C = std::decay_t<std::remove_pointer_t<decltype(exporter)>>;
-                  if (can_stream_out<C>()) {
-                      std::cerr
-                              << '"' << *exporter << "\" -> \""
-                              << (*exporter = C())
-                              << '"' << std::endl;
-                  } else {
-                      std::cerr << "cannot stream " << typeid(C).name() << std::endl;
-                      *exporter = C();
-                  };
+                  *exporter = C();
                   parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
                   return 1;
               }
