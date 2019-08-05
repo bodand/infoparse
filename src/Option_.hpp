@@ -375,11 +375,12 @@ namespace InfoParse::Internals {
       };
 
       namespace ba = boost::algorithm;
+      using ConstructableT = std::decay_t<std::remove_pointer_t<decltype(exporter)>>;
+
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
       int bonus = fp + 2 != lp;
       int addendum = 1; // to skip ':' or leading ' '
-      using ConstructableT = std::decay_t<std::remove_pointer_t<decltype(exporter)>>;
 
       switch (*l) {
           case '=': {
@@ -392,7 +393,9 @@ namespace InfoParse::Internals {
           default:
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
-                  *exporter = evalVal(std::to_string(ConstructableT()));
+                  std::ostringstream oss;
+                  oss << ConstructableT();
+                  *exporter = evalVal(oss.str());
                   return 1;
               }
               addendum--;
@@ -400,7 +403,9 @@ namespace InfoParse::Internals {
           case ' ': [[fallthrough]];
           case ':': {
               if (l + 1 == parsee.end()) {
-                  *exporter = evalVal(std::to_string(ConstructableT()));
+                  std::ostringstream oss;
+                  oss << ConstructableT();
+                  *exporter = evalVal(oss.str());
                   parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
                   return 1;
               }

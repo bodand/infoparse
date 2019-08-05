@@ -141,7 +141,7 @@ namespace InfoParse {
        *        will shadow the other, depending their position in the std::map
        */
       template<class T>
-      std::enable_if_t<Internals::can_stream_in<T>()
+      std::enable_if_t<Internals::can_stream<T>()
                        && std::is_default_constructible_v<T>,
               OptionsParser*>
       addOption(Internals::OptionString name, T* exporter);
