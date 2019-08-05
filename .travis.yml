@@ -16,6 +16,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - libstdc++-8-dev
             - cmake
             - make
             - doxygen
