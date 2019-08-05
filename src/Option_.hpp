@@ -393,9 +393,7 @@ namespace InfoParse::Internals {
           default:
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
-                  std::ostringstream oss;
-                  oss << ConstructableT();
-                  *exporter = evalVal(oss.str());
+                  *exporter = T{};
                   return 1;
               }
               addendum--;
@@ -403,9 +401,7 @@ namespace InfoParse::Internals {
           case ' ': [[fallthrough]];
           case ':': {
               if (l + 1 == parsee.end()) {
-                  std::ostringstream oss;
-                  oss << ConstructableT();
-                  *exporter = evalVal(oss.str());
+                  *exporter = T{};
                   parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
                   return 1;
               }
