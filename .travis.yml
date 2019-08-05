@@ -16,7 +16,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - libc++1
+            - libc++1-7
+            - libc++-7-dev
+            - libc++abi-7-dev
             - cmake
             - make
             - doxygen
@@ -25,23 +27,13 @@ matrix:
 before_install:
   - sudo python -m pip install --upgrade pip
   - sudo python -m pip install conan mkdocs --ignore-installed
-#  - echo [libc++ for clang] #todo
-#  - svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
-#  - cd libcxx
-#  - mkdir build && cd build
-#  - cmake .. && make && sudo make install
-#  - sudo cp ./libc++.so.1.0 /usr/lib/
-#  - sudo mkdir /usr/include/c++/v1
-#  - cd .. && sudo cp -r include/* /usr/include/c++/v1/
-#  - cd /usr/lib && sudo ln -sf libc++.so.1.0 libc++.so
-#  - sudo ln -sf libc++.so.1.0 libc++.so.1 && cd $cwd
 
 install:
   - mkdir build && cd build
   - conan install .. --build missing
 
 script:
-  - cmake .. -DCMAKE_VERBOSE_MAKEFILE=ON
+  - cmake ..
   - make
   - cd test && ctest -V
 
