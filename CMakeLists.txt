@@ -47,48 +47,15 @@ configure_file(
         @ONLY
 )
 
-message(STATUS "[InfoParse] Looking for a presinstalled Boost")
+message(STATUS "Looking for a presinstalled Boost")
 find_package(Boost COMPONENTS unit_test_framework)
 if (Boost_FOUND)
     set(USE_AUTO_INSTALLED_BOOST 0)
-    message(STATUS "[InfoParse] Found a preinstalled Boost")
+    message(STATUS "Looking for a presinstalled Boost - Success")
 else ()
     set(USE_AUTO_INSTALLED_BOOST 1)
-    message(STATUS "[InfoParse] Did not find a preinstalled Boost")
-    message(STATUS "[InfoParse] Installing the latest Boost Headers for project-level comsumption")
-    if ((NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz") AND (NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0"))
-        message(STATUS "Downloading archive")
-        file(DOWNLOAD
-                https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz
-                ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz
-                EXPECTED_HASH SHA256=882b48708d211a5f48e60b0124cf5863c1534cd544ecd0664bb534a4b5d506e9
-                SHOW_PROGRESS
-                )
-    else ()
-        message(STATUS "Already downloaded or installed")
-    endif ()
-    if ((EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz") AND (NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0"))
-        message(STATUS "Extracting archive")
-        if (WIN32)
-            execute_process(
-                    COMMAND cmd /c ${CMAKE_COMMAND} -E tar xzf boost_1_70_0.tar.gz
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            )
-        else ()
-            execute_process(
-                    COMMAND ${CMAKE_COMMAND} -E tar xzf boost_1_70_0.tar.gz
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            )
-        endif ()
-    else ()
-        message(STATUS "Already installed")
-    endif ()
-    if (EXISTS ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz)
-        message(STATUS "Deleting archive")
-        file(REMOVE ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz)
-    endif ()
-    file(GLOB AUTO_BOOST_DIR RELATIVE ${CMAKE_SOURCE_DIR} boost_*)
-    include_directories("${AUTO_BOOST_DIR}")
+    message(STATUS "Looking for a presinstalled Boost - Failure")
+    include(utility/mkboost.cmake)
 endif ()
 
 

@@ -57,14 +57,14 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
                              });
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionCanBeInstantiatedWithDeductedShortName) {
-      int i;
+      int i = 0;
       auto opt = new Option_("test", &i);
       BOOST_CHECK_NE(opt, nullptr);
       delete opt;
   }
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionCanBeInstantiatedWithExplicitShortName) {
-      int i;
+      int i = 0;
       auto opt = new Option_("test|c", &i);
       BOOST_CHECK_NE(opt, nullptr);
       delete opt;
@@ -72,7 +72,8 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameSole,
                        valSeps, sample, match) {
-      int i;
+      int i = 0;
+      BOOST_REQUIRE_EQUAL(int(), 0);
       auto opt = new Option_("test|c", &i);
       auto[matchee, exp, fail] = mkParseString(false, false, sample, "4");
       std::cout << matchee << std::endl;
@@ -81,7 +82,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 4);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, decltype(i)());
+          BOOST_CHECK_EQUAL(i, 0);
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;
@@ -89,7 +90,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameSole,
                        valSeps, sample, match) {
-      int i;
+      int i = 0;
       auto opt = new Option_("test|c", &i);
       auto[matchee, exp, fail] = mkParseString(true, false, sample, "4");
       auto res = opt->match(matchee);
@@ -97,7 +98,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 4);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, decltype(i)());
+          BOOST_CHECK_EQUAL(i, 0);
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;
@@ -137,7 +138,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithLongNameCherryPick,
                        valSeps, sample, match) {
-      int i;
+      int i = 0;
       auto opt = new Option_("test|c", &i);
       auto[matchee, exp, fail] = mkParseString(false, true, sample, "42");
       auto res = opt->match(matchee);
@@ -145,7 +146,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 42);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, decltype(i)());
+          BOOST_CHECK_EQUAL(i, 0);
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;
@@ -153,7 +154,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
 
   BOOST_DATA_TEST_CASE(Test_Option_OptionShouldMatchIntWithShortNameCherryPick,
                        valSeps, sample, match) {
-      int i;
+      int i = 0;
       auto opt = new Option_("test|c", &i);
       auto[matchee, exp, fail] = mkParseString(true, true, sample, "42");
       auto res = opt->match(matchee);
@@ -161,7 +162,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
           BOOST_CHECK_EQUAL(i, 42);
           BOOST_CHECK_EQUAL(res, exp);
       } else {
-          BOOST_CHECK_EQUAL(i, decltype(i)());
+          BOOST_CHECK_EQUAL(i, 0);
           BOOST_CHECK_EQUAL(res, fail);
       }
       delete opt;
@@ -200,7 +201,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
   }
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionEquality) {
-      int i;
+      int i = 0;
       auto* optc = new Option_("test", &i);
       auto* optk = new Option_("test", &i);
       BOOST_CHECK_EQUAL(*optc, *optk);
@@ -209,7 +210,7 @@ BOOST_AUTO_TEST_SUITE(Test_Option)
   }
 
   BOOST_AUTO_TEST_CASE(Test_Option_OptionEqualityBasedOnLONGNamesFalse) {
-      int i;
+      int i = 0;
       auto* optc = new Option_("testc", &i);
       auto* optk = new Option_("testk", &i);
       BOOST_CHECK_NE(*optc, *optk);

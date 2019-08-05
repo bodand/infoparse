@@ -391,7 +391,7 @@ namespace InfoParse::Internals {
           default:
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
-                  *exporter = T();
+                  *exporter = std::decay_t<std::remove_pointer_t<decltype(exporter)>>();
                   return 1;
               }
               addendum--;
@@ -399,7 +399,7 @@ namespace InfoParse::Internals {
           case ' ': [[fallthrough]];
           case ':': {
               if (l + 1 == parsee.end()) {
-                  *exporter = T();
+                  *exporter = std::decay_t<std::remove_pointer_t<decltype(exporter)>>();
                   parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
                   return 1;
               }
