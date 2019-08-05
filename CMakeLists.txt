@@ -20,11 +20,15 @@ configure_file(
         "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
 )
 
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+endif ()
+
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
     set(USE_CLANG_PARSING "YES")
     set(COMPILATION_DB_PATH ${PROJECT_BINARY_DIR}/compile_command.json)
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    #    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 else ()
     set(USE_CLANG_PARSING "NO")
     set(COMPILATION_DB_PATH "")

@@ -5,7 +5,9 @@ The following are required for the ability to build infoparse:
  - A C++17 compliant C++ compiler 
   \[Note: According to their docs this means GCC 7+, clang 3.9+ ]
   \[Note: Currently I cannot guarantee that MSVC works. On my system
-  it shits itself quite badly while both GCC 8.1 and 9.1 happily work.]
+  it shits itself quite badly.]
+  \[Note: While GCC 7+ and clang 3.9+ can compile the library, 
+  the tests require GCC 9+ or clang 5+.]
  - CMake 3.11+
  
 If using a non-Windows os, a `make` implementation is necessary as well.
