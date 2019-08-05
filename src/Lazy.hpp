@@ -26,7 +26,7 @@ namespace InfoParse::Internals {
   class bad_lazy_eval : public virtual std::exception {
       /// Interface
   public:
-      const char* what() const noexcept override;
+      _retval const char* what() const noexcept override;
 
       /// Lifecycle
   public:
@@ -97,6 +97,21 @@ namespace InfoParse::Internals {
        * @throws bad_lazy_cast
        */
       _retpure const T& operator*() const;
+
+      /**
+       * Returns a pointer to
+       * an instance of type T if plausible:
+       *  - type T is already constructed; or
+       *  - type T is constructable without arguments
+       *    using the provided function (!= type T itself
+       *    if default constructable)
+       *
+       * @return A const reference to the heap-allocated
+       *         object of type T
+       *
+       * @throws bad_lazy_cast
+       */
+      _retpure T* operator->() const;
 
       /**
        * Returns and possibly instantiates
@@ -170,6 +185,18 @@ namespace InfoParse::Internals {
   template<class T, class... TArgs>
   inline const T& Lazy<T, TArgs...>::operator()(TArgs... args) const {
       return get(args...);
+  }
+
+  template<class T, class... TArgs>
+  T* Lazy<T, TArgs...>::operator->() const {
+      if (inited) {
+          return val.get();
+      }
+      if constexpr (sizeof...(TArgs) == 0) {
+          return get(), val.get();
+      } else {
+          throw bad_lazy_eval(typeid(T).name());
+      }
   }
 
 }

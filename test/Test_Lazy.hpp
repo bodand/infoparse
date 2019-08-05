@@ -82,9 +82,26 @@ BOOST_AUTO_TEST_SUITE(Test_Lazy)
       BOOST_CHECK_EQUAL(*l, 4);
   }
 
+  struct Foo {
+      Foo(int i)
+              : i(i) {}
+      int i;
+  };
+
+  BOOST_AUTO_TEST_CASE(Test_Lazy_AfterInitedArrowDerefernceOperatorWorksWithArgumentRequiringT) {
+      Lazy<Foo, int> l([](int i) { return std::make_shared<Foo>(i); });
+      BOOST_REQUIRE_EQUAL(l(4).i, 4);
+      BOOST_CHECK_EQUAL(l->i, 4);
+  }
+
   BOOST_AUTO_TEST_CASE(Test_Lazy_DereferenceOpartorThrowExceptionWhenTRequiresArgs) {
       Lazy<int, int> l([](int i) { return std::make_shared<int>(i); });
       BOOST_CHECK_THROW(auto i = *l, bad_lazy_eval);
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_Lazy_ArrowDereferenceOpartorThrowExceptionWhenTRequiresArgs) {
+      Lazy<Foo, int> l([](int i) { return std::make_shared<Foo>(i); });
+      BOOST_CHECK_THROW(auto i = l->i, bad_lazy_eval);
   }
 
 BOOST_AUTO_TEST_SUITE_END()
