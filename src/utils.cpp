@@ -10,9 +10,15 @@
 //
 
 #include <iostream>
-#include "utils.hpp"
 
-#include <boost/algorithm/string.hpp>
+#include "utils.hpp"
+#include "config.hpp"
+
+#ifdef INFO_USE_BOOST
+
+  #include <boost/algorithm/string.hpp>
+
+#endif
 
 namespace InfoParse {
   std::string makeMonolithArgs(int argc, char** argv) {
@@ -137,12 +143,40 @@ namespace InfoParse {
 
   std::vector<std::string> split(const std::string& toSplit, char c) {
       std::vector<std::string> retVal;
-#ifdef __clang__
+#ifdef INFO_USE_BOOST
+  #ifdef __clang__
       // Yes this is the best way to use the preprocessor
-      boost::split(retVal, toSplit, [&](char λc) { return λc == c; });
+      ::boost::split(retVal, toSplit, [&](char λc) { return λc == c; });
+  #else
+      ::boost::split(retVal, toSplit, [&](char c_) { return c_ == c; });
+  #endif
 #else
-      boost::split(retVal, toSplit, [&](char c_) { return c_ == c; });
+      std::string s;
+      std::istringstream tokenStream(toSplit);
+      while (std::getline(tokenStream, s, c)) {
+          retVal.push_back(s);
+      }
 #endif
       return retVal;
+  }
+
+  bool anyOf(char c, const std::string& set) {
+      for (auto&& cc : set) {
+          if (cc == c)
+              return true;
+      }
+      return false;
+  }
+
+  void to_lower(std::string& str) {
+#ifdef INFO_USE_BOOST
+      ::boost::algorithm::to_lower(str);
+#else
+      std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) {
+        if (!(bool) std::islower(c))
+            return (unsigned char) std::tolower(c);
+        return c;
+      });
+#endif
   }
 }
