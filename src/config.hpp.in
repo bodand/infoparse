@@ -1,0 +1,9 @@
+//
+// Created by bodand on 2019-08-07.
+//
+
+#pragma once
+
+#if ${IP_USE_BOOST}
+  #define INFO_USE_BOOST
+#endif
