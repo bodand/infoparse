@@ -10,13 +10,30 @@
 #include "Lazy.hpp"
 #include "utils.hpp"
 
-#include <boost/algorithm/searching/knuth_morris_pratt.hpp>
-#include <boost/algorithm/searching/boyer_moore_horspool.hpp>
+#ifdef INFO_USE_BOOST
+
+  #include <boost/algorithm/searching/knuth_morris_pratt.hpp>
+  #include <boost/algorithm/searching/boyer_moore_horspool.hpp>
+
+#endif
 
 namespace InfoParse::Internals {
+#ifdef INFO_USE_BOOST
   using boost::algorithm::knuth_morris_pratt;
   using boost::algorithm::boyer_moore_horspool;
+
+  template <class T>
+  using FinderEins = knuth_morris_pratt<typename std::basic_string<T>::const_iterator>;
+  template <class T>
+  using FinderZwei = boyer_moore_horspool<typename std::basic_string<T>::const_iterator>;
+#else
+  template <class T>
+  using FinderEins = ShittyFinder<typename std::basic_string<T>::const_iterator>;
+  template <class T>
+  using FinderZwei = ShittyFinder<typename std::basic_string<T>::const_iterator>;
+#endif
   using StrIter = std::string::const_iterator;
+
   /**
    * An std::tuple containing
    * an std::string and a lazily constructed
@@ -25,8 +42,8 @@ namespace InfoParse::Internals {
   template<class T>
   using searchableOf = std::tuple<
           std::basic_string<T>,
-          Lazy<knuth_morris_pratt<typename std::basic_string<T>::const_iterator>, const std::string&>,
-          Lazy<boyer_moore_horspool<typename std::basic_string<T>::const_iterator>, const std::string&>
+          Lazy<FinderEins<T>, const std::basic_string<T>&>,
+          Lazy<FinderZwei<T>, const std::basic_string<T>&>
   >;
 
   /**
@@ -129,9 +146,9 @@ namespace InfoParse::Internals {
       /// The names stored by the object
       std::vector<std::string> names;
       /// Lazily constructed Knuth-Morris-Pratt search objects for each name
-      std::vector<Lazy<knuth_morris_pratt<StrIter>, const std::string&>> kmpSearch;
+      std::vector<Lazy<FinderEins<char>, const std::string&>> kmpSearch;
       /// Lazily constructed Boyer-Moore search objects for each name
-      std::vector<Lazy<boyer_moore_horspool<StrIter>, const std::string&>> bmSearch;
+      std::vector<Lazy<FinderZwei<char>, const std::string&>> bmSearch;
 
       /// Methods
   private:

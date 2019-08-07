@@ -80,6 +80,23 @@ namespace InfoParse {
   void to_lower(std::string& str);
 
   namespace Internals {
+    template<class It>
+    class ShittyFinder {
+        /// Lifecycle
+    public:
+        ShittyFinder(It parserB, It parserE);
+
+        /// Operators
+    public:
+        std::pair<It, It> operator()(It parseeB, It parseeE);
+
+        /// Fields
+    private:
+        It parserB;
+        It parserE;
+        std::unordered_map<typename std::iterator_traits<It>::value_type,
+                std::vector<It>> findMap;
+    };
 
     /**
      * Checks if two supplied type's inheritance relationship
@@ -207,5 +224,45 @@ namespace InfoParse {
                && can_stream_out<T, So, Args...>();
     }
 
+    template<class It>
+    ShittyFinder<It>::ShittyFinder(It parserB, It parserE)
+            : parserB(parserB), parserE(parserE) {
+        for (auto it = parserB; it != parserE; ++it) {
+            findMap[*it].push_back(it);
+        }
+    }
+
+    template<class It>
+    std::pair<It, It> ShittyFinder<It>::operator()(It parseeB, It parseeE) {
+        std::size_t size = std::distance(parseeB, parseeE);
+        // If nothing to find, nothing is found
+        if (size == 0)
+            return {parserB, parserB};
+
+        typename decltype(findMap)::iterator found;
+        // If starter elem doesn't exist why bother
+        if ((found = findMap.find(*parseeB)) == findMap.end())
+            return {parserE, parserE};
+
+        auto walkThroughShit = [](const auto& starter,
+                                  const auto& matchee,
+                                  const std::size_t& size) {
+          for (std::size_t i = 1; i < size; ++i) {
+              unless (*(matchee + i) == *(starter + i)) {
+                  return false;
+              }
+          }
+          return true;
+        };
+
+        // Check each starter elem and see if they match
+        for (auto&& starter : found->second) {
+            if (walkThroughShit(starter, parseeB, size))
+                return {starter, starter + size};
+        }
+
+        // Fuck
+        return {parserE, parserE};
+    }
   }
 }

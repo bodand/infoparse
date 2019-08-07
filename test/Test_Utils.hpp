@@ -178,6 +178,60 @@ BOOST_AUTO_TEST_SUITE(Test_Utils)
       BOOST_CHECK_MESSAGE(ret, "can_stream_out succeeded for built-in type `bool`");
   }
 
+  BOOST_AUTO_TEST_CASE(Test_Utils_FinderFindsStuff) {
+      std::string parser("haystack needle haystack");
+      std::string parsee("needle");
+
+      ShittyFinder<std::string::iterator> finder(parser.begin(), parser.end());
+
+      auto[f, l] = finder(parsee.begin(), parsee.end());
+
+      auto dist = std::distance(f, l);
+      BOOST_CHECK_EQUAL(dist, parsee.size());
+      std::ostringstream ss;
+
+      for (auto it = f; it != l; ++it) {
+          ss << *it;
+      }
+      BOOST_CHECK_EQUAL(ss.str(), parsee);
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_Utils_FinderDoesntFindNonExistingStuff) {
+      std::string parser("haystack needle haystack");
+      std::string parsee("cocaine");
+
+      ShittyFinder<std::string::iterator> finder(parser.begin(), parser.end());
+
+      auto[f, l] = finder(parsee.begin(), parsee.end());
+
+      auto dist = std::distance(f, l);
+      BOOST_CHECK_EQUAL(dist, 0);
+      std::ostringstream ss;
+
+      for (auto it = f; it != l; ++it) {
+          ss << *it;
+      }
+      BOOST_CHECK_EQUAL(ss.str(), "");
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_Utils_FinderFindsTheEmptyString) {
+      std::string parser("haystack needle haystack");
+      std::string parsee;
+
+      ShittyFinder<std::string::iterator> finder(parser.begin(), parser.end());
+
+      auto[f, l] = finder(parsee.begin(), parsee.end());
+
+      auto dist = std::distance(f, l);
+      BOOST_CHECK_EQUAL(dist, 0);
+      std::ostringstream ss;
+
+      for (auto it = f; it != l; ++it) {
+          ss << *it;
+      }
+      BOOST_CHECK_EQUAL(ss.str(), "");
+  }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 #pragma clang diagnostic pop

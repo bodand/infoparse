@@ -9,10 +9,10 @@ InfoParse::Internals::OptionString::OptionString(const std::string& str)
         : names(OptionString::prependDashes(InfoParse::split(str, '|'))) {
     for (auto&& name : names) {
         kmpSearch.emplace_back([](const std::string& name) {
-          return std::make_shared<knuth_morris_pratt<StrIter>>(name.begin(), name.end());
+          return std::make_shared<FinderEins<char>>(name.begin(), name.end());
         });
         bmSearch.emplace_back([](const std::string& name) {
-          return std::make_shared<boyer_moore_horspool<StrIter>>(name.begin(), name.end());
+          return std::make_shared<FinderZwei<char>>(name.begin(), name.end());
         });
     }
 }
