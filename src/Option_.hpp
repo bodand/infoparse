@@ -15,8 +15,6 @@
 #include <locale>
 #include <cctype>
 
-#include <boost/algorithm/string.hpp>
-
 #include "utils.hpp"
 #include "OptionString.hpp"
 
@@ -184,8 +182,6 @@ namespace InfoParse::Internals {
 
       /// Methods
   private:
-      _pure static bool anyOf(char c, std::string set);
-
       int parseFlag(std::string& parsee, std::pair<StrCIter, StrCIter> match) const;
 
       int parseValue(std::string& parsee, std::pair<StrCIter, StrCIter> match) const;
@@ -261,19 +257,9 @@ namespace InfoParse::Internals {
   }
 
   template<class T>
-  inline bool Option_<T>::anyOf(char c, std::string set) {
-      for (auto&& cc : set) {
-          if (cc == c)
-              return true;
-      }
-      return false;
-  }
-
-  template<class T>
   int Option_<T>::handleFlagParse(std::string& parsee,
                                   StrCIter f,
                                   StrCIter l) const {
-      namespace ba = boost::algorithm;
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
       int bonus = fp + 2 != lp;
@@ -303,7 +289,7 @@ namespace InfoParse::Internals {
           case '=': {
               // +1 for we need not the =
               auto val = parsee.substr(lp + 1, parsee.find(' ', lp) - (lp + 1));
-              ba::to_lower(val);
+              to_lower(val);
               callCallback(std::to_string((int) evalVal(val)));
               parsee.erase(fp - bonus, lp - (fp - bonus) + 2 + val.size()); // +2 for '=' & trailing space
               return 1;
@@ -318,7 +304,7 @@ namespace InfoParse::Internals {
               auto whitespaces = firstNonSpace - (lp + 1);
               auto endOfValue = parsee.find(' ', firstNonSpace);
               auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
-              ba::to_lower(val);
+              to_lower(val);
               callCallback(std::to_string((int) evalVal(val)));
               parsee.erase(fp - bonus,
                            lp - (fp - bonus) + whitespaces + 2 + val.size()); // +2 for ':' & trailing space

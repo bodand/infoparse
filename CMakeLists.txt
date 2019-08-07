@@ -30,7 +30,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     set(COMPILATION_DB_PATH ${PROJECT_BINARY_DIR}/compile_command.json)
     message(STATUS "Searching for lld")
     find_program(USABLE_LLD lld DOC "Search for llvm's lld linker")
-    if (NOT USABLE_LLD-NOTFOUND)
+    if (NOT ${USABLE_LLD-NOTFOUND})
         message(STATUS "Searching for lld - Success")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fuse-ld=lld")
     else ()
@@ -50,14 +50,18 @@ configure_file(
 message(STATUS "Looking for a presinstalled Boost")
 find_package(Boost COMPONENTS unit_test_framework)
 if (Boost_FOUND)
-    set(USE_AUTO_INSTALLED_BOOST 0)
+    set(IP_USE_BOOST 1)
     message(STATUS "Looking for a presinstalled Boost - Success")
 else ()
-    set(USE_AUTO_INSTALLED_BOOST 1)
+    set(IP_USE_BOOST 0)
     message(STATUS "Looking for a presinstalled Boost - Failure")
     include(utility/mkboost.cmake)
 endif ()
 
+configure_file(
+        ${PROJECT_SOURCE_DIR}/src/config.hpp.in
+        ${PROJECT_SOURCE_DIR}/src/config.hpp
+)
 
 set(InfoParse_SOURCES
         src/versioning.cpp src/utils.cpp
@@ -71,6 +75,7 @@ set(InfoParse_SOURCES
 set(InfoParse_HEADERS
         # Config'd
         src/versioning.hpp
+        src/config.hpp
         # Procedural headers
         src/utils.hpp
         # Classes

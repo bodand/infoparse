@@ -42,6 +42,14 @@
   #define _retval
 #endif
 
+#include "config.hpp"
+
+#ifdef INFO_USE_BOOST
+
+  #include <boost/algorithm/string.hpp>
+
+#endif
+
 namespace InfoParse {
   // guaranteed s = arcItrStr(itrStr(s))
   // or whatever, you get it
@@ -66,6 +74,10 @@ namespace InfoParse {
                                                UnaryFunction f);
 
   _pure std::vector<std::string> split(const std::string& toSplit, char c);
+
+  _pure bool anyOf(char c, const std::string& set);
+
+  void to_lower(std::string& str);
 
   namespace Internals {
 
