@@ -5,7 +5,7 @@ This is achievable in some ways, two of which are presented here.
 
 ## conan
 
-InfoParse uses [conan](conan.io) as its dependency manager a packager.
+InfoParse uses [conan](htpps://conan.io) as its dependency manager a packager.
 That means, we at InfoSoft gradually provide new InfoParse releases on our
 conan server, the latest of which is always recommended to be used.
 Our server is available at `conan.isdevnet.com` upon which InfoParse is
@@ -14,7 +14,7 @@ published as `InfoParse/1.3.5@bodand/stable`.
 More in-depth documentation on using conan to get InfoParse follows for
 those not familiar with custom servers or with conan in general. 
 \[Note: We assume you already have a working copy of conan installed.
-To get conan look at their [website](conan.io) for documentation.]
+To get conan look at their [website](htpps://conan.io) for documentation.]
 
 ### Remote
 

@@ -49,8 +49,56 @@ namespace InfoParse::Internals {
 
   public:
       /**
-       * Constructs the Option_ with explicitly
-       * given SHORT name.
+       * Constructs the Option_ with the provided
+       * names and pointer to value or the callback function pointer.
+       *
+       * In case of using function the followings are used:
+       *
+       * Let the input value be `f` of type 'F*'.
+       * `F` shall be either 1) `R(P)`; or 2) `R(P, Ps)`.<br />
+       * In case of `R(P)`:
+       *  - `P` shall be either 1) `void`; or 2) std or c-style string; or
+       *    3) any type for which `can_stream_in<P>` is `true`.
+       *    -# If `P` is `void`, `f` is called like `(*f)()`.
+       *    -# If `P` is a string (std, or c-string) `f` will be called directly
+       *       with the parsed value. The empty string is a viable value, for example
+       *       in case of parsing `"--option="`.
+       *    -# Otherwise according to the parsing rules used by the declared
+       *       `operator>>(std::istream&, P&)`, let `val` be the value of
+       *       type `P` containing the value extraced from said operator;
+       *       then `f` will be called as `(*f)(val)`.
+       *  - `R` shall be either 1) a `void` type; or 2) pointer type of `pR*`
+       *    3) any type which can be cast to `int`.
+       *    -# If the `R` is a possibly cv-qualified `void`, the function is called;
+       *       no diagnostic is performed and the function is believed to have
+       *       succeeded.
+       *    -# If `R` is a pointer type of `pR*`, then the returned value is
+       *       checked for `nullptr`. If it is the function is considered to have
+       *       failed.
+       *    -# If `R` is convertible to `int`, the returned value will be
+       *       checked for the return value as in a shell.
+       *       Let `val` be the value to be passed to `f` and of type `P` as
+       *       described above.
+       *       If the expression `((int) (*f)(val)) == 0` is `false`, the function
+       *       is considered to have failed.
+       *    -# If `R` is convertible to `bool`;
+       *       Let `val` be the value to be passed to `f` and of type `P` as
+       *       described above.
+       *       If the expression ((bool) (*f)(val)) is `false`, the function is
+       *       considered to have failed.
+       *    -# Otherwise no diagnostic is performed and the function is believed
+       *       to have succeeded.
+       *
+       * In case of `R(P, Ps)`:<br />
+       * `P` & `R` behave the same as it is described above for `R(P)`.
+       * `Ps` is std or c-style string and the direct parsed value
+       * is supplied there in the applicable type. If `Ps` is of type `pPs*`,
+       * then the input value will be `((pPs*) val.c_str())`. Otherwise the library
+       * tries passing in a default constructed object with the value of `Ps{}`.
+       *
+       * In case the function is deemed to have failed, it is run once
+       * more, without any diagnostic. If it were to fail a second time,
+       * it shall stay as failed, the library won't care.
        *
        * @param[in] names The names of the param split by '|'
        * @param[out] exporter The pointer to a constructed memory whereto
@@ -148,40 +196,9 @@ namespace InfoParse::Internals {
                                          StrCIter f, StrCIter l) const;
 
       _retpure std::string iterateNamesOnWith(std::string parsee, bool flag) const;
-  };
 
-  /*
-   * o --string text
-   * todo --string: text -> text
-   * todo --string= text -> ""
-   *  --string=text      -> text
-   * o -s text
-   * todo -s=text  -> text
-   * todo -s= text -> ""
-   * todo -s: text -> text
-   * todo -stext   -> text
-   * o --int 12
-   * todo x --int=12  -> 12
-   * todo x --int= 12 -> 0
-   * todo x --int: 12 -> 12
-   * todo x --int12   -> 12
-   * o -i 12
-   * todo -i=12  -> 12
-   * todo -i= 12 -> 0
-   * todo -i: 12 -> 12
-   * todo -i12   -> 12
-   * o --flag
-   * o --no-flag
-   * o --flag=(yes|no|true|false|<truthy value like 1 or whatever>|<falsy value like 0 or "">)
-   *      note: "--flag=" will set flag to false
-   *  =>
-   *   --flag=yes -> yes -> true
-   *   --flag= yes -> "" -> false
-   *   --flag: yes -> yes -> true
-   *   --flag:<EOL> -> "" -> false
-   * o -f
-   * o -f[=:]<see above>
-   */
+      void callCallback(const std::string& value) const;
+  };
 
   template<class T>
   inline std::string Option_<T>::match(const std::string& args) const {
@@ -281,19 +298,19 @@ namespace InfoParse::Internals {
       switch (*l) {
           case ' ': // --flagtext is not valid for --flag
               parsee.erase(f - bonus, l + 1);
-              *exporter = true;
+              callCallback("1");
               return 1;
           case '=': {
               // +1 for we need not the =
               auto val = parsee.substr(lp + 1, parsee.find(' ', lp) - (lp + 1));
               ba::to_lower(val);
-              *exporter = evalVal(val);
+              callCallback(std::to_string((int) evalVal(val)));
               parsee.erase(fp - bonus, lp - (fp - bonus) + 2 + val.size()); // +2 for '=' & trailing space
               return 1;
           }
           case ':': {
               if (l + 1 == parsee.end()) {
-                  *exporter = false;
+                  callCallback("0");
                   parsee.erase(fp - bonus, lp - (fp - bonus) + 1); // +1 for ':'
                   return 1;
               }
@@ -302,7 +319,7 @@ namespace InfoParse::Internals {
               auto endOfValue = parsee.find(' ', firstNonSpace);
               auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
               ba::to_lower(val);
-              *exporter = evalVal(val);
+              callCallback(std::to_string((int) evalVal(val)));
               parsee.erase(fp - bonus,
                            lp - (fp - bonus) + whitespaces + 2 + val.size()); // +2 for ':' & trailing space
               return 1;
@@ -310,7 +327,7 @@ namespace InfoParse::Internals {
           default:
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
-                  *exporter = true;
+                  callCallback("1");
                   return 1;
               }
               return 0;
@@ -329,7 +346,7 @@ namespace InfoParse::Internals {
           match = *(f - (i + 1)) == noStr[noStr.size() - (i + 1)];
       }
       if (match) { // negated flag invocation
-          *exporter = false;
+          callCallback("0");
           parsee.erase(fp - noStr.size(),
                        lp - fp + 1 + noStr.size()); //+1 for trailing space
           return 1;
@@ -367,15 +384,8 @@ namespace InfoParse::Internals {
       if (f == l) { // 404
           return 0;
       }
-      auto evalVal = [](const std::string& val) -> T {
-        std::istringstream ss(val);
-        T retVal;
-        ss >> retVal;
-        return retVal;
-      };
 
       namespace ba = boost::algorithm;
-      using ConstructableT = std::decay_t<std::remove_pointer_t<decltype(exporter)>>;
 
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
@@ -386,15 +396,14 @@ namespace InfoParse::Internals {
           case '=': {
               // +1 for we need not the =
               auto val = parsee.substr(lp + 1, parsee.find(' ', lp) - (lp + 1));
-              *exporter = evalVal(val);
+              callCallback(val);
               parsee.erase(fp - bonus, lp - (fp - bonus) + 2 + val.size()); // +2 for '=' & trailing space
               return 1;
           }
           default:
               if (l == parsee.end()) {
                   parsee.erase(f - bonus, l);
-                  T val{};
-                  *exporter = std::move(val);
+                  callCallback("");
                   return 1;
               }
               addendum--;
@@ -402,8 +411,7 @@ namespace InfoParse::Internals {
           case ' ': [[fallthrough]];
           case ':': {
               if (l + 1 == parsee.end()) {
-                  T val{};
-                  *exporter = std::move(val);
+                  callCallback("");
                   parsee.erase(fp - bonus, lp - (fp - bonus) + addendum);
                   return 1;
               }
@@ -411,7 +419,7 @@ namespace InfoParse::Internals {
               auto whitespaces = firstNonSpace - (lp + addendum);
               auto endOfValue = parsee.find(' ', firstNonSpace);
               auto val = parsee.substr(firstNonSpace, endOfValue - firstNonSpace);
-              *exporter = evalVal(val);
+              callCallback(val);
               parsee.erase(fp - bonus,
                            lp - (fp - bonus) + whitespaces + addendum + 1 + val.size()); // +1 for trailing space
               return 1;
@@ -450,5 +458,130 @@ namespace InfoParse::Internals {
       return parsee;
   }
 
+  // Do not enter unless certified Template Templar
+  /****************************************************************************/
+  struct none {
+  };
+
+  template<class, class...>
+  struct TypeD;
+
+  template<class T1>
+  constexpr std::tuple<TypeD<T1>*, int>
+  mkTypeD(T1* v) {
+      return {new TypeD<T1>(v), 0};
+  };
+
+  template<class T1, class... Args>
+  constexpr std::tuple<TypeD<T1, Args...>*, bool>
+  mkTypeD(T1 (* f)(Args...)) {
+      return {new TypeD<T1, Args...>(f), false};
+  }
+
+  template<class T>
+  void Option_<T>::callCallback(const std::string& value) const {
+      auto td = mkTypeD(exporter);
+      using TDType = decltype(td);
+      using Typ =
+      typename std::remove_pointer_t<std::tuple_element_t<0, TDType>>;
+      using SecTyp = std::tuple_element_t<1, TDType>;
+
+      if constexpr (std::is_same_v<SecTyp, bool>) {
+          using R = typename Typ::Ret;
+          using Arg1 = typename Typ::Arg0;
+          using Arg2 = typename Typ::Arg1;
+
+          auto callF = [&]() -> R {
+            auto makeArg = [](const std::string& value) -> Arg1 {
+              if constexpr (std::is_same_v<std::remove_cv_t<std::remove_reference_t<Arg1>>,
+                      std::string>) {
+                  // String is output directly
+                  return value;
+              }
+              std::istringstream ss(value);
+              Arg1 arg1;
+              ss >> arg1;
+              return arg1;
+            };
+
+            if constexpr (std::is_same_v<Arg1, none>) {
+                // exporter takes no parameters
+                return (*exporter)();
+            }
+            if constexpr (std::is_same_v<Arg2, none>) {
+                // exporter takes 1 parameter
+                return (*exporter)(makeArg(value));
+            }
+            if constexpr (std::is_same_v<std::remove_reference_t<std::remove_cv_t<Arg2>>,
+                    std::string>) {
+                // exporter takes 2 values
+                return (*exporter)(makeArg(value), value);
+            }
+            if constexpr (std::is_pointer_v<Arg2>) {
+                // You asked for it
+                return (*exporter)(makeArg(value), (Arg2) value.c_str());
+            }
+            // Hope this makes sense
+            return (*exporter)(makeArg(value), Arg2{});
+          };
+
+          if constexpr (std::is_pointer_v<R>) {
+              if (callF() == nullptr) {
+                  callF(); // Retry failed func
+              }
+          }
+          if constexpr (std::is_convertible_v<R, int>) {
+              unless (((int) callF()) == 0) {
+                  callF(); // Retry failed func
+              }
+          }
+          if constexpr (std::is_convertible_v<R, bool>) {
+              unless ((bool) callF()) {
+                  callF(); // Retry failed func
+              }
+          }
+          // Not checking success
+          callF();
+      } else {
+          if constexpr (std::is_same_v<std::remove_reference_t<std::remove_cv_t<T>>,
+                  std::string>) {
+              // String is output directly
+              *exporter = value;
+          } else if (value != "") {
+              std::istringstream ss(value);
+              ss >> *exporter;
+          } else {
+              T val{};
+              *exporter = val;
+          }
+      }
+
+      delete std::get<0>(td);
+  }
+
+  template<class T1, class... Args>
+  struct TypeD {
+      typedef T1 Ret;
+
+      template<class Fst = none, class...>
+      struct fP {
+          using Type = Fst;
+      };
+
+      template<class = none, class Snd = none, class...>
+      struct sP {
+          using Type = Snd;
+      };
+
+      using Arg0 = typename fP<Args...>::Type;
+      using Arg1 = typename sP<Args...>::Type;
+
+      typedef T1 (* func)(Args...);
+
+      TypeD(func& f) {}
+
+      TypeD(T1*& val) {}
+  };
+  /****************************************************************************/
 }
 

@@ -8,7 +8,7 @@ The following are required for the ability to build infoparse:
   it shits itself quite badly.]
   \[Note: While GCC 7+ and clang 3.9+ can compile the library, 
   the tests require GCC 9+ or clang 5+.]
- - CMake 3.11+
+ - CMake 3.10+
  
 If using a non-Windows os, a `make` implementation is necessary as well.
 Or maybe not if you use `ninja`, I don't know.
@@ -24,7 +24,7 @@ The followings describe the most common ways this can be done.
 The sources are available on github, so
 you can pull them using `git`:
 ```bash
-$ git clone https://github.com/isbodand/infoparse.git
+git clone https://github.com/isbodand/infoparse.git
 ```
 
 ## Tarball
@@ -33,7 +33,7 @@ If for whatever reason using git is not possible
 you can resort to the good ol' `curl` and `tar` combo.
 
 ```bash
-$ curl -Ls https://github.com/isbodand/infoparse/archive/master.tar.gz | tar xz
+curl -Ls https://github.com/isbodand/infoparse/archive/master.tar.gz | tar xz
 ```
 
 This will create a `infoparse-master` directory with the sources for InfoParse. 
@@ -60,7 +60,7 @@ If you are running and inferior version of Windows and don't have access to PS
 or you broke it at some point in time:
 
 ```cmd
-> bitsadmin /transfer InfoParseDownload /priority high https://github.com/isbodand/infoparse/archive/master.zip %home%/Downloads/infoparse.zip
+bitsadmin /transfer InfoParseDownload /priority high https://github.com/isbodand/infoparse/archive/master.zip %home%/Downloads/infoparse.zip
 ```
 If using cmd you have no build-in way of unzipping files, so figuring out this is left 
 as an exercise to the reader, possible procedures range from `7z` to abusing `jar`. 
@@ -73,13 +73,13 @@ This is done it 2 steps:
  1) Creating a build directory
  
 ```bash
-$ mkdir build && cd build
+mkdir build && cd build
 ``` 
 
  2) Calling CMake
  
 ```bash
-$ cmake ..
+cmake ..
 ```
 
 # Calling the build tool
@@ -93,7 +93,7 @@ CMake is able to call the required build tool for the configuration
 it generated. To do so just call:
 
 ```bash
-$ cmake --build .
+cmake --build .
 ```
 
 ## Calling the tool itself
