@@ -21,6 +21,7 @@ compile_commands.json
 ## Configured by CMake
 src/versioning.hpp
 src/config.hpp
+.doxygen
 
 ## Perl Idea plugin thingy
 _Deparsed_XSubs.pm
