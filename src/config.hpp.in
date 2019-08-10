@@ -7,3 +7,21 @@
 #if ${IP_USE_BOOST}
   #define INFO_USE_BOOST
 #endif
+
+namespace InfoParse::Internals::Config {
+#ifdef INFO_RETRY_FAILED_CALLBACK_FUNCTION
+    static constexpr bool RetryFailedCallback = true;
+#else
+    static constexpr bool RetryFailedCallback = false;
+#endif
+#ifdef INFO_PARSER_FAIL_BAD_FUNCTION_SILENTLY
+  static constexpr bool FailSilently = true;
+#else
+  static constexpr bool FailSilently = false;
+#endif
+#ifdef INFO_DELETE_RETURN_VALUE_OF_CALLBACK
+  static constexpr bool DeleteCallbackReturn = true;
+#else
+  static constexpr bool DeleteCallbackReturn = false;
+#endif
+}

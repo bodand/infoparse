@@ -31,6 +31,7 @@
  */
 namespace InfoParse {
   using Internals::OptionHandler_;
+  using Internals::identity_t;
 
   class OptionsParser;
   /**
@@ -74,6 +75,13 @@ namespace InfoParse {
          */
         template<class T>
         const OptionAdder& operator()(OptionString name, T* val) const;
+
+        /**
+         * @copydoc operator()()
+         */
+        template<class R, class... Args>
+        const OptionAdder& operator()(OptionString name,
+                                      identity_t<const std::function<R(Args...)>&> val) const;
 
         /// Lifecycle
     public:
@@ -154,8 +162,12 @@ namespace InfoParse {
       template<class T>
       std::enable_if_t<std::is_function_v<T> || (Internals::can_stream_v<T>
                                                  && std::is_default_constructible_v<T>),
-              OptionsParser*>
+              OptionsParser&>
       addOption(Internals::OptionString name, T* exporter);
+
+      template<class R, class... Args>
+      OptionsParser& addOption(Internals::OptionString name,
+                               identity_t<const std::function<R(Args...)>&> f);
 
       /**
        * Parses the given arguments using parameters in
@@ -202,10 +214,18 @@ namespace InfoParse {
       return *this;
   }
 
+  template<class R, class... Args>
+  const InfoParse::OptionAdder&
+  Internals::OptionAdder::operator()(Internals::OptionString name,
+                                     identity_t<const std::function<R(Args...)>&> val) const {
+      mother->addOption(name, val);
+      return *this;
+  }
+
   template<class T>
   inline std::enable_if_t<std::is_function_v<T> || (Internals::can_stream_v<T>
                                                     && std::is_default_constructible_v<T>),
-          OptionsParser*>
+          OptionsParser&>
   OptionsParser::addOption(Internals::OptionString name, T* exporter) {
       if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
           optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
@@ -214,7 +234,22 @@ namespace InfoParse {
           };
       }
       ((OptionHandler_<T>*) optionHandlers[typeid(T)].first)->addOption(name, exporter);
-      return this;
+      return *this;
+  }
+
+  template<class R, class... Args>
+  inline OptionsParser& OptionsParser::addOption(Internals::OptionString name,
+                                                 identity_t<const std::function<R(Args...)>&> f) {
+      static_assert(sizeof...(Args) <= 2, "Supplied callback function takes too many arguments");
+      using T = R(Args...);
+      if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
+          optionHandlers[typeid(T)].first = (void*) new OptionHandler_<Internals::none, R, Args...>();
+          optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
+            return ((OptionHandler_<Internals::none, R, Args...>*) optionVoid)->handle(args);
+          };
+      }
+      ((OptionHandler_<Internals::none, R, Args...>*) optionHandlers[typeid(T)].first)->addOption(name, f);
+      return *this;
   }
 
   inline std::string OptionsParser::parse(const std::string& args) {

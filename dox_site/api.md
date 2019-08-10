@@ -39,18 +39,17 @@ parser.addOption("amazingly-great-option-name", &i);
 bool silent = false;
 bool chain = false;
 parser.addOption("silent|quiet|s|q", &silent)
-    ->addOption("calls-can-be-chained", &wget);
+    .addOption("calls-can-be-chained", &wget);
 ```
 
 This method adds options one-by-one as the above example presents.
 `addOption` takes a `OptionString` (which is implicitly constructed from 
 `std::string`s or string literals, mind you) which parses the input string
 into the names of the parameters, by splitting the string on the pipes 
-`'|'`. Also note that `addOption` returns a pointer to the 
+`'|'`. Also note that `addOption` returns a reference to the 
 `IP::OptionsParser` which you called it from, so as shown on the second 
-and third call they can be chain called. Note this is the original and 
-was the only behavior until `1.3.x`, however plans are to only return
-a const reference in some future version, when is not yet specified.
+and third call they can be chain called. \[Note: Up to and including 
+`1.4.x` the return value was a pointer to the parser object.]
 
 ### Multiple
 
@@ -132,3 +131,22 @@ void version() {
 }
 
 ```
+
+#### Failure and success conditions
+
+Depending on the [configuration](/infoparsed/config) and on the
+function's return value, a function may be deemed to have succeeded or
+to have failed by the library upon calling the callback-function. 
+The failure and success conditions are as of the followings.
+
+ 1) A `void` function is always successful.
+ 2) A function returning a pointer is successful if the returned
+     pointer is not `nullptr`. \[Note: See 
+     [configs](/infoparsed/config#info_delete_return_value_of_callback) 
+     for returned pointers that should be deleted.]
+ 3) If the returned value is convertible to `int` the following
+    expression determines success: `((int) f(args...)) == 0` where
+    `f` is the callback function and `args...` are the parameters.
+ 4) A function whose return value is convertible to `bool`, that equals
+    whether the function failed or not.
+ 5) Any other case the function is hoped to have succeeded.

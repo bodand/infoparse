@@ -11,13 +11,18 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 project(InfoParse)
 
 set(InfoParse_VERSION_MAJOR 1)
-set(InfoParse_VERSION_MINOR 4)
-set(InfoParse_VERSION_PATCH 3)
+set(InfoParse_VERSION_MINOR 5)
+set(InfoParse_VERSION_PATCH 0)
 set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${InfoParse_VERSION_PATCH}")
 
-configure_file(
+configure_file( # For version
         "${PROJECT_SOURCE_DIR}/src/versioning.hpp.in"
         "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
+)
+
+configure_file( # For version
+        "${PROJECT_SOURCE_DIR}/dox_site/installation.md.in"
+        "${PROJECT_SOURCE_DIR}/dox_site/installation.md"
 )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
@@ -43,7 +48,7 @@ else ()
     set(COMPILATION_DB_PATH "")
 endif ()
 
-configure_file(
+configure_file( # For clang support
         ${PROJECT_SOURCE_DIR}/.doxygen.in
         ${PROJECT_SOURCE_DIR}/.doxygen
         @ONLY
@@ -60,7 +65,7 @@ else ()
     include(utility/mkboost.cmake)
 endif ()
 
-configure_file(
+configure_file( # For Boost support
         ${PROJECT_SOURCE_DIR}/src/config.hpp.in
         ${PROJECT_SOURCE_DIR}/src/config.hpp
 )

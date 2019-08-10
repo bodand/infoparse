@@ -80,6 +80,12 @@ namespace InfoParse {
   void to_lower(std::string& str);
 
   namespace Internals {
+    struct none {
+        friend std::istream& operator>>(std::istream& is, const none& none) {
+            return is;
+        }
+    };
+
     template<class It>
     class ShittyFinder {
         /// Lifecycle
@@ -232,6 +238,21 @@ namespace InfoParse {
     template<class T, class S = std::ostream, class... Args>
     inline constexpr bool can_stream_out_v = can_stream_out<T, S, Args...>::value;
 
+    /**
+     * Provides an indirection of types
+     * identity<T>::type -> T
+     */
+    template<class T>
+    struct identity;
+
+    /**
+     * Helper for identity<T>::type
+     *
+     * @see identity
+     */
+    template<class T>
+    using identity_t = typename identity<T>::type;
+
     template<class B, class I>
     struct extends {
         static constexpr bool value =
@@ -297,6 +318,13 @@ namespace InfoParse {
                 can_stream_in_v<T, Si, Args...>
                 && can_stream_out_v<T, So, Args...>;
     };
+
+    template<class T>
+    struct identity {
+        using type = T;
+    };
+
+    // ShittyFinder impl
 
     template<class It>
     ShittyFinder<It>::ShittyFinder(It parserB, It parserE)

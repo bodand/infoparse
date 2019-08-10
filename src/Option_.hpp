@@ -15,10 +15,21 @@
 #include <locale>
 #include <cctype>
 
+#include "config.hpp"
 #include "utils.hpp"
 #include "OptionString.hpp"
 
 namespace InfoParse::Internals {
+  /**
+   * Thrown if supplied function callback
+   *  1) takes too many parameters
+   *  2)
+   */
+  class bad_function_callback : public virtual std::logic_error {
+  public:
+      bad_function_callback(int a);
+  };
+
   /**
    * Stores one parsable option with a SHORT
    * and LONG name.
@@ -30,7 +41,8 @@ namespace InfoParse::Internals {
    * @tparam T The type of the parameter to stuff the
    *           found value into.
    */
-  template<class T>
+  template<class T = none,
+          class R = none, class... Args>
   class Option_ {
       ///Interface
   public:
@@ -48,9 +60,19 @@ namespace InfoParse::Internals {
   public:
       /**
        * Constructs the Option_ with the provided
-       * names and pointer to value or the callback function pointer.
+       * names and pointer to value.
        *
-       * In case of using function the followings are used:
+       * @param[in] names The names of the param split by '|'
+       * @param[out] exporter The pointer to a constructed memory whereto
+       *                       dump the found value
+       *
+       * @note `exporter` is not checked for `nullptr`
+       */
+      Option_(OptionString names, T* exporter);
+
+      /**
+       * Constructs the Option_ with the provided
+       * names and function callback.
        *
        * Let the input value be `f` of type `F*`.
        * `F` shall be either 1) `R(P)`; or 2) `R(P, Ps)`.<br />
@@ -100,12 +122,9 @@ namespace InfoParse::Internals {
        * it shall stay as failed, the library won't care.
        *
        * @param[in] names The names of the param split by '|'
-       * @param[out] exporter The pointer to a constructed memory whereto
-       *                       dump the found value or call the function with
-       *
-       * @note `exporter` is not checked for `nullptr`
+       * @param[out] func The function callback to call with the found value
        */
-      Option_(OptionString names, T* exporter);
+      Option_(OptionString names, const std::function<R(Args...)>& func);
 
       /// Operators
   public:
@@ -179,7 +198,9 @@ namespace InfoParse::Internals {
       OptionString names;
       /// Exporter of type `T` whereto the parsed value will be spit back
       T* exporter;
-      /// Typedef of const_iterator of std::string
+      /// Optional callback-function
+      std::optional<std::function<R(Args...)>> callback;
+      /// Typedef of `const_iterator` of `std::string`
       typedef std::string::const_iterator StrCIter;
 
       /// Methods
@@ -198,15 +219,16 @@ namespace InfoParse::Internals {
       void callCallback(const std::string& value) const;
   };
 
-  template<class T>
-  inline std::string Option_<T>::match(const std::string& args) const {
+  template<class T, class R, class... Args>
+  inline std::string Option_<T, R, Args...>::match(const std::string& args) const {
       return iterateNamesOnWith(args, std::is_same_v<T, bool>);
   }
 
-  template<class T>
-  inline Option_<T>::Option_(OptionString names, T* exporter)
+  template<class T, class R, class... Args>
+  inline Option_<T, R, Args...>::Option_(OptionString names, T* exporter)
           : exporter(exporter),
-            names(std::move(names)) {}
+            names(std::move(names)),
+            callback(std::nullopt) {}
 
   template<class U>
   inline std::ostream& operator<<(std::ostream& os, const Option_<U>& option) {
@@ -214,38 +236,38 @@ namespace InfoParse::Internals {
       return os;
   }
 
-  template<class T>
-  inline bool Option_<T>::operator==(const Option_& rhs) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator==(const Option_& rhs) const {
       return names == rhs.names;
   }
 
-  template<class T>
-  inline bool Option_<T>::operator!=(const Option_& rhs) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator!=(const Option_& rhs) const {
       return !(rhs == *this);
   }
 
-  template<class T>
-  inline bool Option_<T>::operator==(const std::string& name) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator==(const std::string& name) const {
       return names[0] == name;
   }
 
-  template<class T>
-  inline bool Option_<T>::operator!=(const std::string& name) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator!=(const std::string& name) const {
       return !(name == name);
   }
 
-  template<class T>
-  inline bool Option_<T>::operator==(const char* cname) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator==(const char* cname) const {
       return *this == std::string(cname);
   }
 
-  template<class T>
-  inline bool Option_<T>::operator!=(const char* cname) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator!=(const char* cname) const {
       return *this != std::string(cname);
   }
 
-  template<class T>
-  inline bool Option_<T>::operator==(char c) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator==(char c) const {
       for (auto&& name : names.getNames()) {
           if (name.size() == 2 && name[1] == c)
               return true;
@@ -253,15 +275,15 @@ namespace InfoParse::Internals {
       return false;
   }
 
-  template<class T>
-  inline bool Option_<T>::operator!=(char c) const {
+  template<class T, class R, class... Args>
+  inline bool Option_<T, R, Args...>::operator!=(char c) const {
       return !(*this == c);
   }
 
-  template<class T>
-  int Option_<T>::handleFlagParse(std::string& parsee,
-                                  StrCIter f,
-                                  StrCIter l) const {
+  template<class T, class R, class... Args>
+  int Option_<T, R, Args...>::handleFlagParse(std::string& parsee,
+                                              StrCIter f,
+                                              StrCIter l) const {
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
       int bonus = fp + 2 != lp;
@@ -322,10 +344,10 @@ namespace InfoParse::Internals {
       }
   }
 
-  template<class T>
-  int Option_<T>::handleOptionalNegatedFlagParse(std::string& parsee,
-                                                 StrCIter f,
-                                                 StrCIter l) const {
+  template<class T, class R, class... Args>
+  int Option_<T, R, Args...>::handleOptionalNegatedFlagParse(std::string& parsee,
+                                                             StrCIter f,
+                                                             StrCIter l) const {
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
       std::string noStr = "--no";
@@ -345,9 +367,9 @@ namespace InfoParse::Internals {
       /* so just */ return 0;
   }
 
-  template<class T>
-  int Option_<T>::parseFlag(std::string& parsee,
-                            std::pair<StrCIter, StrCIter> match) const {
+  template<class T, class R, class... Args>
+  int Option_<T, R, Args...>::parseFlag(std::string& parsee,
+                                        std::pair<StrCIter, StrCIter> match) const {
       auto& f = match.first;
       auto& l = match.second;
       if (f == l) { // 404
@@ -364,16 +386,14 @@ namespace InfoParse::Internals {
       return 0;
   }
 
-  template<class T>
-  int Option_<T>::parseValue(std::string& parsee,
-                             std::pair<StrCIter, StrCIter> match) const {
+  template<class T, class R, class... Args>
+  int Option_<T, R, Args...>::parseValue(std::string& parsee,
+                                         std::pair<StrCIter, StrCIter> match) const {
       auto& f = match.first;
       auto& l = match.second;
       if (f == l) { // 404
           return 0;
       }
-
-      namespace ba = boost::algorithm;
 
       auto lp = std::distance(parsee.cbegin(), l);
       auto fp = std::distance(parsee.cbegin(), f);
@@ -415,9 +435,9 @@ namespace InfoParse::Internals {
       }
   }
 
-  template<class T>
-  std::string Option_<T>::iterateNamesOnWith(std::string parsee,
-                                             bool flag) const {
+  template<class T, class R, class... Args>
+  std::string Option_<T, R, Args...>::iterateNamesOnWith(std::string parsee,
+                                                         bool flag) const {
       typedef std::string::size_type strsize_t;
       auto useBMH = []([[maybe_unused]] strsize_t parsedSize,
                        [[maybe_unused]] strsize_t parseeSize) {
@@ -448,12 +468,6 @@ namespace InfoParse::Internals {
 
   // Do not enter unless certified Template Templar
   /****************************************************************************/
-  struct none {
-      friend std::istream& operator>>(std::istream& is, const none& none) {
-          return is;
-      }
-  };
-
   template<class, class...>
   struct TypeD;
 
@@ -469,48 +483,123 @@ namespace InfoParse::Internals {
       return {new TypeD<T1, Args...>(f), false};
   }
 
-  template<class T>
-  void Option_<T>::callCallback(const std::string& value) const {
-      auto td = mkTypeD(exporter);
-      using TDType = decltype(td);
-      using Typ =
-      typename std::remove_pointer_t<std::tuple_element_t<0, TDType>>;
-      using SecTyp = std::tuple_element_t<1, TDType>;
+  template<class Fst = none, class...>
+  struct fP {
+      using Type = Fst;
+  };
 
-      if constexpr (std::is_same_v<SecTyp, bool>) {
-          using Re = typename Typ::Ret;
-          using Arg1 = std::remove_cv_t<std::remove_reference_t<typename Typ::Arg0>>;
-          using Arg2 = std::remove_cv_t<std::remove_reference_t<typename Typ::Arg1>>;
+  template<class = none, class Snd = none, class...>
+  struct sP {
+      using Type = Snd;
+  };
 
-          auto callF = [&]() -> Re {
-            auto makeArg = [](const std::string& value) -> Arg1 {
-              if constexpr (std::is_same_v<Arg1, std::string>) {
-                  // String is output directly
-                  return value;
-              }
-              std::istringstream ss(value);
-              Arg1 arg1;
-              ss >> arg1;
-              return arg1;
-            };
-
-            if constexpr (std::is_same_v<Arg1, none>) {
-                // exporter takes no parameters
-                return (*exporter)();
-            } else if constexpr (std::is_same_v<Arg2, none>) {
-                // exporter takes 1 parameter
-                return (*exporter)(makeArg(value));
-            } else if constexpr (std::is_same_v<Arg2, std::string>) {
-                // exporter takes 2 values
-                return (*exporter)(makeArg(value), value);
-            } else if constexpr (std::is_pointer_v<Arg2>) {
-                // You asked for it
-                return (*exporter)(makeArg(value), (Arg2) value.c_str());
-            } else // Hope this makes sense
-                return (*exporter)(makeArg(value), Arg2{});
+  template<class T, class R, class... Args>
+  void Option_<T, R, Args...>::callCallback(const std::string& value) const {
+      if constexpr (std::is_same_v<T, none>) {
+          auto checkReturnAndRetryIfNeed = [](const std::function<R(Args...)>& f,
+                                              Args... args) {
+//          if (Config::RetryFailedCallback) {
+            if constexpr (std::is_pointer_v<R>) {
+                if (Config::DeleteCallbackReturn) {
+                    auto ptr = f(args...);
+                    if (ptr == nullptr) {
+                        ptr = f(args...); // Retry failed func
+                    }
+                    delete ptr;
+                } else {
+                    if (f(args...) == nullptr) {
+                        f(args...); // Retry failed func
+                    }
+                }
+            } else if constexpr (std::is_convertible_v<R, int>) {
+                unless (((int) f(args...)) == 0) {
+                    f(args...); // Retry failed func
+                }
+            } else if constexpr (std::is_convertible_v<R, bool>) {
+                unless ((bool) f(args...)) {
+                    f(args...); // Retry failed func
+                }
+            } else {
+                f(args...);
+            }
+//          } else f();
           };
 
-//          if (Config::RetryFailedFunc) {
+          using Arg1 = std::remove_cv_t<std::remove_reference_t<typename fP<Args...>::Type>>;
+          using Arg2 = std::remove_cv_t<std::remove_reference_t<typename sP<Args...>::Type>>;
+
+          auto makeArg = [](const std::string& value) -> Arg1 {
+            if constexpr (std::is_same_v<Arg1, std::string>) {
+                // String is output directly
+                return value;
+            }
+            std::istringstream ss(value);
+            Arg1 arg1;
+            ss >> arg1;
+            return arg1;
+          };
+
+          // Give me switch constexpr pls
+          constexpr std::size_t args = sizeof...(Args);
+          if constexpr (args == 0) {
+              checkReturnAndRetryIfNeed(*callback);
+          } else if constexpr (args == 1) {
+              checkReturnAndRetryIfNeed(*callback, makeArg(value));
+          } else if constexpr (args == 2) {
+              if constexpr (std::is_same_v<Arg2, std::string>) {
+                  // exporter takes 2 values
+                  checkReturnAndRetryIfNeed(*callback, makeArg(value), value);
+              } else if constexpr (std::is_pointer_v<Arg2>) {
+                  // You asked for it
+                  checkReturnAndRetryIfNeed(*callback, makeArg(value), (Arg2) value.c_str());
+              } else // Hope this makes sense
+                  checkReturnAndRetryIfNeed(*callback, makeArg(value), Arg2{});
+          } else if (!Config::FailSilently) {
+              throw bad_function_callback(sizeof...(Args));
+          }
+      } else {
+          auto td = mkTypeD(exporter);
+          using TDType = decltype(td);
+          using Typ =
+          typename std::remove_pointer_t<std::tuple_element_t<0, TDType>>;
+          using SecTyp = std::tuple_element_t<1, TDType>;
+
+          if constexpr (std::is_same_v<SecTyp, bool>) {
+              using Re = typename Typ::Ret;
+              using Arg1 = std::remove_cv_t<std::remove_reference_t<typename Typ::Arg0>>;
+              using Arg2 = std::remove_cv_t<std::remove_reference_t<typename Typ::Arg1>>;
+
+              auto callF = [&]() -> Re {
+                auto makeArg = [](const std::string& value) -> Arg1 {
+                  if constexpr (std::is_same_v<std::remove_cv_t<std::remove_reference_t<Arg1>>,
+                          std::string>) {
+                      // String is output directly
+                      return value;
+                  }
+                  std::istringstream ss(value);
+                  Arg1 arg1;
+                  ss >> arg1;
+                  return arg1;
+                };
+
+                if constexpr (std::is_same_v<Arg1, none>) {
+                    // exporter takes no parameters
+                    return (*exporter)();
+                } else if constexpr (std::is_same_v<Arg2, none>) {
+                    // exporter takes 1 parameter
+                    return (*exporter)(makeArg(value));
+                } else if constexpr (std::is_same_v<std::remove_reference_t<std::remove_cv_t<Arg2>>,
+                        std::string>) {
+                    // exporter takes 2 values
+                    return (*exporter)(makeArg(value), value);
+                } else if constexpr (std::is_pointer_v<Arg2>) {
+                    // You asked for it
+                    return (*exporter)(makeArg(value), (Arg2) value.c_str());
+                } else
+                    // Hope this makes sense
+                    return (*exporter)(makeArg(value), Arg2{});
+              };
+
               if constexpr (std::is_pointer_v<Re>) {
                   if (callF() == nullptr) {
                       callF(); // Retry failed func
@@ -526,24 +615,24 @@ namespace InfoParse::Internals {
                       callF(); // Retry failed func
                   }
               }
-//          }
-          // Not checking success
-          callF();
-      } else {
-          if constexpr (std::is_same_v<std::remove_reference_t<std::remove_cv_t<T>>,
-                  std::string>) {
-              // String is output directly
-              *exporter = value;
-          } else if (value != "") {
-              std::istringstream ss(value);
-              ss >> *exporter;
+              // Not checking success
+              callF();
           } else {
-              T val{};
-              *exporter = val;
+              if constexpr (std::is_same_v<std::remove_reference_t<std::remove_cv_t<T>>,
+                      std::string>) {
+                  // String is output directly
+                  *exporter = value;
+              } else if (value != "") {
+                  std::istringstream ss(value);
+                  ss >> *exporter;
+              } else {
+                  T val{};
+                  *exporter = val;
+              }
           }
-      }
 
-      delete std::get<0>(td);
+          delete std::get<0>(td);
+      }
   }
 
   template<class T1, class... Args>
@@ -569,6 +658,12 @@ namespace InfoParse::Internals {
 
       TypeD(T1*& val) {}
   };
+
   /****************************************************************************/
+  template<class T, class R, class... Args>
+  Option_<T, R, Args...>::Option_(OptionString names, const std::function<R(Args...)>& func)
+          : names(names),
+            exporter(nullptr),
+            callback(func) {}
 }
 
