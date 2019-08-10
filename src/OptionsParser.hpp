@@ -18,6 +18,7 @@
 #include <iterator>
 #include <regex>
 
+#include "config.hpp"
 #include "utils.hpp"
 #include "OptionHandler_.hpp"
 #include "OptionString.hpp"
@@ -151,8 +152,8 @@ namespace InfoParse {
        *        will shadow the other, depending their position in the std::map
        */
       template<class T>
-      std::enable_if_t<Internals::can_stream<T>()
-                       && std::is_default_constructible_v<T>,
+      std::enable_if_t<std::is_function_v<T> || (Internals::can_stream_v<T>
+                                                 && std::is_default_constructible_v<T>),
               OptionsParser*>
       addOption(Internals::OptionString name, T* exporter);
 
@@ -202,8 +203,8 @@ namespace InfoParse {
   }
 
   template<class T>
-  inline std::enable_if_t<Internals::can_stream<T>()
-                          && std::is_default_constructible_v<T>,
+  inline std::enable_if_t<std::is_function_v<T> || (Internals::can_stream_v<T>
+                                                    && std::is_default_constructible_v<T>),
           OptionsParser*>
   OptionsParser::addOption(Internals::OptionString name, T* exporter) {
       if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {

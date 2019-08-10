@@ -31,8 +31,8 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       auto* parser = new OptionsParser;
       bool a, b;
       parser->addOptions()
-              ("alpha|a", &a)
-              ("beta|b", &b);
+                    ("alpha|a", &a)
+                    ("beta|b", &b);
       parser->parse("-a -b");
       BOOST_CHECK_MESSAGE(a && b, "Multiple addition of options succeeded.");
       delete parser;
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       auto* parser = new OptionsParser;
       bool a, b;
       parser->addOption("abool|a", &a)
-              ->addOption("bbool|b", &b);
+            ->addOption("bbool|b", &b);
       parser->parse("-a -b");
       BOOST_CHECK_MESSAGE(a && b, "Sequential addition of options succeeded.");
       delete parser;
@@ -53,9 +53,9 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       BOOST_REQUIRE_NE(parser, nullptr);
       bool a, b, c;
       parser->addOptions()
-              ("alpha|a", &a)
-              ("beta|b", &b)
-              ("gamma|g", &c);
+                    ("alpha|a", &a)
+                    ("beta|b", &b)
+                    ("gamma|g", &c);
       parser->parse("--alpha --gamma");
       BOOST_CHECK(a);
       BOOST_CHECK(!b);
@@ -124,6 +124,21 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       BOOST_CHECK(bb);
       BOOST_CHECK(!cc);
       delete parser;
+  }
+
+  void streamTieHack(const std::string& val) {
+      *std::cout.tie() << val;
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_OptionsParser_StreamTieHackForFunctionOutput) {
+      std::stringstream ss;
+      auto tieStream = std::cout.tie();
+      std::cout.tie(&ss);
+      OptionsParser parser;
+      parser.addOption("value", streamTieHack);
+      parser.parse(" --value=text ");
+      BOOST_CHECK_EQUAL(ss.str(), "text");
+      std::cout.tie(tieStream);
   }
 
 BOOST_AUTO_TEST_SUITE_END()

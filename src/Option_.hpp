@@ -52,11 +52,11 @@ namespace InfoParse::Internals {
        *
        * In case of using function the followings are used:
        *
-       * Let the input value be `f` of type 'F*'.
+       * Let the input value be `f` of type `F*`.
        * `F` shall be either 1) `R(P)`; or 2) `R(P, Ps)`.<br />
        * In case of `R(P)`:
        *  - `P` shall be either 1) `void`; or 2) std or c-style string; or
-       *    3) any type for which `can_stream_in<P>` is `true`.
+       *    3) any type for which `can_stream<P>` is `true`.
        *    -# If `P` is `void`, `f` is called like `(*f)()`.
        *    -# If `P` is a string (std, or c-string) `f` will be called directly
        *       with the parsed value. The empty string is a viable value, for example
@@ -65,8 +65,9 @@ namespace InfoParse::Internals {
        *       `operator>>(std::istream&, P&)`, let `val` be the value of
        *       type `P` containing the value extraced from said operator;
        *       then `f` will be called as `(*f)(val)`.
-       *  - `R` shall be either 1) a `void` type; or 2) pointer type of `pR*`
-       *    3) any type which can be cast to `int`.
+       *  - `R` shall be either 1) a `void` type; or 2) pointer type of `pR*`; or
+       *    3) any type which can be cast to `int`; or 4) any type which can be converted
+       *    to `bool`.
        *    -# If the `R` is a possibly cv-qualified `void`, the function is called;
        *       no diagnostic is performed and the function is believed to have
        *       succeeded.
@@ -100,7 +101,7 @@ namespace InfoParse::Internals {
        *
        * @param[in] names The names of the param split by '|'
        * @param[out] exporter The pointer to a constructed memory whereto
-       *                 dump the found value
+       *                       dump the found value or call the function with
        *
        * @note `exporter` is not checked for `nullptr`
        */
@@ -115,10 +116,10 @@ namespace InfoParse::Internals {
        * Checks equality depending on equal
        * LONG and SHORT names
        *
-       * let A = lhs.LONG == rhs.LONG
-       * let B = lhs.SHORT == rhs.SHORT
+       * let `A` = `lhs.LONG == rhs.LONG`<br />
+       * let `B` = `lhs.SHORT == rhs.SHORT`<br />
        *
-       * lhs == rhs iff A ∨ B
+       * `lhs == rhs` iff `A ∨ B`
        */
       _retval bool operator==(const Option_& rhs) const;
 
@@ -143,10 +144,11 @@ namespace InfoParse::Internals {
       /**
        * Checks inequality by negating the
        * equality check.
-       * let A = lhs.LONG == rhs.LONG
-       * let B = lhs.SHORT == rhs.SHORT
        *
-       * lhs != rhs iff !(A ∨ B)
+       * let `A` be `lhs.LONG == rhs.LONG`<br />
+       * let `B` be `lhs.SHORT == rhs.SHORT`<br />
+       *
+       * `lhs != rhs` iff `!(A ∨ B)`
        */
       _retval bool operator!=(const Option_& rhs) const;
 
@@ -175,7 +177,7 @@ namespace InfoParse::Internals {
   private:
       /// Names of the option by which it can be parsed
       OptionString names;
-      /// Exporter of type T whereto the parsed value will be spit back
+      /// Exporter of type `T` whereto the parsed value will be spit back
       T* exporter;
       /// Typedef of const_iterator of std::string
       typedef std::string::const_iterator StrCIter;
@@ -447,6 +449,9 @@ namespace InfoParse::Internals {
   // Do not enter unless certified Template Templar
   /****************************************************************************/
   struct none {
+      friend std::istream& operator>>(std::istream& is, const none& none) {
+          return is;
+      }
   };
 
   template<class, class...>
@@ -473,14 +478,13 @@ namespace InfoParse::Internals {
       using SecTyp = std::tuple_element_t<1, TDType>;
 
       if constexpr (std::is_same_v<SecTyp, bool>) {
-          using R = typename Typ::Ret;
-          using Arg1 = typename Typ::Arg0;
-          using Arg2 = typename Typ::Arg1;
+          using Re = typename Typ::Ret;
+          using Arg1 = std::remove_cv_t<std::remove_reference_t<typename Typ::Arg0>>;
+          using Arg2 = std::remove_cv_t<std::remove_reference_t<typename Typ::Arg1>>;
 
-          auto callF = [&]() -> R {
+          auto callF = [&]() -> Re {
             auto makeArg = [](const std::string& value) -> Arg1 {
-              if constexpr (std::is_same_v<std::remove_cv_t<std::remove_reference_t<Arg1>>,
-                      std::string>) {
+              if constexpr (std::is_same_v<Arg1, std::string>) {
                   // String is output directly
                   return value;
               }
@@ -493,39 +497,36 @@ namespace InfoParse::Internals {
             if constexpr (std::is_same_v<Arg1, none>) {
                 // exporter takes no parameters
                 return (*exporter)();
-            }
-            if constexpr (std::is_same_v<Arg2, none>) {
+            } else if constexpr (std::is_same_v<Arg2, none>) {
                 // exporter takes 1 parameter
                 return (*exporter)(makeArg(value));
-            }
-            if constexpr (std::is_same_v<std::remove_reference_t<std::remove_cv_t<Arg2>>,
-                    std::string>) {
+            } else if constexpr (std::is_same_v<Arg2, std::string>) {
                 // exporter takes 2 values
                 return (*exporter)(makeArg(value), value);
-            }
-            if constexpr (std::is_pointer_v<Arg2>) {
+            } else if constexpr (std::is_pointer_v<Arg2>) {
                 // You asked for it
                 return (*exporter)(makeArg(value), (Arg2) value.c_str());
-            }
-            // Hope this makes sense
-            return (*exporter)(makeArg(value), Arg2{});
+            } else // Hope this makes sense
+                return (*exporter)(makeArg(value), Arg2{});
           };
 
-          if constexpr (std::is_pointer_v<R>) {
-              if (callF() == nullptr) {
-                  callF(); // Retry failed func
+//          if (Config::RetryFailedFunc) {
+              if constexpr (std::is_pointer_v<Re>) {
+                  if (callF() == nullptr) {
+                      callF(); // Retry failed func
+                  }
               }
-          }
-          if constexpr (std::is_convertible_v<R, int>) {
-              unless (((int) callF()) == 0) {
-                  callF(); // Retry failed func
+              if constexpr (std::is_convertible_v<Re, int>) {
+                  unless (((int) callF()) == 0) {
+                      callF(); // Retry failed func
+                  }
               }
-          }
-          if constexpr (std::is_convertible_v<R, bool>) {
-              unless ((bool) callF()) {
-                  callF(); // Retry failed func
+              if constexpr (std::is_convertible_v<Re, bool>) {
+                  unless ((bool) callF()) {
+                      callF(); // Retry failed func
+                  }
               }
-          }
+//          }
           // Not checking success
           callF();
       } else {

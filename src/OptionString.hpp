@@ -10,12 +10,12 @@
 #include "Lazy.hpp"
 #include "utils.hpp"
 
+//&!off
 #ifdef INFO_USE_BOOST
-
   #include <boost/algorithm/searching/knuth_morris_pratt.hpp>
   #include <boost/algorithm/searching/boyer_moore_horspool.hpp>
-
 #endif
+//&!off
 
 namespace InfoParse::Internals {
 #ifdef INFO_USE_BOOST

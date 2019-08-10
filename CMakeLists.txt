@@ -12,7 +12,7 @@ project(InfoParse)
 
 set(InfoParse_VERSION_MAJOR 1)
 set(InfoParse_VERSION_MINOR 4)
-set(InfoParse_VERSION_PATCH 2)
+set(InfoParse_VERSION_PATCH 3)
 set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${InfoParse_VERSION_PATCH}")
 
 configure_file(
@@ -28,6 +28,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
     set(USE_CLANG_PARSING "YES")
     set(COMPILATION_DB_PATH ${PROJECT_BINARY_DIR}/compile_command.json)
+
     message(STATUS "Searching for lld")
     find_program(USABLE_LLD lld DOC "Search for llvm's lld linker")
     if (NOT ${USABLE_LLD-NOTFOUND})
@@ -36,6 +37,7 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
     else ()
         message(STATUS "Searching for lld - Failure")
     endif ()
+
 else ()
     set(USE_CLANG_PARSING "NO")
     set(COMPILATION_DB_PATH "")

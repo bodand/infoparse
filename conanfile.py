@@ -3,7 +3,7 @@ from conans import ConanFile, CMake
 
 class InfoparseConan(ConanFile):
     name = "InfoParse"
-    version = "1.3.5"
+    version = "1.4.3"
     license = "BSD 3-Clause"
     author = "bodand bodand@pm.me"
     url = "https://github.com/isbodand/"

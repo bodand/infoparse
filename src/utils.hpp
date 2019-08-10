@@ -107,7 +107,15 @@ namespace InfoParse {
      * @return Whether the inheritance relationship is in check
      */
     template<class B, class I>
-    constexpr bool extends();
+    struct extends;
+
+    /**
+     * Helper for extends<B, I>::value
+     *
+     * @see extends
+     */
+    template<class B, class I>
+    inline constexpr bool extends_v = extends<B, I>::value;
 
     /**
      * Checks if the supplied Factory can create a Product using Args
@@ -120,7 +128,17 @@ namespace InfoParse {
      */
     template<class F, class P,
             class... Args>
-    constexpr bool can_construct_with();
+    struct can_construct_with;
+
+    /**
+     * Helper for can_construct_with<F, P, Args...>::value
+     *
+     * @see can_construct_with
+     */
+    template<class F, class P,
+            class... Args>
+    inline constexpr bool can_construct_with_v =
+            can_construct_with<F, P, Args...>::value;
 
     /**
      * Checks if the supplied Factory can create a Product
@@ -133,7 +151,15 @@ namespace InfoParse {
      * @see can_construct_with<F, P, Args...>()
      */
     template<class F, class P>
-    constexpr bool can_construct();
+    struct can_construct;
+
+    /**
+     * Helper for can_construct<F, P>::value
+     *
+     * @see can_construct
+     */
+    template<class F, class P>
+    inline constexpr bool can_construct_v = can_construct<F, P>::value;
 
     /**
      * Checks whether the supplied type T can
@@ -151,7 +177,16 @@ namespace InfoParse {
      */
     template<class T, class Si = std::istream,
             class So = std::ostream, class... Args>
-    constexpr bool can_stream();
+    struct can_stream;
+
+    /**
+     * Helper for can_stream<T, Si, So, Args...>::value
+     *
+     * @see can_stream
+     */
+    template<class T, class Si = std::istream,
+            class So = std::ostream, class... Args>
+    inline constexpr bool can_stream_v = can_stream<T, Si, So, Args...>::value;
 
     /**
      * Checks whether the supplied type T can
@@ -165,7 +200,15 @@ namespace InfoParse {
      * @return Boolean depending on operator>>(S&, T&) exits.
      */
     template<class T, class S = std::istream, class... Args>
-    constexpr bool can_stream_in();
+    struct can_stream_in;
+
+    /**
+     * Helper for can_stream_in<T, S, Args...>::value
+     *
+     * @see can_stream_in
+     */
+    template<class T, class S = std::istream, class... Args>
+    inline constexpr bool can_stream_in_v = can_stream_in<T, S, Args...>::value;
 
     /**
      * Checks whether the supplied type T can
@@ -179,50 +222,81 @@ namespace InfoParse {
      * @return Boolean depending on operator<<(S&, T&) exits.
      */
     template<class T, class S = std::ostream, class... Args>
-    constexpr bool can_stream_out();
+    struct can_stream_out;
+
+    /**
+     * Helper for can_stream_out<T, S, Args...>::value
+     *
+     * @see can_stream_out
+     */
+    template<class T, class S = std::ostream, class... Args>
+    inline constexpr bool can_stream_out_v = can_stream_out<T, S, Args...>::value;
 
     template<class B, class I>
-    constexpr bool extends() {
-        return std::is_base_of_v<
-                typename std::remove_reference<B>::type,
-                typename std::remove_reference<I>::type
-        >;
-    }
+    struct extends {
+        static constexpr bool value =
+                std::is_base_of_v<
+                        typename std::remove_reference<B>::type,
+                        typename std::remove_reference<I>::type
+                >;
+    };
 
     template<class F, class P, class... Args>
-    constexpr bool can_construct_with() {
-        return std::is_same_v<
-                decltype(std::declval<F>().manufacture(std::declval<Args>()...)),
-                P
-        >;
-    }
+    struct can_construct_with {
+        static constexpr bool value =
+                std::is_same_v<
+                        decltype(std::declval<F>().manufacture(std::declval<Args>()...)),
+                        P
+                >;
+    };
 
     template<class F, class P>
-    constexpr bool can_construct() {
-        return can_construct_with<F, P>();
-    }
+    struct can_construct {
+        static constexpr bool value = can_construct_with_v<F, P>;
+    };
 
     template<class T, class S, class... Args>
-    constexpr bool can_stream_in() {
-        return std::is_same_v<
-                std::decay_t<decltype(std::declval<S&>() >> std::declval<T&>(std::declval<Args>()...))>,
-                S
-        >;
-    }
+    struct can_stream_in {
+        template<class iT, class iS, class=void>
+        struct inner : std::false_type {
+        };
+
+        template<class iT, class iS>
+        struct inner<iT, iS, std::enable_if_t<
+                std::is_same_v<
+                        std::decay_t<decltype(std::declval<iS&>() >> std::declval<iT&>(std::declval<Args>()...))>,
+                        iS
+                >>
+        > : std::true_type {
+        };
+
+        static constexpr bool value = inner<T, S>::value;
+    };
 
     template<class T, class S, class... Args>
-    constexpr bool can_stream_out() {
-        return std::is_same_v<
-                std::decay_t<decltype(std::declval<S&>() << std::declval<T&>(std::declval<Args>()...))>,
-                S
-        >;
-    }
+    struct can_stream_out {
+        template<class iT, class iS, class=void>
+        struct inner : std::false_type {
+        };
+
+        template<class iT, class iS>
+        struct inner<iT, iS, std::enable_if_t<
+                std::is_same_v<
+                        std::decay_t<decltype(std::declval<iS&>() << std::declval<iT&>(std::declval<Args>()...))>,
+                        iS
+                >>
+        > : std::true_type {
+        };
+
+        static constexpr bool value = inner<T, S>::value;
+    };
 
     template<class T, class Si, class So, class... Args>
-    constexpr bool can_stream() {
-        return can_stream_in<T, Si, Args...>()
-               && can_stream_out<T, So, Args...>();
-    }
+    struct can_stream {
+        static constexpr bool value =
+                can_stream_in_v<T, Si, Args...>
+                && can_stream_out_v<T, So, Args...>;
+    };
 
     template<class It>
     ShittyFinder<It>::ShittyFinder(It parserB, It parserE)
@@ -239,7 +313,7 @@ namespace InfoParse {
         if (size == 0)
             return {parserB, parserB};
 
-        typename decltype(findMap)::iterator found;
+        typename decltype(findMap)::const_iterator found;
         // If starter elem doesn't exist why bother
         if ((found = findMap.find(*parseeB)) == findMap.end())
             return {parserE, parserE};
