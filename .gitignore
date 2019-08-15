@@ -18,9 +18,14 @@ compile_commands.json
 ## ??
 *.stackdump
 
+## Whatever
+test_package/
+
 ## Configured by CMake
 src/versioning.hpp
 src/config.hpp
+test/testmain.cpp
+dox_site/installation.md
 .doxygen
 
 ## Perl Idea plugin thingy

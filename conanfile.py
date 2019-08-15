@@ -12,7 +12,7 @@ class InfoparseConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=True"
-    exports_sources = ["*.[ch]pp", "*.in"]
+    exports_sources = ["src/*.[ch]pp", "*.[ch]pp.in"]
     generators = "cmake"
 
     def source(self):

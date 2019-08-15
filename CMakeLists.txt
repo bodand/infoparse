@@ -27,8 +27,9 @@ configure_file( # For version
         "${PROJECT_SOURCE_DIR}/dox_site/installation.md"
 )
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+    message(WARNING "MSVC is most likely going to fail building this, at least for me it is unable to do so.")
 endif ()
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
