@@ -20,7 +20,7 @@ class InfoparseConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_folder="infoparse")
+        cmake.configure("-DCMAKE_BUILD_TYPE=Release", source_folder="infoparse")
         cmake.build()
 
     def package(self):
