@@ -16,6 +16,7 @@
 #include <regex>
 #include <sstream>
 #include <iterator>
+#include <unordered_map>
 
 #define unless(x) if (!(x))
 #define until(x) while (!(x))
