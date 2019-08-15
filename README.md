@@ -5,7 +5,7 @@ C++ 17 parameter parser like Perl's Getopt::Long.
 
 ### Conan
 
-InfoParse is available as a conan dependency `InfoParse/1.3.5@bodand/stable` 
+InfoParse is available as a conan dependency `InfoParse/1.5.2@bodand/stable` 
 at `https://conan.isdevnet.com`.
 
 Add the server by: 
@@ -15,7 +15,7 @@ $ conan remote add InfoSoft-Conan-Server https://conan.isdevnet.com
 Then using `conanfile.txt`
 ```text
 [requirements]
-InfoParse/1.3.5@bodand/stable
+InfoParse/1.5.2@bodand/stable
 ```
 
 ### Build it
@@ -92,10 +92,10 @@ removing the parsed text from the passed string (or c-array of c-strings).
 
 ## Documentation
 
-Full documentation is available [here](https://isbodand.github.io/infoparse), 
-at this repo's GitHub page.
+Full documentation is available [here](https://isbodand.github.io/infoparsed).
 
 ## License
 
 This project and repository is licensed under the BSD 3-Clause license.
 For more information check the provided `LICENSE` file.
+

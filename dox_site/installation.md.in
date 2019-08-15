@@ -43,7 +43,7 @@ $ conan search -r InfoSoft-Conan-Server
 If you searched for InfoParse in the last paragraph you saw what is
 the name you need to add as a requirement.
 
-Add `InfoParse/1.3.5@bodand/stable` to your conanfile.(py|txt) and conan
+Add `InfoParse/${InfoParse_VERSION}@bodand/stable` to your conanfile.(py|txt) and conan
 shall automagically install the package for you by running
 
 ```shell

@@ -10,26 +10,35 @@
 #define InfoParse_MAJOR @InfoParse_VERSION_MAJOR@
 #define InfoParse_MINOR @InfoParse_VERSION_MINOR@
 #define InfoParse_PATCH @InfoParse_VERSION_PATCH@
+#define InfoParse_BUILD_DATE "@InfoParse_VERSION_BUILD_DATE@"
+#define InfoParse_WIDE_BUILD_DATE L"@InfoParse_VERSION_BUILD_DATE@"
 #define InfoParse_VERSION "@InfoParse_VERSION@"
 #define InfoParse_WIDE_VERSION L"@InfoParse_VERSION@"
 
 #include <string>
+#include "config.hpp"
 
 namespace InfoParse {
-  static inline const std::string getVersion() {
-      return InfoParse_VERSION " built (" __DATE__ " at " __TIME__ ")";
+  static inline std::string getVersion() {
+      if (Internals::Config::UseBuildTimeInVersion) {
+          return InfoParse_VERSION " built on " InfoParse_BUILD_DATE;
+      }
+      return InfoParse_VERSION;
   }
 
-  static inline const std::wstring getWideVersion() {
-      return InfoParse_WIDE_VERSION L" built (" __DATE__ L" at " __TIME__ L")";
+  static inline std::wstring getWideVersion() {
+      if (Internals::Config::UseBuildTimeInVersion) {
+          return InfoParse_WIDE_VERSION L" built on " InfoParse_WIDE_BUILD_DATE;
+      }
+      return InfoParse_WIDE_VERSION;
   }
 
 #if defined(_WIN32) || defined(_WIN64)
 
-  static inline const std::wstring getAutoVersion() {
+  static inline std::wstring getAutoVersion() {
       return getWideVersion();
 #else
-      static inline const std::string getAutoVersion() {
+      static inline std::string getAutoVersion() {
           return getVersion();
 #endif
   }

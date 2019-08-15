@@ -17,7 +17,7 @@ case it is deemed to have failed. Failure conditions are described
 
 # INFO_PARSER_FAIL_BAD_FUNCTION_SILENTLY
 Parameters: `none`  
-If the function takes more that 2 parameters the library upon realizing
+If the callback takes more that 2 parameters the library upon realizing
 this when trying to call the function, throws a `bad_function_callback`
 exception. Note this is hardly required as OptionsParser static
 asserts less than or equal to 2 on it's input of addOption, so
@@ -30,3 +30,8 @@ If the callback function returns a pointer which is supposed to be
 deleted, for some ungodly reason, with this option the library
 will call `delete ptr`, where `ptr` is the value returned by the callback.
 Note that this is then called for every returned pointer.
+
+# INFO_USE_BUILD_TIME_IN_VERSION
+Parameters: `1` or `0` whether yes or no; default is `1`  
+Decides whether build time is to be shown in the version number of
+the library.

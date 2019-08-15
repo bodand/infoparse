@@ -3,7 +3,7 @@ from conans import ConanFile, CMake
 
 class InfoparseConan(ConanFile):
     name = "InfoParse"
-    version = "1.5.0"
+    version = "1.5.2"
     license = "BSD 3-Clause"
     author = "bodand bodand@pm.me"
     url = "https://github.com/isbodand/"
@@ -33,3 +33,4 @@ class InfoparseConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["infoparse"]
+
