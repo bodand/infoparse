@@ -146,9 +146,9 @@ namespace InfoParse::Internals {
       /// The names stored by the object
       std::vector<std::string> names;
       /// Lazily constructed Knuth-Morris-Pratt search objects for each name
-      std::vector<Lazy<FinderEins<char>, const std::string&>> kmpSearch;
+      std::vector<Lazy<FinderEins<char>, std::string&>> kmpSearch;
       /// Lazily constructed Boyer-Moore search objects for each name
-      std::vector<Lazy<FinderZwei<char>, const std::string&>> bmSearch;
+      std::vector<Lazy<FinderZwei<char>, std::string&>> bmSearch;
 
       /// Methods
   private:
