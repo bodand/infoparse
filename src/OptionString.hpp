@@ -42,8 +42,8 @@ namespace InfoParse::Internals {
   template<class T>
   using searchableOf = std::tuple<
           std::basic_string<T>,
-          Lazy<FinderEins<T>, const std::basic_string<T>&>,
-          Lazy<FinderZwei<T>, const std::basic_string<T>&>
+          Lazy<FinderEins<T>, std::basic_string<T>&>,
+          Lazy<FinderZwei<T>, std::basic_string<T>&>
   >;
 
   /**
