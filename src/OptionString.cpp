@@ -7,11 +7,11 @@
 
 InfoParse::Internals::OptionString::OptionString(const std::string& str)
         : names(OptionString::prependDashes(InfoParse::split(str, '|'))) {
-    for (auto& name : names) {
-        kmpSearch.emplace_back([](const std::string& name) {
+    for (auto&& name : names) {
+        kmpSearch.emplace_back([](/*const */std::string& name) {
           return std::make_shared<FinderEins<char>>(name.begin(), name.end());
         });
-        bmSearch.emplace_back([](const std::string& name) {
+        bmSearch.emplace_back([](/*const */std::string& name) {
           return std::make_shared<FinderZwei<char>>(name.begin(), name.end());
         });
     }
