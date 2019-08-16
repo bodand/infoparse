@@ -22,6 +22,7 @@ class InfoparseConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         spareBodandsNet = " -DBODANDS_INTERNET_IS_FADING_AWAY=YES" if self.options.use_local else ""
+        print("bod: \"", spareBodandsNet, '"')
         cmake.configure("-DCMAKE_BUILD_TYPE=Release" + spareBodandsNet, source_folder="infoparse")
         cmake.build()
 
