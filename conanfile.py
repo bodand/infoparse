@@ -6,7 +6,7 @@ class InfoparseConan(ConanFile):
     version = "1.5.2"
     license = "BSD 3-Clause"
     author = "bodand bodand@pm.me"
-    url = "https://github.com/isbodand/"
+    url = "https://github.com/isbodand/infoparse"
     description = "C++17 Parameter parser like Perl's Getopt::Long"
     topics = ("parser", "getopt-long", "c++17")
     settings = "os", "compiler", "build_type", "arch"
@@ -24,7 +24,7 @@ class InfoparseConan(ConanFile):
         cmake.build()
 
     def package(self):
-        self.copy("*.hpp", dst="include/infoparse", src="infoparse")
+        self.copy("*.hpp", dst="include/infoparse", src="infoparse/src")
         self.copy("*infoparse.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
