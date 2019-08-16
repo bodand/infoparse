@@ -3,11 +3,15 @@ message(STATUS "Installing Project-level Boost")
 # Download archive if not existing
 if ((NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz") AND (NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0"))
     message(STATUS ">Downloading archive")
-    file(DOWNLOAD
-            https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz
-            ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz
-            EXPECTED_HASH SHA256=882b48708d211a5f48e60b0124cf5863c1534cd544ecd0664bb534a4b5d506e9
-            )
+    if (BODANDS_INTERNET_IS_FADING_AWAY)
+        file(COPY D:/boost_1_70_0.tar.gz DESTINATION ${CMAKE_SOURCE_DIR})
+    else ()
+        file(DOWNLOAD
+                https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz
+                ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz
+                EXPECTED_HASH SHA256=882b48708d211a5f48e60b0124cf5863c1534cd544ecd0664bb534a4b5d506e9
+                )
+    endif ()
     message(STATUS ">Downloading archive - Done")
 else ()
     message(STATUS ">Downloading archive - Cached")
