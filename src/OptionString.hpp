@@ -23,16 +23,16 @@ namespace InfoParse::Internals {
   using boost::algorithm::boyer_moore_horspool;
 
   template <class T>
-  using FinderEins = knuth_morris_pratt<typename std::basic_string<T>::const_iterator>;
+  using FinderEins = knuth_morris_pratt<typename std::basic_string<T>::iterator>;
   template <class T>
-  using FinderZwei = boyer_moore_horspool<typename std::basic_string<T>::const_iterator>;
+  using FinderZwei = boyer_moore_horspool<typename std::basic_string<T>::iterator>;
 #else
   template <class T>
-  using FinderEins = ShittyFinder<typename std::basic_string<T>::const_iterator>;
+  using FinderEins = ShittyFinder<typename std::basic_string<T>::iterator>;
   template <class T>
-  using FinderZwei = ShittyFinder<typename std::basic_string<T>::const_iterator>;
+  using FinderZwei = ShittyFinder<typename std::basic_string<T>::iterator>;
 #endif
-  using StrIter = std::string::const_iterator;
+  using StrIter = std::string::iterator;
 
   /**
    * An std::tuple containing
