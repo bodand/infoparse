@@ -10,7 +10,8 @@ class InfoparseConan(ConanFile):
     description = "C++17 Parameter parser like Perl's Getopt::Long"
     topics = ("parser", "getopt-long", "c++17")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
+    options = {"shared": [True, False],
+               "use_local":  [True, False]}
     default_options = "shared=True"
     exports_sources = ["src/*.[ch]pp", "*.[ch]pp.in"]
     generators = "cmake"
@@ -20,7 +21,8 @@ class InfoparseConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure("-DCMAKE_BUILD_TYPE=Release", source_folder="infoparse")
+        spareBodandsNet = " -DBODANDS_INTERNET_IS_FADING_AWAY=YES" if self.options.use_local else ""
+        cmake.configure("-DCMAKE_BUILD_TYPE=Release" + spareBodandsNet, source_folder="infoparse")
         cmake.build()
 
     def package(self):
@@ -33,4 +35,3 @@ class InfoparseConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["infoparse"]
-
