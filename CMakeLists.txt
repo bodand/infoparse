@@ -20,12 +20,12 @@ string(TIMESTAMP InfoParse_VERSION_BUILD_DATE "%Y-%m-%d at %H:%M:%S (%s)" UTC)
 configure_file( # For version
         "${PROJECT_SOURCE_DIR}/src/versioning.hpp.in"
         "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
-)
+        )
 
 configure_file( # For version
         "${PROJECT_SOURCE_DIR}/dox_site/installation.md.in"
         "${PROJECT_SOURCE_DIR}/dox_site/installation.md"
-)
+        )
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
@@ -55,7 +55,7 @@ configure_file( # For clang support
         ${PROJECT_SOURCE_DIR}/.doxygen.in
         ${PROJECT_SOURCE_DIR}/.doxygen
         @ONLY
-)
+        )
 
 message(STATUS "Looking for a presinstalled Boost")
 find_package(Boost COMPONENTS unit_test_framework)
@@ -71,7 +71,7 @@ endif ()
 configure_file( # For Boost support
         ${PROJECT_SOURCE_DIR}/src/config.hpp.in
         ${PROJECT_SOURCE_DIR}/src/config.hpp
-)
+        )
 
 set(InfoParse_SOURCES
         src/versioning.cpp src/utils.cpp
