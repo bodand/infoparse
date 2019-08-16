@@ -7,7 +7,6 @@ if ((NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz") AND (NOT EXISTS "${CM
             https://dl.bintray.com/boostorg/release/1.70.0/source/boost_1_70_0.tar.gz
             ${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz
             EXPECTED_HASH SHA256=882b48708d211a5f48e60b0124cf5863c1534cd544ecd0664bb534a4b5d506e9
-            SHOW_PROGRESS
             )
     message(STATUS ">Downloading archive - Done")
 else ()

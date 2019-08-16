@@ -201,7 +201,7 @@ namespace InfoParse::Internals {
       /// Optional callback-function
       std::optional<std::function<R(Args...)>> callback;
       /// Typedef of `const_iterator` of `std::string`
-      typedef std::string::const_iterator StrCIter;
+      typedef std::string::iterator StrCIter;
 
       /// Methods
   private:
@@ -284,8 +284,8 @@ namespace InfoParse::Internals {
   int Option_<T, R, Args...>::handleFlagParse(std::string& parsee,
                                               StrCIter f,
                                               StrCIter l) const {
-      auto lp = std::distance(parsee.cbegin(), l);
-      auto fp = std::distance(parsee.cbegin(), f);
+      auto lp = std::distance(parsee.begin(), l);
+      auto fp = std::distance(parsee.begin(), f);
       int bonus = fp + 2 != lp;
       auto evalVal = [](const std::string& val) {
         if (val == "yes" || val == "true") { // true values
@@ -348,8 +348,8 @@ namespace InfoParse::Internals {
   int Option_<T, R, Args...>::handleOptionalNegatedFlagParse(std::string& parsee,
                                                              StrCIter f,
                                                              StrCIter l) const {
-      auto lp = std::distance(parsee.cbegin(), l);
-      auto fp = std::distance(parsee.cbegin(), f);
+      auto lp = std::distance(parsee.begin(), l);
+      auto fp = std::distance(parsee.begin(), f);
       std::string noStr = "--no";
       bool match = false;
       for (int i = 0; i < noStr.size(); ++i) {
@@ -395,8 +395,8 @@ namespace InfoParse::Internals {
           return 0;
       }
 
-      auto lp = std::distance(parsee.cbegin(), l);
-      auto fp = std::distance(parsee.cbegin(), f);
+      auto lp = std::distance(parsee.begin(), l);
+      auto fp = std::distance(parsee.begin(), f);
       int bonus = fp + 2 != lp;
       int addendum = 1; // to skip ':' or leading ' '
 
