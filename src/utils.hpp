@@ -95,7 +95,7 @@ namespace InfoParse {
 
         /// Operators
     public:
-        std::pair<It, It> operator()(It parseeB, It parseeE);
+        std::pair<It, It> operator()(It parseeB, It parseeE) const;
 
         /// Fields
     private:
@@ -336,7 +336,7 @@ namespace InfoParse {
     }
 
     template<class It>
-    std::pair<It, It> ShittyFinder<It>::operator()(It parseeB, It parseeE) {
+    std::pair<It, It> ShittyFinder<It>::operator()(It parseeB, It parseeE) const {
         std::size_t size = std::distance(parseeB, parseeE);
         // If nothing to find, nothing is found
         if (size == 0)
