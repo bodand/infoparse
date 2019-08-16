@@ -12,7 +12,7 @@ class InfoparseConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False],
                "use_local":  [True, False]}
-    default_options = "shared=True"
+    default_options = {"shared": True, "use_local": False}
     exports_sources = ["src/*.[ch]pp", "*.[ch]pp.in"]
     generators = "cmake"
 
@@ -22,7 +22,6 @@ class InfoparseConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         spareBodandsNet = " -DBODANDS_INTERNET_IS_FADING_AWAY=YES" if self.options.use_local else ""
-        print("bod: \"", spareBodandsNet, '"')
         cmake.configure("-DCMAKE_BUILD_TYPE=Release" + spareBodandsNet, source_folder="infoparse")
         cmake.build()
 

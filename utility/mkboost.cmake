@@ -3,7 +3,7 @@ message(STATUS "Installing Project-level Boost")
 # Download archive if not existing
 if ((NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0.tar.gz") AND (NOT EXISTS "${CMAKE_SOURCE_DIR}/boost_1_70_0"))
     message(STATUS ">Downloading archive")
-    if (BODANDS_INTERNET_IS_FADING_AWAY)
+    if (EXISTS "D:/boost_1_70_0.tar.gz")
         message(STATUS "Loggin' away")
         file(COPY D:/boost_1_70_0.tar.gz DESTINATION ${CMAKE_SOURCE_DIR})
     else ()
