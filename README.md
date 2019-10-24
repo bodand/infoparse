@@ -1,26 +1,36 @@
 # InfoParse
 C++ 17 parameter parser like Perl's Getopt::Long.
 
-## Installation
+## Synopsis
 
-### Conan
+```objectivec
+#include <iostream>
+#include <string>
 
-InfoParse is available as a conan dependency `InfoParse/2.0.1@bodand/stable` 
-at `https://conan.isdevnet.com`.
+#include <infoparse/OptionsParser>
 
-Add the server by: 
-```shell 
-$ conan remote add InfoSoft-Conan-Server https://conan.isdevnet.com    
+int main(int argc, char** argv) {
+    // Variables
+    bool var1;
+    std::string var2;
+    
+    // Parsing
+    info::parse::OptionsParser parser;
+    parser.addOptions()
+        ("b|bool", &var1)
+        ("s|string", &var2)
+    ;
+    
+    parser.parse(argc, argv);
+    
+    // Output
+    std::cout << std::boolaplha 
+              << "Var1: " << var1 << "\n"
+              << "Var2: \"" << var2 << '"' << std::endl;
+    
+    return 0;
+} 
 ```
-Then using `conanfile.txt`
-```text
-[requirements]
-InfoParse/2.0.1@bodand/stable
-```
-
-### Build it
-
-You can build InfoParse from source as described in the docs.
 
 ## Usage
 
