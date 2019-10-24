@@ -64,6 +64,16 @@ namespace info::parse {
   void replaceAll(std::string& str, const std::string& from, const std::string& to);
   void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to);
 
+  template<class Traits, class CharT, class UnaryFunction>
+  _pure std::basic_string<CharT> regex_replace(const std::basic_string<CharT>& s,
+                                               const std::basic_regex<CharT, Traits>& re,
+                                               UnaryFunction f);
+
+  template<class BidirIt, class Traits, class CharT, class UnaryFunction>
+  _pure std::basic_string<CharT> regex_replace(BidirIt first, BidirIt last,
+                                               const std::basic_regex<CharT, Traits>& re,
+                                               UnaryFunction f);
+
   _pure std::vector<std::string> split(const std::string& toSplit, char c);
 
   _pure bool anyOf(char c, const std::string& set);

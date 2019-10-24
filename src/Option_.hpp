@@ -498,9 +498,9 @@ namespace info::parse::detail {
       if constexpr (std::is_same_v<T, none>) {
           auto checkReturnAndRetryIfNeed = [](const std::function<R(Args...)>& f,
                                               Args... args) {
-//          if (Config::RetryFailedCallback) {
+//          if (config::RetryFailedCallback) {
             if constexpr (std::is_pointer_v<R>) {
-                if (Config::DeleteCallbackReturn) {
+                if (config::DeleteCallbackReturn) {
                     auto ptr = f(args...);
                     if (ptr == nullptr) {
                         ptr = f(args...); // Retry failed func
@@ -554,7 +554,7 @@ namespace info::parse::detail {
                   checkReturnAndRetryIfNeed(*callback, makeArg(value), (Arg2) value.c_str());
               } else // Hope this makes sense
                   checkReturnAndRetryIfNeed(*callback, makeArg(value), Arg2{});
-          } else if (!Config::FailSilently) {
+          } else if (!config::FailSilently) {
               throw bad_function_callback(sizeof...(Args));
           }
       } else {
