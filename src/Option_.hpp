@@ -19,7 +19,7 @@
 #include "utils.hpp"
 #include "OptionString.hpp"
 
-namespace InfoParse::Internals {
+namespace info::parse::detail {
   /**
    * Thrown if supplied function callback
    *  1) takes too many parameters
@@ -363,7 +363,7 @@ namespace InfoParse::Internals {
       }
       // no negation just random 'o' before flag
       // note that *o-flag is invalid
-      // and short options are not negatable
+      // and short _options are not negatable
       /* so just */ return 0;
   }
 

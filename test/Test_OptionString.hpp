@@ -13,7 +13,7 @@
 #include "../src/OptionString.hpp"
 
 BOOST_AUTO_TEST_SUITE(Test_OptionString)
-  using namespace InfoParse;
+  using namespace info::parse;
 
   BOOST_AUTO_TEST_CASE(Test_OptionString_SplitsStringCorrectly) {
       OptionString os("apple|a|ap");

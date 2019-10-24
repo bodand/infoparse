@@ -11,8 +11,8 @@
 
 #include "OptionsParser.hpp"
 
-InfoParse::Internals::OptionAdder::OptionAdder(OptionsParser* parser)
-        : mother(parser) {}
+info::parse::detail::OptionAdder::OptionAdder(OptionsParser* parser)
+        : _mother(parser) {}
 
 
 

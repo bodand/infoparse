@@ -2,8 +2,8 @@
 
 The API is pretty easy to handle, this combined with
 my madness complicated the implementation, but never mind that.
-Only one class is present in the `InfoParse` namespace, others are 
-`InfoParse::Internals` namespace which, you'd never guess it, is for
+Only one class is present in the `info::parse` namespace, others are 
+`info::parse::Internals` namespace which, you'd never guess it, is for
 internal use. 
 
 ## Include
@@ -16,7 +16,7 @@ all headers reside. Therefrom do you need to include
 
 This only class is `OptionsParser`. As of `1.4.0`, this class
 is default constructed, so you can easily just pop it wherever you want:
-\[Note: For the followings `IP` is an alias to namespace `InfoParse`.]
+\[Note: For the followings `IP` is an alias to namespace `info::parse`.]
 ```objectivec
 IP::OptionsParser parser;
 ```
@@ -73,20 +73,20 @@ presented [there](#single) .
 ### Functions
 
 However mighty variables are, they are boring. Having functions as possible
-output variables definitely is not, however they are highly dysfunctional (haha)
-at the moment: for some ungodly reason the standard doesn't specify a type
-for lambdas so I cannot go Template Wizard on their(the lambdas') asses 
-to check if the provided type `T` is a lambda, so currently only function pointers
-work. This would be fine, but C++ is limited in the regard of not allowing 
-function definitions inside other functions, and thus to have some kind
-of side-effect performed that affects the state of the current caller
-function is impossible, unless using some kind of global callback hack, 
-like tie-ing a local stream to `std::cout` and have a function put stuff
-to the currently tie-d stream of `std::cout` \[Note: **Warning** 
-This is not a tried and working method, just something I ass-pulled while
-writing these docs. Usage is highly unadvised unless tested extensively 
-for possible failures. In case of not finding any, please notify me so 
-I can remove this warning.].
+output variables definitely is not. 
+Since the glorious release of version `1.5.0`, using any kind of callable is
+a great way to specify callbacks to the parser system. 
+Works with function pointers, function objects and even lambdas.
+While values specify the type of the program parameter by their own type,
+lambdas, and function pointers do so with
+their parameter type.
+Callables may have some type `T` as their parameter iff `T` implements
+the streaming `operator>>`, or `void`:
+If their type is `T`, they will be called with an argument of type `T`,
+parsed from the program arguments; 
+if their type is `void` they will be called without any value being passed to them,
+as if the boolean value were to be encoded in the 
+fact that whether or not they are called.
 
 See this example of using function callbacks.  
 
@@ -99,12 +99,15 @@ See this example of using function callbacks.
 [[noreturn]] void help();
 [[noreturn]] void version();
 
-int main(int argc, char** argv) { // K&R All the way
+int main(int argc, char** argv) { // K&R braces All the way
     // Setup
-    InfoParse::OptionsParser parser;
+    info::parse::OptionsParser parser;
     parser.addOptions()
         ("help|h|?", help)
         ("version|v", version)
+        ("lambda|l", [&](const std::string& str) {
+          std::cout << str << std::endl;
+        })
     ;
     
     // Parsing
@@ -139,14 +142,14 @@ function's return value, a function may be deemed to have succeeded or
 to have failed by the library upon calling the callback-function. 
 The failure and success conditions are as of the followings.
 
- 1) A `void` function is always successful.
+ 1) A `void` function is always successful.  
  2) A function returning a pointer is successful if the returned
      pointer is not `nullptr`. \[Note: See 
      [configs](/infoparsed/config#info_delete_return_value_of_callback) 
-     for returned pointers that should be deleted.]
+     for returned pointers that should be deleted.]  
  3) If the returned value is convertible to `int` the following
     expression determines success: `((int) f(args...)) == 0` where
-    `f` is the callback function and `args...` are the parameters.
+    `f` is the callback function and `args...` are the parameters.  
  4) A function whose return value is convertible to `bool`, that equals
-    whether the function failed or not.
- 5) Any other case the function is hoped to have succeeded.
+    whether the function failed or not.  
+ 5) Any other case the function is hoped to have succeeded.  

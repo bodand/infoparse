@@ -19,8 +19,8 @@
 #include "../src/OptionHandler_.hpp"
 #include "../src/Option_.hpp"
 
-using namespace InfoParse;
-using namespace InfoParse::Internals;
+using namespace info::parse;
+using namespace info::parse::detail;
 
 BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
 
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
       Option_<int> opt("name", &data);
       CREATE_HANDLER;
       handler->addOption(std::move(opt));
-      auto& opts = handler->getOptions();
+      auto& opts = handler->options();
       BOOST_CHECK_NE(opts.size(), 0);
       auto i = opts.begin();
       while (*i != "Option<i>[name]" && i != opts.end()) {
@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
       int data;
       CREATE_HANDLER;
       handler->addOption("name", &data);
-      auto& opts = handler->getOptions();
+      auto& opts = handler->options();
       BOOST_CHECK_NE(opts.size(), 0);
       auto i = opts.begin();
       while (*i != "name" && i != opts.end()) {
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
       int data;
       CREATE_HANDLER;
       handler->addOption("name|p", &data);
-      auto& opts = handler->getOptions();
+      auto& opts = handler->options();
       BOOST_CHECK_NE(opts.size(), 0);
       auto i = opts.begin();
       while (*i != "name" && i != opts.end()) {
@@ -78,9 +78,9 @@ BOOST_AUTO_TEST_SUITE(Test_OptionHandler)
       Option_<int> opt("name", &data);
       CREATE_HANDLER;
       handler->addOption(std::move(opt));
-      auto& opts = handler->getOptions();
+      auto& opts = handler->options();
       handler->rmOption("name");
-      BOOST_CHECK_EQUAL(handler->getOptions().size(), 0);
+      BOOST_CHECK_EQUAL(handler->options().size(), 0);
       delete handler;
   }
 

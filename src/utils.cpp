@@ -20,7 +20,7 @@
 
 #endif
 
-namespace InfoParse {
+namespace info::parse {
   std::string makeMonolithArgs(int argc, char** argv) {
       std::ostringstream retStream;
       retStream << " ";

@@ -51,7 +51,7 @@
 
 #endif
 
-namespace InfoParse {
+namespace info::parse {
   // guaranteed s = arcItrStr(itrStr(s))
   // or whatever, you get it
   void itrStr(std::string& str);
@@ -64,23 +64,13 @@ namespace InfoParse {
   void replaceAll(std::string& str, const std::string& from, const std::string& to);
   void replaceAll(std::wstring& str, const std::wstring& from, const std::wstring& to);
 
-  template<class Traits, class CharT, class UnaryFunction>
-  _pure std::basic_string<CharT> regex_replace(const std::basic_string<CharT>& s,
-                                               const std::basic_regex<CharT, Traits>& re,
-                                               UnaryFunction f);
-
-  template<class BidirIt, class Traits, class CharT, class UnaryFunction>
-  _pure std::basic_string<CharT> regex_replace(BidirIt first, BidirIt last,
-                                               const std::basic_regex<CharT, Traits>& re,
-                                               UnaryFunction f);
-
   _pure std::vector<std::string> split(const std::string& toSplit, char c);
 
   _pure bool anyOf(char c, const std::string& set);
 
   void to_lower(std::string& str);
 
-  namespace Internals {
+  namespace detail {
     struct none {
         friend std::istream& operator>>(std::istream& is, const none& none) {
             return is;
@@ -99,10 +89,10 @@ namespace InfoParse {
 
         /// Fields
     private:
-        It parserB;
-        It parserE;
+        It _parserB;
+        It _parserE;
         std::unordered_map<typename std::iterator_traits<It>::value_type,
-                std::vector<It>> findMap;
+                std::vector<It>> _findMap;
     };
 
     /**
@@ -329,9 +319,9 @@ namespace InfoParse {
 
     template<class It>
     ShittyFinder<It>::ShittyFinder(It parserB, It parserE)
-            : parserB(parserB), parserE(parserE) {
+            : _parserB(parserB), _parserE(parserE) {
         for (auto it = parserB; it != parserE; ++it) {
-            findMap[*it].push_back(it);
+            _findMap[*it].push_back(it);
         }
     }
 
@@ -340,12 +330,12 @@ namespace InfoParse {
         std::size_t size = std::distance(parseeB, parseeE);
         // If nothing to find, nothing is found
         if (size == 0)
-            return {parserB, parserB};
+            return {_parserB, _parserB};
 
-        typename decltype(findMap)::const_iterator found;
+        typename decltype(_findMap)::const_iterator found;
         // If starter elem doesn't exist why bother
-        if ((found = findMap.find(*parseeB)) == findMap.end())
-            return {parserE, parserE};
+        if ((found = _findMap.find(*parseeB)) == _findMap.end())
+            return {_parserE, _parserE};
 
         auto walkThroughShit = [](const auto& starter,
                                   const auto& matchee,
@@ -365,7 +355,7 @@ namespace InfoParse {
         }
 
         // Fuck
-        return {parserE, parserE};
+        return {_parserE, _parserE};
     }
   }
 }

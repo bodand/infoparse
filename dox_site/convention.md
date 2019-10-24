@@ -1,6 +1,6 @@
 # Conventions
 
-The InfoParse source uses some standard-ish conventions. These
+The info::parse source uses some standard-ish conventions. These
 are not that intrusive after getting used them. 
 The followings describe what these are and what they are doing, as
 some are a bit cryptic on first sight for those not necessarily 
@@ -14,6 +14,15 @@ well versed in the C++ language's abusability.
  - Class names are `PascalCase`
  - Classes that behave like interfaces are `PascalCase` and are an adjective, 
  like the Java convention for interfaces.
+ - Member variables are `_camelCase`, while prefering single-word names,
+ if possible, of course.
+ - Accessor member functions are the name of the member variable without
+ the leading underscore
+ - Accessor member functions are the name of the member variable without
+ the leading underscore, while taking a parameter of the approriate type
+ - static and/or non-member functions are `PascalCase` 
+ - Namespace of the project is `info::parse`, implementation details inside
+ the `detail` subnamespace.
 
 # Macros
 

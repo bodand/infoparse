@@ -18,7 +18,7 @@
 #include "Option_.hpp"
 #include "OptionString.hpp"
 
-namespace InfoParse::Internals {
+namespace info::parse::detail {
 
   /**
    * Groups multiple Option_<T>-s together
@@ -30,12 +30,12 @@ namespace InfoParse::Internals {
    *
    * @tparam T The type for Option_<T>-s can be accepted into the group
    *
-   * @see InfoParse::Option_<T>
+   * @see info::parse::Option_<T>
    */
   template<class T = none,
           class R = none, class... Args>
   class OptionHandler_ {
-      std::vector<Option_<T, R, Args...>> options;
+      std::vector<Option_<T, R, Args...>> _options;
 
   public:
       /**
@@ -76,7 +76,7 @@ namespace InfoParse::Internals {
        * Getter for the options
        * @return The internal collection of options
        */
-      const std::vector<Option_<T>>& getOptions() const;
+      const std::vector<Option_<T>>& options() const;
 
       /**
        * Removes the option with "name".
@@ -88,40 +88,40 @@ namespace InfoParse::Internals {
 
   template<class T, class R, class... Args>
   void OptionHandler_<T, R, Args...>::addOption(Option_<T, R, Args...>&& option) {
-      options.push_back(std::move(option));
+      _options.push_back(std::move(option));
   }
 
   template<class T, class R, class... Args>
   void OptionHandler_<T, R, Args...>::addOption(OptionString name, T* exporter) {
-      options.emplace_back(std::move(name), exporter);
+      _options.emplace_back(std::move(name), exporter);
   }
 
   template<class T, class R, class... Args>
   void OptionHandler_<T, R, Args...>::addOption(OptionString name,
                                                 const std::function<R(Args...)>& func) {
-      options.emplace_back(std::move(name), func);
+      _options.emplace_back(std::move(name), func);
   }
 
   template<class T, class R, class... Args>
   std::string OptionHandler_<T, R, Args...>::handle(const std::string& args) const {
       std::string parsable(args);
-      std::for_each(options.begin(), options.end(), [&](const Option_<T, R, Args...>& opt) {
+      std::for_each(_options.begin(), _options.end(), [&](const Option_<T, R, Args...>& opt) {
         parsable = opt.match(parsable);
       });
       return parsable;
   }
 
   template<class T, class R, class... Args>
-  const std::vector<Option_<T>>& OptionHandler_<T, R, Args...>::getOptions() const {
-      return options;
+  const std::vector<Option_<T>>& OptionHandler_<T, R, Args...>::options() const {
+      return _options;
   }
 
   template<class T, class R, class... Args>
   void OptionHandler_<T, R, Args...>::rmOption(const std::string& name) {
-      auto i = options.begin();
-      while ((*i != name && i != options.end())) { ++i; };
-      unless (i == options.end()) {
-          options.erase(i);
+      auto i = _options.begin();
+      while ((*i != name && i != _options.end())) { ++i; };
+      unless (i == _options.end()) {
+          _options.erase(i);
       }
   }
 }

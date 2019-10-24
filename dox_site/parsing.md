@@ -76,7 +76,6 @@ There exist, of course, values whose job is to take actual meaningful
 parameters and pass them into the program. These values compared to
 the values taken by boolean flags do actually show up in the library's
 caller program, unless, of course, an option is defined to dump into `nullptr`.
-\[Note: **Warning** This behavior is not yet implemented.]
 
 ## Direct value
 

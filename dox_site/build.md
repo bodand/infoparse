@@ -10,8 +10,9 @@ The following are required for the ability to build infoparse:
   the tests require GCC 9+ or clang 5+.]
  - CMake 3.10+
  
-If using a non-Windows os, a `make` implementation is necessary as well.
-Or maybe not if you use `ninja`, I don't know.
+A `make` implementation is most likely necessary as well.
+Or maybe not if you use `ninja`, I don't know, but normally
+it is.
  
 # Downloading Sources
 
@@ -36,7 +37,7 @@ you can resort to the good ol' `curl` and `tar` combo.
 curl -Ls https://github.com/isbodand/infoparse/archive/master.tar.gz | tar xz
 ```
 
-This will create a `infoparse-master` directory with the sources for InfoParse. 
+This will create a `infoparse-master` directory with the sources for info::parse. 
 \[Note: Checksums are not provided by GitHub so don't need to be angry at me for
 not checking them. If you don't want to download things without a checksum
 use the [git](#git) method.]
@@ -45,7 +46,7 @@ use the [git](#git) method.]
 
 If you happen to be stuck on a Windows PC without the required tooling to
 get yourself `curl` and/or `tar`. 
-You can try any of the following options to get yourself InfoParse:
+You can try any of the following options to get yourself info::parse:
  
 ### PowerShell
   
@@ -60,7 +61,7 @@ If you are running and inferior version of Windows and don't have access to PS
 or you broke it at some point in time:
 
 ```cmd
-bitsadmin /transfer InfoParseDownload /priority high https://github.com/isbodand/infoparse/archive/master.zip %home%/Downloads/infoparse.zip
+bitsadmin /transfer info::parseDownload /priority high https://github.com/isbodand/infoparse/archive/master.zip %home%/Downloads/infoparse.zip
 ```
 If using cmd you have no build-in way of unzipping files, so figuring out this is left 
 as an exercise to the reader, possible procedures range from `7z` to abusing `jar`. 
@@ -102,5 +103,5 @@ This command varies by platform, here are a few, however if you are not
 sure which tool to call, just call through CMake as described above. 
  
   - `make` for *nix people 
-  - `msbuild InfoParse.sln` for MSVC
+  - `msbuild info::parse.sln` for MSVC
   - `mingw32-make` for MinGW 

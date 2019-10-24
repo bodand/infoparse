@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     std::string var2;
     
     // Parsing
-    InfoParse::OptionsParser parser;
+    info::parse::OptionsParser parser;
     parser.addOptions()
         ("b|bool", &var1)
         ("s|string", &var2)

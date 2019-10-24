@@ -17,7 +17,7 @@
 #endif
 //&!off
 
-namespace InfoParse::Internals {
+namespace info::parse::detail {
 #ifdef INFO_USE_BOOST
   using boost::algorithm::knuth_morris_pratt;
   using boost::algorithm::boyer_moore_horspool;
@@ -144,11 +144,11 @@ namespace InfoParse::Internals {
       /// Fields
   private:
       /// The names stored by the object
-      std::vector<std::string> names;
+      std::vector<std::string> _names;
       /// Lazily constructed Knuth-Morris-Pratt search objects for each name
-      std::vector<Lazy<FinderEins<char>, std::string&>> kmpSearch;
+      std::vector<Lazy<FinderEins<char>, std::string&>> _kmpSearch;
       /// Lazily constructed Boyer-Moore search objects for each name
-      std::vector<Lazy<FinderZwei<char>, std::string&>> bmSearch;
+      std::vector<Lazy<FinderZwei<char>, std::string&>> _bmSearch;
 
       /// Methods
   private:

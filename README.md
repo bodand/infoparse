@@ -35,10 +35,10 @@ InfoParse, more headers as described in the documentation are available,
 however messing with them is highly unadvised. 
 
 ### Instantiate
-In the scope in which you plan to use InfoParse in you need to instantiate
-an `InfoParse::OptionsParse`. 
+In the scope in which you plan to use info::parse in you need to instantiate
+an `info::parse::OptionsParse`. 
 \[Note: For the following parts of the documentation
-`namespace IP = InfoParse` is in place, as I'm too lazy to write that much.\]
+`namespace IP = info::parse` is in place, as I'm too lazy to write that much.\]
 ```objectivec
 IP::OptionsParser parser;
 ```
@@ -98,4 +98,3 @@ Full documentation is available [here](https://isbodand.github.io/infoparsed).
 
 This project and repository is licensed under the BSD 3-Clause license.
 For more information check the provided `LICENSE` file.
-

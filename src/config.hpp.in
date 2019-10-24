@@ -8,7 +8,7 @@
   #define INFO_USE_BOOST
 #endif
 
-namespace InfoParse::Internals::Config {
+namespace info::parse::detail::Config {
   // Retries callback function if deemed failed by
   // return value
 #ifdef INFO_RETRY_FAILED_CALLBACK_FUNCTION

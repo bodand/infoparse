@@ -23,8 +23,8 @@
 #include <boost/test/data/monomorphic.hpp>
 #include "../src/Option_.hpp"
 
-using namespace InfoParse;
-using namespace InfoParse::Internals;
+using namespace info::parse;
+using namespace info::parse::detail;
 namespace bdata = boost::unit_test::data;
 
 BOOST_AUTO_TEST_SUITE(Test_Option)

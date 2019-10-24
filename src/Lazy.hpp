@@ -10,7 +10,7 @@
 
 #include "utils.hpp"
 
-namespace InfoParse::Internals {
+namespace info::parse::detail {
   /**
    * @brief Exception class; thrown
    *        if requesting casting Lazy<T> to T

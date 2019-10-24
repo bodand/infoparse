@@ -19,7 +19,7 @@
 #include <vector>
 #include <string>
 
-using namespace InfoParse;
+using namespace info::parse;
 
 BOOST_AUTO_TEST_SUITE(Test_Utils)
 
@@ -111,12 +111,12 @@ BOOST_AUTO_TEST_SUITE(Test_Utils)
   };
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_extends) {
-      bool ret = Internals::extends_v<Base, Sub>;
+      bool ret = detail::extends_v<Base, Sub>;
       BOOST_CHECK(ret);
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_extends_false) {
-      bool ret = Internals::extends_v<Sub, Base>;
+      bool ret = detail::extends_v<Sub, Base>;
       BOOST_CHECK(!ret);
   }
 
@@ -131,50 +131,50 @@ BOOST_AUTO_TEST_SUITE(Test_Utils)
   };
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct_with) {
-      if constexpr (Internals::can_construct_with_v<BaseFactory, Base, int, int>)
+      if constexpr (detail::can_construct_with_v<BaseFactory, Base, int, int>)
           BOOST_CHECK(true);
       else
           BOOST_CHECK(false);
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct) {
-      if constexpr (Internals::can_construct_v<SubFactory, Sub>)
+      if constexpr (detail::can_construct_v<SubFactory, Sub>)
           BOOST_CHECK(true);
       else
           BOOST_CHECK(false);
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct_with_false) {
-      if constexpr (Internals::can_construct_with_v<BaseFactory, Sub, int, int>)
+      if constexpr (detail::can_construct_with_v<BaseFactory, Sub, int, int>)
           BOOST_CHECK(false);
       else
           BOOST_CHECK(true);
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_construct_false) {
-      if constexpr (Internals::can_construct_v<SubFactory, Base>)
+      if constexpr (detail::can_construct_v<SubFactory, Base>)
           BOOST_CHECK(false);
       else
           BOOST_CHECK(true);
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_int) {
-      bool ret = Internals::can_stream_in_v<int>;
+      bool ret = detail::can_stream_in_v<int>;
       BOOST_CHECK_MESSAGE(ret, "can_stream_in succeeded for built-in type `int`");
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_bool) {
-      bool ret = Internals::can_stream_in_v<bool>;
+      bool ret = detail::can_stream_in_v<bool>;
       BOOST_CHECK_MESSAGE(ret, "can_stream_in succeeded for built-in type `bool`");
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_out_int) {
-      bool ret = Internals::can_stream_out_v<int>;
+      bool ret = detail::can_stream_out_v<int>;
       BOOST_CHECK_MESSAGE(ret, "can_stream_out succeeded for built-in type `int`");
   }
 
   BOOST_AUTO_TEST_CASE(Test_Utils_ConstExpr_can_stream_out_bool) {
-      bool ret = Internals::can_stream_out_v<bool>;
+      bool ret = detail::can_stream_out_v<bool>;
       BOOST_CHECK_MESSAGE(ret, "can_stream_out succeeded for built-in type `bool`");
   }
 

@@ -11,7 +11,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include "../src/Lazy.hpp"
 
-using namespace InfoParse::Internals;
+using namespace info::parse::detail;
 
 BOOST_AUTO_TEST_SUITE(Test_Lazy)
 

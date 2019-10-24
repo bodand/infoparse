@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
                     ("alpha|a", &a)
                     ("beta|b", &b);
       parser->parse("-a -b");
-      BOOST_CHECK_MESSAGE(a && b, "Multiple addition of options succeeded.");
+      BOOST_CHECK_MESSAGE(a && b, "Multiple addition of _options succeeded.");
       delete parser;
   }
 
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       parser->addOption("abool|a", &a)
             .addOption("bbool|b", &b);
       parser->parse("-a -b");
-      BOOST_CHECK_MESSAGE(a && b, "Sequential addition of options succeeded.");
+      BOOST_CHECK_MESSAGE(a && b, "Sequential addition of _options succeeded.");
       delete parser;
   }
 
@@ -149,6 +149,16 @@ BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
       std::string s;
       OptionsParser parser;
       parser.addOption<void, const std::string&>("value", [&](const std::string& s_) {
+        s = s_;
+      });
+      parser.parse(" --value=text ");
+      BOOST_CHECK_EQUAL(s, "text");
+  }
+
+  BOOST_AUTO_TEST_CASE(Test_OptionsParser_StringViewCallback) {
+      std::string s;
+      OptionsParser parser;
+      parser.addOption<void, const std::string&>("value", [&](std::string_view s_) {
         s = s_;
       });
       parser.parse(" --value=text ");

@@ -9,7 +9,7 @@
 // Created by tudom on 2019. 05. 01..
 //
 
-#define BOOST_TEST_MODULE InfoParseTestModule
+#define BOOST_TEST_MODULE info::parseTestModule
 
 //&!off ${Test_TEST_CASES}
 //&!on

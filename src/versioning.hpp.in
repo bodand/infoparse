@@ -7,30 +7,30 @@
 
 #pragma once
 
-#define InfoParse_MAJOR @InfoParse_VERSION_MAJOR@
-#define InfoParse_MINOR @InfoParse_VERSION_MINOR@
-#define InfoParse_PATCH @InfoParse_VERSION_PATCH@
-#define InfoParse_BUILD_DATE "@InfoParse_VERSION_BUILD_DATE@"
-#define InfoParse_WIDE_BUILD_DATE L"@InfoParse_VERSION_BUILD_DATE@"
-#define InfoParse_VERSION "@InfoParse_VERSION@"
-#define InfoParse_WIDE_VERSION L"@InfoParse_VERSION@"
+#define info::parse_MAJOR @info::parse_VERSION_MAJOR@
+#define info::parse_MINOR @info::parse_VERSION_MINOR@
+#define info::parse_PATCH @info::parse_VERSION_PATCH@
+#define info::parse_BUILD_DATE "@info::parse_VERSION_BUILD_DATE@"
+#define info::parse_WIDE_BUILD_DATE L"@info::parse_VERSION_BUILD_DATE@"
+#define info::parse_VERSION "@info::parse_VERSION@"
+#define info::parse_WIDE_VERSION L"@info::parse_VERSION@"
 
 #include <string>
 #include "config.hpp"
 
-namespace InfoParse {
+namespace info::parse {
   static inline std::string getVersion() {
-      if (Internals::Config::UseBuildTimeInVersion) {
-          return InfoParse_VERSION " built on " InfoParse_BUILD_DATE;
+      if (detail::Config::UseBuildTimeInVersion) {
+          return info::parse_VERSION " built on " info::parse_BUILD_DATE;
       }
-      return InfoParse_VERSION;
+      return info::parse_VERSION;
   }
 
   static inline std::wstring getWideVersion() {
-      if (Internals::Config::UseBuildTimeInVersion) {
-          return InfoParse_WIDE_VERSION L" built on " InfoParse_WIDE_BUILD_DATE;
+      if (detail::Config::UseBuildTimeInVersion) {
+          return info::parse_WIDE_VERSION L" built on " info::parse_WIDE_BUILD_DATE;
       }
-      return InfoParse_WIDE_VERSION;
+      return info::parse_WIDE_VERSION;
   }
 
 #if defined(_WIN32) || defined(_WIN64)

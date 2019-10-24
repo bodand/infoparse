@@ -29,9 +29,9 @@
  * Contains all the API the library provides
  * in the form of classes and/or functions.
  */
-namespace InfoParse {
-  using Internals::OptionHandler_;
-  using Internals::identity_t;
+namespace info::parse {
+  using detail::OptionHandler_;
+  using detail::identity_t;
 
   class OptionsParser;
   /**
@@ -41,7 +41,7 @@ namespace InfoParse {
    * Nothing it contains should be used by
    * any user of the library, albeit possible.
    */
-  namespace Internals {
+  namespace detail {
     /**
      * Adds options to an OptionsParser
      * objects using the operator()(OptionsString, T*).
@@ -101,10 +101,10 @@ namespace InfoParse {
         /// Fields
     private:
         /// The "mother" object to add the options to
-        OptionsParser* mother;
+        OptionsParser* _mother;
     };
   }
-  using Internals::OptionAdder;
+  using detail::OptionAdder;
 
   /**
    * Stores options for parsing, and parses.
@@ -160,13 +160,13 @@ namespace InfoParse {
        *        will shadow the other, depending their position in the std::map
        */
       template<class T>
-      std::enable_if_t<std::is_function_v<T> || (Internals::can_stream_v<T>
+      std::enable_if_t<std::is_function_v<T> || (detail::can_stream_v<T>
                                                  && std::is_default_constructible_v<T>),
               OptionsParser&>
-      addOption(Internals::OptionString name, T* exporter);
+      addOption(detail::OptionString name, T* exporter);
 
       template<class R, class... Args>
-      OptionsParser& addOption(Internals::OptionString name,
+      OptionsParser& addOption(detail::OptionString name,
                                identity_t<const std::function<R(Args...)>&> f);
 
       /**
@@ -198,7 +198,7 @@ namespace InfoParse {
       /// Fields
   private:
       std::map<std::type_index, std::pair<void*,
-              std::function<std::string(void*, const std::string&)>>> optionHandlers;
+              std::function<std::string(void*, const std::string&)>>> _optionHandlers;
 
       /// Methods & stuff
   private:
@@ -207,61 +207,61 @@ namespace InfoParse {
   };
 
   template<class T>
-  const Internals::OptionAdder&
-  Internals::OptionAdder::operator()(Internals::OptionString name,
-                                     T* val) const {
-      mother->addOption(std::move(name), val);
+  const detail::OptionAdder&
+  detail::OptionAdder::operator()(detail::OptionString name,
+                                  T* val) const {
+      _mother->addOption(std::move(name), val);
       return *this;
   }
 
   template<class R, class... Args>
-  const InfoParse::OptionAdder&
-  Internals::OptionAdder::operator()(Internals::OptionString name,
-                                     identity_t<const std::function<R(Args...)>&> val) const {
-      mother->addOption(name, val);
+  const info::parse::OptionAdder&
+  detail::OptionAdder::operator()(detail::OptionString name,
+                                  identity_t<const std::function<R(Args...)>&> val) const {
+      _mother->addOption(name, val);
       return *this;
   }
 
   template<class T>
-  inline std::enable_if_t<std::is_function_v<T> || (Internals::can_stream_v<T>
+  inline std::enable_if_t<std::is_function_v<T> || (detail::can_stream_v<T>
                                                     && std::is_default_constructible_v<T>),
           OptionsParser&>
-  OptionsParser::addOption(Internals::OptionString name, T* exporter) {
-      if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
-          optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
-          optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
+  OptionsParser::addOption(detail::OptionString name, T* exporter) {
+      if (_optionHandlers.find(typeid(T)) == _optionHandlers.end()) {
+          _optionHandlers[typeid(T)].first = (void*) new OptionHandler_<T>();
+          _optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
             return ((OptionHandler_<T>*) optionVoid)->handle(args);
           };
       }
-      ((OptionHandler_<T>*) optionHandlers[typeid(T)].first)->addOption(name, exporter);
+      ((OptionHandler_<T>*) _optionHandlers[typeid(T)].first)->addOption(name, exporter);
       return *this;
   }
 
   template<class R, class... Args>
-  inline OptionsParser& OptionsParser::addOption(Internals::OptionString name,
+  inline OptionsParser& OptionsParser::addOption(detail::OptionString name,
                                                  identity_t<const std::function<R(Args...)>&> f) {
       static_assert(sizeof...(Args) <= 2, "Supplied callback function takes too many arguments");
       using T = R(Args...);
-      if (optionHandlers.find(typeid(T)) == optionHandlers.end()) {
-          optionHandlers[typeid(T)].first = (void*) new OptionHandler_<Internals::none, R, Args...>();
-          optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
-            return ((OptionHandler_<Internals::none, R, Args...>*) optionVoid)->handle(args);
+      if (_optionHandlers.find(typeid(T)) == _optionHandlers.end()) {
+          _optionHandlers[typeid(T)].first = (void*) new OptionHandler_<detail::none, R, Args...>();
+          _optionHandlers[typeid(T)].second = [](void* optionVoid, const std::string& args) {
+            return ((OptionHandler_<detail::none, R, Args...>*) optionVoid)->handle(args);
           };
       }
-      ((OptionHandler_<Internals::none, R, Args...>*) optionHandlers[typeid(T)].first)->addOption(name, f);
+      ((OptionHandler_<detail::none, R, Args...>*) _optionHandlers[typeid(T)].first)->addOption(name, f);
       return *this;
   }
 
   inline std::string OptionsParser::parse(const std::string& args) {
       std::string parsable(equalizeWhitespace(explodeBundledFlags(args)));
-      for (const auto& handler : optionHandlers) {
+      for (const auto& handler : _optionHandlers) {
           parsable = handler.second.second(handler.second.first, parsable);
       }
       return parsable;
   }
 
   inline std::string OptionsParser::parse(int argc, char** argv) {
-      return parse(InfoParse::makeMonolithArgs(argc, argv));
+      return parse(info::parse::makeMonolithArgs(argc, argv));
   }
 
 #pragma clang diagnostic push
