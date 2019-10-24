@@ -1,6 +1,6 @@
 # Configurations
 
-While info::parse is not the most configurable of the libraries; it 
+While InfoParse is not the most configurable of libraries; it 
 still offers some ability to be configured. 
 
 Configuration is done by setting or defining specific macros before including

@@ -12,7 +12,7 @@ project(InfoParse)
 
 set(InfoParse_VERSION_MAJOR 2)
 set(InfoParse_VERSION_MINOR 0)
-set(InfoParse_VERSION_PATCH 0)
+set(InfoParse_VERSION_PATCH 1)
 set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${InfoParse_VERSION_PATCH}")
 
 string(TIMESTAMP InfoParse_VERSION_BUILD_DATE "%Y-%m-%d at %H:%M:%S (%s)" UTC)
@@ -128,5 +128,6 @@ install(TARGETS infoparse EXPORT InfoParseConfig
         PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}/infoparse
         )
 install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})
+
 
 
