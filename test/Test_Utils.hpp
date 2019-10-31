@@ -14,7 +14,7 @@
 #pragma ide diagnostic ignored "cert-err58-cpp"
 
 #include <boost/test/included/unit_test.hpp>
-#include "../src/utils.hpp"
+#include "../include/info/parse/utils.hpp"
 
 #include <vector>
 #include <string>

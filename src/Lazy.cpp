@@ -2,7 +2,7 @@
 // Created by bodand on 2019-07-24.
 //
 
-#include "Lazy.hpp"
+#include "../include/info/parse/Lazy.hpp"
 
 #include <utility>
 

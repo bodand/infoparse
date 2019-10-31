@@ -2,8 +2,8 @@
 // Created by bodand on 2019-07-24.
 //
 
-#include "OptionString.hpp"
-#include "utils.hpp"
+#include "../include/info/parse/OptionString.hpp"
+#include "../include/info/parse/utils.hpp"
 
 info::parse::detail::OptionString::OptionString(const std::string& str)
         : _names(OptionString::prependDashes(info::parse::split(str, '|'))) {

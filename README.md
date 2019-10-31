@@ -7,7 +7,7 @@ C++ 17 parameter parser like Perl's Getopt::Long.
 #include <iostream>
 #include <string>
 
-#include <infoparse/OptionsParser>
+#include <info/parse/OptionsParser>
 
 int main(int argc, char** argv) {
     // Variables

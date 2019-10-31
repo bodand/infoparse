@@ -46,9 +46,7 @@
 #include "config.hpp"
 
 #ifdef INFO_USE_BOOST
-
   #include <boost/algorithm/string.hpp>
-
 #endif
 
 namespace info::parse {

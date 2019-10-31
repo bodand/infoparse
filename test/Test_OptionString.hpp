@@ -10,7 +10,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include "../src/OptionString.hpp"
+#include "../include/info/parse/OptionString.hpp"
 
 BOOST_AUTO_TEST_SUITE(Test_OptionString)
   using namespace info::parse;

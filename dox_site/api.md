@@ -9,7 +9,7 @@ internal use.
 ## Include
 
 The library - if installed correctly and not butchered like how I usually
-install stuff - has its directory called `infoparse`, where
+install stuff - has its directory called `info/parse`, where
 all headers reside. Therefrom do you need to include 
 
 ## Construction

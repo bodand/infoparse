@@ -18,8 +18,8 @@ set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${I
 string(TIMESTAMP InfoParse_VERSION_BUILD_DATE "%Y-%m-%d at %H:%M:%S (%s)" UTC)
 
 configure_file( # For version
-        "${PROJECT_SOURCE_DIR}/src/versioning.hpp.in"
-        "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
+        "${PROJECT_SOURCE_DIR}/src/config/versioning.hpp.in"
+        "${PROJECT_SOURCE_DIR}/include/info/parse/versioning.hpp"
         )
 
 configure_file( # For version
@@ -69,12 +69,13 @@ else ()
 endif ()
 
 configure_file( # For Boost support
-        ${PROJECT_SOURCE_DIR}/src/config.hpp.in
-        ${PROJECT_SOURCE_DIR}/src/config.hpp
+        "${PROJECT_SOURCE_DIR}/src/config/config.hpp.in"
+        "${PROJECT_SOURCE_DIR}/include/info/parse/config.hpp"
         )
 
 set(InfoParse_SOURCES
-        src/versioning.cpp src/utils.cpp
+        src/versioning.cpp
+        src/utils.cpp
         src/Option_.cpp
         src/OptionHandler_.cpp
         src/OptionString.cpp
@@ -84,16 +85,15 @@ set(InfoParse_SOURCES
 
 set(InfoParse_HEADERS
         # Config'd
-        src/versioning.hpp
-        src/config.hpp
+        include/info/parse/config.hpp
         # Procedural headers
-        src/utils.hpp
+        include/info/parse/utils.hpp
         # Classes
-        src/Option_.hpp
-        src/OptionHandler_.hpp
-        src/OptionsParser.hpp
-        src/OptionString.hpp
-        src/Lazy.hpp
+        include/info/parse/Option_.hpp
+        include/info/parse/OptionHandler_.hpp
+        include/info/parse/OptionsParser.hpp
+        include/info/parse/OptionString.hpp
+        include/info/parse/Lazy.hpp
         )
 
 add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
@@ -125,7 +125,7 @@ install(TARGETS infoparse EXPORT InfoParseConfig
         RUNTIME DESTINATION ${INSTALL_BIN_DIR}
         LIBRARY DESTINATION ${INSTALL_LIB_DIR}
         ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}/infoparse
+        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}/info/parse
         )
 install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})
 

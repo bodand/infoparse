@@ -16,8 +16,8 @@
 #define CREATE_HANDLER \
     auto* handler = new OptionHandler_<decltype(data)>
 
-#include "../src/OptionHandler_.hpp"
-#include "../src/Option_.hpp"
+#include "../include/info/parse/OptionHandler_.hpp"
+#include "../include/info/parse/Option_.hpp"
 
 using namespace info::parse;
 using namespace info::parse::detail;

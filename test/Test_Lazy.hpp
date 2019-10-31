@@ -9,7 +9,7 @@
 #pragma ide diagnostic ignored "cert-err58-cpp"
 
 #include <boost/test/included/unit_test.hpp>
-#include "../src/Lazy.hpp"
+#include "../include/info/parse/Lazy.hpp"
 
 using namespace info::parse::detail;
 
