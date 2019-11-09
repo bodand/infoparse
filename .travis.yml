@@ -3,10 +3,9 @@ language: cpp
 perl:
   - "5.28"
 
-cache: pip
-
 compiler:
   - clang
+  # - gcc # GCC 9.1+ required to build the tests, which, we do not have
 
 matrix:
   include:
@@ -25,11 +24,10 @@ matrix:
 
 before_install:
   - sudo python -m pip install --upgrade pip
-  - sudo python -m pip install conan mkdocs --ignore-installed
+  - sudo python -m pip install mkdocs --ignore-installed
 
 install:
   - mkdir build && cd build
-  - conan install .. --build missing
 
 script:
   - cmake ..
