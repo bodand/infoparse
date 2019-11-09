@@ -16,6 +16,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - libboost-dev
+            - libboost-test-dev
             - libstdc++-8-dev
             - cmake
             - make
