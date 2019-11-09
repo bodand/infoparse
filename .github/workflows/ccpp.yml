@@ -1,0 +1,24 @@
+name: C/C++ CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Boost
+      run: apt-get install cmake ninja-build libboost-all-dev
+    - name: Install MkDocs
+      run: pip install mkdocs
+    - name: CMake
+      run: |
+        mkdir build && cd build
+        cmake .. -G Ninja
+    - name: make
+      run: ninja
+    - name: Run Tests
+      run: |
+        cd test
+        ctest -v
+        
