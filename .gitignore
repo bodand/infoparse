@@ -22,9 +22,9 @@ compile_commands.json
 test_package/
 
 ## Configured by CMake
-src/versioning.hpp
-src/config.hpp
-test/testmain.cpp
+include/info/parse/versioning.hpp
+include/info/parse/neo/version.hpp
+test/main.cpp
 dox_site/installation.md
 .doxygen
 
