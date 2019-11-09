@@ -1,0 +1,8 @@
+//
+// Created by tudom on 2019. 05. 01..
+//
+
+#define BOOST_TEST_MODULE InfoParseClassicTestModule
+
+//&!off ${INFO_PARSE_CLASSIC_TEST_CASES}
+//&!on

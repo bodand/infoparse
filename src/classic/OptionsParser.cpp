@@ -9,7 +9,8 @@
 // Created by bodand on 2019-02-06.
 //
 
-#include "../include/info/parse/OptionsParser.hpp"
+#include "MakeInclude.hpp"
+#include INFO_PARSE_CLASSIC_INCLUDE(OptionsParser.hpp)
 
 info::parse::detail::OptionAdder::OptionAdder(OptionsParser* parser)
         : _mother(parser) {}

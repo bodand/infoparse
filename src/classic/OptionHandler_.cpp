@@ -9,4 +9,5 @@
 // Created by bodand on 2019-03-24.
 //
 
-#include "../include/info/parse/OptionHandler_.hpp"
+#include "MakeInclude.hpp"
+#include INFO_PARSE_CLASSIC_INCLUDE(OptionHandler_.hpp)

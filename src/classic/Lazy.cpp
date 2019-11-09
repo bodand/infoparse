@@ -2,7 +2,8 @@
 // Created by bodand on 2019-07-24.
 //
 
-#include "../include/info/parse/Lazy.hpp"
+#include "MakeInclude.hpp"
+#include INFO_PARSE_CLASSIC_INCLUDE(Lazy.hpp)
 
 #include <utility>
 

@@ -4,9 +4,7 @@
 
 #pragma once
 
-#if ${IP_USE_BOOST}
-  #define INFO_USE_BOOST
-#endif
+#define INFO_USE_BOOST
 
 namespace info::parse::config {
   // Retries callback function if deemed failed by
@@ -33,10 +31,8 @@ namespace info::parse::config {
 #endif
 
   // Build time in library version
-#ifndef INFO_USE_BUILD_TIME_IN_VERSION
-  #define INFO_USE_BUILD_TIME_IN_VERSION 1
-#endif
-#if INFO_USE_BUILD_TIME_IN_VERSION == 1
+#if !defined(INFO_USE_BUILD_TIME_IN_VERSION) \
+    || INFO_USE_BUILD_TIME_IN_VERSION == 1
   static constexpr bool UseBuildTimeInVersion = true;
 #else
   static constexpr bool UseBuildTimeInVersion = false;

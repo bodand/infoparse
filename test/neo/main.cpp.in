@@ -1,0 +1,4 @@
+#define BOOST_TEST_MODULE InfoParseNeoTestModule
+
+//&!off ${INFO_PARSE_NEO_TEST_CASES}
+//&!on

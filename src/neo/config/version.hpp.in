@@ -1,0 +1,16 @@
+#pragma once
+
+#include <string>
+
+/**
+ * Namespace for the InfoParse Neo
+ * implementation supporting a
+ * wider range of features.
+ */
+namespace info::parse::neo {
+  static const std::string Version{"@INFO_PARSE_NEO_VERSION@"};
+  static const int VersionMajor{@INFO_PARSE_NEO_VERSION_MAJOR@};
+  static const int VersionMinor{@INFO_PARSE_NEO_VERSION_MINOR@};
+  static const int VersoinPatch{@INFO_PARSE_NEO_VERSION_PATCH@};
+  static const std::string BuildTime{"@INFO_PARSE_BUILD_DATE@"};
+}
