@@ -21,7 +21,7 @@ configure_file( # For version
         "${PROJECT_SOURCE_DIR}/include/info/parse/versioning.hpp.in"
         "${PROJECT_SOURCE_DIR}/include/info/parse/versioning.hpp"
         )
-set_property(GLOBAL PROPERTY InfoParseIncludeDir "${PROJECT_SOURCE_DIR}/include")
+set_property(GLOBAL PROPERTY INFO_PARSE_INCLUDE "${PROJECT_SOURCE_DIR}/include")
 
 configure_file( # For version
         "${PROJECT_SOURCE_DIR}/dox_site/installation.md.in"
@@ -31,6 +31,8 @@ configure_file( # For version
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
     message(WARNING "MSVC is most likely going to fail building this, at least for me it is unable to do so.")
+else ()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif ()
 
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
