@@ -8,19 +8,20 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
-project(InfoParse)
+project(InfoParse CXX)
 
 set(InfoParse_VERSION_MAJOR 2)
-set(InfoParse_VERSION_MINOR 0)
-set(InfoParse_VERSION_PATCH 1)
+set(InfoParse_VERSION_MINOR 1)
+set(InfoParse_VERSION_PATCH 0)
 set(InfoParse_VERSION "${InfoParse_VERSION_MAJOR}.${InfoParse_VERSION_MINOR}.${InfoParse_VERSION_PATCH}")
 
 string(TIMESTAMP InfoParse_VERSION_BUILD_DATE "%Y-%m-%d at %H:%M:%S (%s)" UTC)
 
 configure_file( # For version
-        "${PROJECT_SOURCE_DIR}/src/versioning.hpp.in"
-        "${PROJECT_SOURCE_DIR}/src/versioning.hpp"
+        "${PROJECT_SOURCE_DIR}/include/info/parse/versioning.hpp.in"
+        "${PROJECT_SOURCE_DIR}/include/info/parse/versioning.hpp"
         )
+set_property(GLOBAL PROPERTY InfoParseIncludeDir "${PROJECT_SOURCE_DIR}/include")
 
 configure_file( # For version
         "${PROJECT_SOURCE_DIR}/dox_site/installation.md.in"
@@ -69,32 +70,32 @@ else ()
 endif ()
 
 configure_file( # For Boost support
-        ${PROJECT_SOURCE_DIR}/src/config.hpp.in
-        ${PROJECT_SOURCE_DIR}/src/config.hpp
+        ${PROJECT_SOURCE_DIR}/include/info/parse/config.hpp.in
+        ${PROJECT_SOURCE_DIR}/include/info/parse/config.hpp
         )
 
 set(InfoParse_SOURCES
-        src/versioning.cpp src/utils.cpp
-        src/Option_.cpp
-        src/OptionHandler_.cpp
-        src/OptionString.cpp
-        src/OptionsParser.cpp
-        src/Lazy.cpp
-        )
+    src/versioning.cpp src/utils.cpp
+    src/Option_.cpp
+    src/OptionHandler_.cpp
+    src/OptionString.cpp
+    src/OptionsParser.cpp
+    src/Lazy.cpp
+    )
 
 set(InfoParse_HEADERS
-        # Config'd
-        src/versioning.hpp
-        src/config.hpp
-        # Procedural headers
-        src/utils.hpp
-        # Classes
-        src/Option_.hpp
-        src/OptionHandler_.hpp
-        src/OptionsParser.hpp
-        src/OptionString.hpp
-        src/Lazy.hpp
-        )
+    # Config'd
+    include/info/parse/versioning.hpp
+    include/info/parse/config.hpp
+    # Procedural headers
+    include/info/parse/utils.hpp
+    # Classes
+    include/info/parse/Option_.hpp
+    include/info/parse/OptionHandler_.hpp
+    include/info/parse/OptionsParser.hpp
+    include/info/parse/OptionString.hpp
+    include/info/parse/Lazy.hpp
+    )
 
 add_library(infoparse SHARED ${InfoParse_HEADERS} ${InfoParse_SOURCES})
 set_target_properties(infoparse PROPERTIES LINKER_LANGUAGE CXX)
@@ -125,9 +126,11 @@ install(TARGETS infoparse EXPORT InfoParseConfig
         RUNTIME DESTINATION ${INSTALL_BIN_DIR}
         LIBRARY DESTINATION ${INSTALL_LIB_DIR}
         ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
-        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}/infoparse
+        PUBLIC_HEADER DESTINATION ${INSTALL_INCLUDE_DIR}
         )
 install(EXPORT InfoParseConfig DESTINATION ${INSTALL_CMAKE_DIR})
+
+
 
 
 

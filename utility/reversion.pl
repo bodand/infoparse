@@ -12,15 +12,6 @@ my %files = (
         },
         dot   => "",
     },
-    conan  => {
-        file  => "conanfile.py",
-        match => {
-            major => qr/(version = ")\d+\./,
-            minor => qr/(version = "\d+\.)\d+\./,
-            patch => qr/(version = "\d+\.\d+\.)\d+/,
-        },
-        dot   => '.',
-    },
     readme => {
         file  => "readme.md",
         match => {

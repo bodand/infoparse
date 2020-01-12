@@ -17,7 +17,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include "../src/OptionsParser.hpp"
+#include "../include/info/parse/OptionsParser.hpp"
 
 BOOST_AUTO_TEST_SUITE(Test_OptionsParser)
 

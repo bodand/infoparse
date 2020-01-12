@@ -21,7 +21,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/data/monomorphic.hpp>
-#include "../src/Option_.hpp"
+#include "../include/info/parse/Option_.hpp"
 
 using namespace info::parse;
 using namespace info::parse::detail;

@@ -11,8 +11,9 @@
 
 #include <iostream>
 
-#include "utils.hpp"
-#include "config.hpp"
+#include "include.hpp"
+#include INFO_PARSE_INCLUDE(utils.hpp)
+#include INFO_PARSE_INCLUDE(config.hpp)
 
 #ifdef INFO_USE_BOOST
 
